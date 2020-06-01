@@ -10,8 +10,8 @@ function App() {
 
   return html`
     <div class=main>
-      <${Directory} dir=${dir1} setDir=${setDir1} selected=${selectedFile} />
-      <${Directory} dir=${dir2} setDir=${setDir2} selected=${selectedFile} />
+      <${Directory} dir=${dir1} setDir=${setDir1} selected=${selectedFile} onSelect=${setSelectedFile} />
+      <${Directory} dir=${dir2} setDir=${setDir2} selected=${selectedFile} onSelect=${setSelectedFile} />
     </div>
   `;
 }
