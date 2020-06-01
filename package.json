@@ -21,11 +21,12 @@
   },
   "homepage": "https://github.com/catdad/all-compare#readme",
   "devDependencies": {
-    "electron": "^9.0.1",
+    "electron": "^8.3.1",
     "electronmon": "^1.1.0",
     "eslint": "^5.16.0"
   },
   "dependencies": {
+    "fast-glob": "^3.2.2",
     "fs-extra": "^9.0.0",
     "htm": "^3.0.4",
     "lodash": "^4.17.15",
