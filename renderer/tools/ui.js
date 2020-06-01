@@ -1,6 +1,8 @@
 const path = require('path');
 
 const { h, render } = require('preact');
+const { useState } = require('preact/hooks');
+
 const htm = require('htm');
 
 const html = htm.bind(h);
@@ -17,4 +19,4 @@ const css = (csspath, dirname = '.') => {
   document.head.appendChild(link);
 };
 
-module.exports = { html, render, css };
+module.exports = { html, render, css, useState };

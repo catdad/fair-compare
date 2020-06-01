@@ -1,0 +1,25 @@
+.directory {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  max-width: 50%;
+  min-height: 100vh;
+}
+
+.directory:first-of-type {
+  border-right: 1px solid gray;
+}
+
+.directory .header {
+  display: flex;
+  margin: 10px;
+}
+
+.directory .header span {
+  flex-grow: 1;
+}
+
+.directory .list {
+  margin: 10px;
+  word-wrap: break-word;
+}

@@ -9,3 +9,11 @@ html, body {
   color: var(--text);
   font-family: sans-serif;
 }
+
+* {
+  box-sizing: border-box;
+}
+
+.main {
+  display: flex;
+}
