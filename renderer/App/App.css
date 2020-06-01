@@ -1,0 +1,11 @@
+:root {
+  --text: white;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+
+  color: var(--text);
+  font-family: sans-serif;
+}
