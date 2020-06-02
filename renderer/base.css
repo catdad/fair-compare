@@ -21,9 +21,14 @@
 
   --lvl1: var(--01dp);
   --lvl2: var(--03dp);
-  --lvl3: var(--32dp);
-  --lvl4: var(--96dp);
-  --lvl5: var(--256dp);
+  --lvl3: var(--12dp);
+  --lvl4: var(--32dp);
+  --lvl5: var(--48dp);
+  --lvl6: var(--96dp);
+  --lvl7: var(--256dp);
+
+  --color-background: var(--lvl2);
+  --color-border: var(--lvl5);
 
   --text: #dfdfdf;
   --tab-height: 2rem;
@@ -33,7 +38,7 @@ html, body {
   margin: 0;
   padding: 0;
 
-  background-color: var(--lvl2);
+  background-color: var(--color-background);
   color: var(--text);
   font-family: sans-serif;
   min-height: 100%;

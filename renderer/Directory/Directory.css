@@ -7,7 +7,7 @@
 }
 
 .directory:first-of-type {
-  border-right: 1px solid gray;
+  border-right: 1px solid var(--color-border);
 }
 
 .directory .header {

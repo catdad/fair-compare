@@ -1,5 +1,5 @@
 .tab-bar {
-  background-color: var(--lvl3);
+  background-color: var(--lvl4);
   height: var(--tab-height);
   display: flex;
   align-items: center;
@@ -11,8 +11,12 @@
   padding: 0 10px;
   height: 100%;
   max-width: 240px;
-  background: var(--lvl2);
-  border-right: 1px solid var(--lvl4);
+  background: var(--lvl3);
+  border-right: 1px solid var(--color-border);
+}
+
+.tab.selected {
+  background: var(--color-background);
 }
 
 .view {
