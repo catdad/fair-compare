@@ -16,7 +16,7 @@ switch (query.route) {
   }
   case 'image':
   case 'text':
-    render(html`<div>Image view not implemented<//>`);
+    render(html`<div>Image view not implemented<//>`, document.querySelector('#app'));
     break;
   default: {
     const IndexTabs = require('./IndexTabs/IndexTabs.js');

@@ -11,7 +11,7 @@ function getDirectoryStructure(path) {
   });
 }
 
-function Directory({ dir, setDir, selected, onSelect } = {}) {
+function Directory({ dir, setDir, selected, onSelect, onOpen } = {}) {
   const selectDir = () => {
     let base;
 
@@ -39,7 +39,7 @@ function Directory({ dir, setDir, selected, onSelect } = {}) {
       </div>
       <div class="list">
         ${dir.files.map(file => html`
-          <p class=${selected === file ? 'selected' : ''} onClick=${() => onSelect(file)}>${file}</p>
+          <p class=${selected === file ? 'selected' : ''} onclick=${() => onSelect(file)} ondblclick=${() => onOpen(file)}>${file}</p>
         `)}
       </div>
     </div>`;

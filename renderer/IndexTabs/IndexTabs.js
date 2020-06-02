@@ -1,4 +1,5 @@
 const { html, css, useState, useEffect, useRef } = require('../tools/ui.js');
+const viewBus = new (require('events'))();
 
 css('./IndexTabs.css');
 
@@ -11,20 +12,50 @@ function Tabs({ list, onSelect }) {
 }
 
 function createTab({ title, url, view, selected = true }) {
-  return {
+  const onMessage = ({ channel, args }) => {
+    viewBus.emit(channel, ...args);
+  };
+
+  let frame;
+
+  return Object.defineProperties({
+    key: Math.random(),
     title,
     frame: (() => {
-      const frame = document.createElement('webview');
+      frame = document.createElement('webview');
       frame.classList.add('view');
       frame.setAttribute('src', url);
       frame.setAttribute('nodeintegration', true);
 
       view.current.appendChild(frame);
 
+      frame.addEventListener('ipc-message', onMessage);
+
+      frame.addEventListener('did-finish-load', () => {
+        frame.openDevTools();
+      });
+
       return frame;
     })(),
+    close: () => {
+      frame.removeEventListener('new-tab', onMessage);
+      frame.remove();
+    },
     selected
-  };
+  }, {
+    selected: {
+      get: () => selected,
+      set: val => {
+        selected = !!val;
+
+        if (selected) {
+          delete frame.style.top;
+        } else {
+          frame.style.top = '200vh';
+        }
+      }
+    }
+  });
 }
 
 function App() {
@@ -37,14 +68,30 @@ function App() {
     ]);
   }, [/* execute once */]);
 
+  useEffect(() => {
+    const onNewTab = ({ title, ...data }) => {
+      const query = Object.keys(data).map(key => `${key}=${data[key]}`).join('&');
+      const url = `${window.location.href}?${query}`;
+
+      const tab = createTab({ title, url, view });
+      const newTabs = [...(tabs.map(t => {
+        t.selected = false;
+        return t;
+      })), tab];
+
+      setTabs(newTabs);
+    };
+
+    viewBus.on('new-tab', onNewTab);
+
+    return () => {
+      viewBus.off('new-tab', onNewTab);
+    };
+  }, [tabs]);
+
   const selectTab = TAB => {
     tabs.forEach(tab => {
-      if (tab === TAB) {
-        tab.selected = true;
-      } else {
-        tab.selected = false;
-        tab.frame.style.top = '200vh';
-      }
+      tab.selected = tab === TAB;
     });
 
     setTabs([].concat(tabs));
