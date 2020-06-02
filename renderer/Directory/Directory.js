@@ -26,6 +26,7 @@ function Directory({ dir, setDir, selected, onSelect } = {}) {
     }).then(files => {
       setDir({ base, files });
     }).catch(err => {
+      // TODO handle this error better
       console.error(err);
     });
   };
@@ -33,7 +34,7 @@ function Directory({ dir, setDir, selected, onSelect } = {}) {
   return html`
     <div class="directory">
       <div class="header">
-        <span>${dir.base || ''}</span>
+        <span>${dir.base || 'no directory selected'}</span>
         <button onClick=${selectDir}>Pick Directory</button>
       </div>
       <div class="list">
