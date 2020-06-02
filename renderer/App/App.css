@@ -1,5 +1,7 @@
 :root {
   --text: white;
+  --tab-height: 2rem;
+  --app-height: calc(100% - 2rem);
 }
 
 html, body {
@@ -8,10 +10,17 @@ html, body {
 
   color: var(--text);
   font-family: sans-serif;
+  min-height: 100%;
 }
 
 * {
   box-sizing: border-box;
+}
+
+#tabs {
+  height: var(--tab-height);
+  border-bottom: 1px solid red;
+  margin: 0px;
 }
 
 .main {
