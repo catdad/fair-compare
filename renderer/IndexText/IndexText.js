@@ -3,6 +3,15 @@ const fs = require('fs-extra');
 
 css('./IndexText.css');
 
+function File({ title = 'no file available', text = '' }) {
+  return html`
+    <div class=file>
+      <p>${title}</p>
+      <pre>${text}</pre>
+    </div>
+  `;
+}
+
 function App({ left, right }) {
   let leftText, rightText;
 
@@ -18,8 +27,8 @@ function App({ left, right }) {
 
   return html`
     <div class=main>
-      <pre class=file>${leftText || ''}</pre>
-      <pre class=file>${rightText || ''}</pre>
+      <${File} title=${left} text=${leftText} />
+      <${File} title=${right} text=${rightText} />
     </div>
   `;
 }
