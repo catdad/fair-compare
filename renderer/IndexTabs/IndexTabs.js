@@ -10,25 +10,31 @@ function Tabs({ list, onSelect }) {
   });
 }
 
+function createTab({ title, url, view, selected = true }) {
+  return {
+    title,
+    frame: (() => {
+      const frame = document.createElement('webview');
+      frame.classList.add('view');
+      frame.setAttribute('src', url);
+      frame.setAttribute('nodeintegration', true);
+
+      view.current.appendChild(frame);
+
+      return frame;
+    })(),
+    selected
+  };
+}
+
 function App() {
   const [tabs, setTabs] = useState([]);
   const view = useRef(null);
 
   useEffect(() => {
-    setTabs([{
-      title: 'Main',
-      frame: (() => {
-        const frame = document.createElement('webview');
-        frame.classList.add('view');
-        frame.setAttribute('src', `${window.location.href}?route=directory`);
-        frame.setAttribute('nodeintegration', true);
-
-        view.current.appendChild(frame);
-
-        return frame;
-      })(),
-      selected: true
-    }]);
+    setTabs([
+      createTab({ title: 'Main', url: `${window.location.href}?route=directory`, view }),
+    ]);
   }, [/* execute once */]);
 
   const selectTab = TAB => {
