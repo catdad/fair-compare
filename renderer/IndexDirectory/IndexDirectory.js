@@ -1,7 +1,7 @@
 const { html, css, useState } = require('../tools/ui.js');
 const Directory = require('../Directory/Directory.js');
 
-css('./IndexDirectory.css', __dirname);
+css('./IndexDirectory.css');
 
 function App() {
   const [dir1, setDir1] = useState({ base: null, files: [] });

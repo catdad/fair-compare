@@ -4,7 +4,7 @@ const events = new EventEmitter();
 const { html, render, css } = require('./tools/ui.js');
 const query = require('./tools/query.js');
 
-css('./base.css', __dirname);
+css('./base.css');
 
 console.log('INDEX LOADED', query);
 

@@ -2,7 +2,7 @@ const { html, css } = require('../tools/ui.js');
 const fg = require('fast-glob');
 const { dialog } = require('electron').remote;
 
-css('./Directory.css', __dirname);
+css('./Directory.css');
 
 function getDirectoryStructure(path) {
   return fg(['**/*.*'], {

@@ -1,6 +1,6 @@
 const { html, css, useState, useEffect, useRef } = require('../tools/ui.js');
 
-css('./IndexTabs.css', __dirname);
+css('./IndexTabs.css');
 
 function Tabs({ list, onSelect }) {
   return list.map(tab => {
