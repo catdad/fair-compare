@@ -1,0 +1,28 @@
+.tab-bar {
+  background-color: var(--lvl4);
+  height: var(--tab-height);
+  display: flex;
+  align-items: center;
+}
+
+.tab {
+  flex-grow: 1;
+  line-height: var(--tab-height);
+  padding: 0 10px;
+  height: 100%;
+  max-width: 180px;
+  background: var(--lvl3);
+  border-right: 1px solid var(--color-border);
+}
+
+.tab.selected {
+  background: var(--color-background);
+}
+
+.view {
+  position: absolute;
+  top: var(--tab-height);
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
