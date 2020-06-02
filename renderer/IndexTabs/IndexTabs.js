@@ -41,9 +41,9 @@ function App() {
     tabs.forEach(tab => {
       if (tab === TAB) {
         tab.selected = true;
-        tab.frame.style.top = '200vh';
       } else {
         tab.selected = false;
+        tab.frame.style.top = '200vh';
       }
     });
 
