@@ -1,12 +1,19 @@
-const { html, css, useState, useEffect, useRef } = require('../tools/ui.js');
+const { html, css, useState, useEffect, useRef, useCallback } = require('../tools/ui.js');
 const viewBus = new (require('events'))();
 
 css('./IndexTabs.css');
 
-function Tabs({ list, onSelect }) {
+function Tabs({ list, onSelect, onClose }) {
+  const onCloseClick = tab => ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    onClose(tab);
+  };
   return list.map(tab => {
     return html`<span key=${tab.key} class="tab ${tab.selected ? 'selected' : ''}" onClick=${() => onSelect(tab)}>
       ${tab.title}
+      <button onclick=${onCloseClick(tab)}>x</button>
     </span>`;
   });
 }
@@ -49,7 +56,7 @@ function createTab({ title, url, view, selected = true }) {
         selected = !!val;
 
         if (selected) {
-          delete frame.style.top;
+          frame.style.top = '';
         } else {
           frame.style.top = '200vh';
         }
@@ -89,17 +96,35 @@ function App() {
     };
   }, [tabs]);
 
-  const selectTab = TAB => {
+  const selectTab = useCallback(TAB => {
     tabs.forEach(tab => {
       tab.selected = tab === TAB;
     });
 
     setTabs([].concat(tabs));
-  };
+  }, [tabs, setTabs]);
+
+  const closeTab = useCallback(TAB => {
+    if (TAB === tabs[0]) {
+      return;
+    }
+
+    const newTabs = tabs.filter((tab, idx) => {
+      if (tabs[idx + 1] === TAB) {
+        tab.selected = true;
+      } else {
+        tab.selected = false;
+      }
+
+      return tab !== TAB;
+    });
+
+    setTabs(newTabs);
+  }, [tabs, setTabs]);
 
   return html`
     <div class="tab-bar">
-      <${Tabs} list=${tabs} onSelect=${selectTab} />
+      <${Tabs} list=${tabs} onClose=${closeTab} onSelect=${selectTab} />
     </div>
     <div ref=${view}></div>
   `;
