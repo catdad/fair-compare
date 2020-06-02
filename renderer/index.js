@@ -1,11 +1,26 @@
-const { html, render } = require('./tools/ui.js');
-const App = require('./App/App.js');
+const EventEmitter = require('events');
+const events = new EventEmitter();
 
-const tabs = require('./Chrome/tabs.js')({
-  tabs: document.querySelector('#tabs'),
-  app: document.querySelector('#app')
-});
+const { html, render, css } = require('./tools/ui.js');
+const query = require('./tools/query.js');
 
-const [app] = tabs.add({ title: 'Main' });
+css('./base.css', __dirname);
 
-render(html`<${App}/>`, app);
+console.log('INDEX LOADED', query);
+
+switch (query.route) {
+  case 'directory': {
+    const IndexDirectory = require('./IndexDirectory/IndexDirectory.js');
+    render(html`<${IndexDirectory} events=${events} />`, document.querySelector('#app'));
+    break;
+  }
+  case 'image':
+  case 'text':
+    render(html`<div>Image view not implemented<//>`);
+    break;
+  default: {
+    const IndexTabs = require('./IndexTabs/IndexTabs.js');
+    render(html`<${IndexTabs} events=${events} />`, document.querySelector('#app'));
+    break;
+  }
+}
