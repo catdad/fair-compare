@@ -9,8 +9,6 @@ const fileInDir = (dir, file) => {
   if (dir.files.includes(file)) {
     return path.resolve(dir.base, file);
   }
-
-  return null;
 };
 
 function App() {
@@ -22,11 +20,20 @@ function App() {
     const left = fileInDir(dir1, file);
     const right = fileInDir(dir2, file);
 
-    ipcRenderer.sendToHost('new-tab', {
+    const data = {
       title: path.basename(file),
-      route: 'text',
-      left, right
-    });
+      route: 'text'
+    };
+
+    if (left) {
+      data.left = left;
+    }
+
+    if (right) {
+      data.right = right;
+    }
+
+    ipcRenderer.sendToHost('new-tab', data);
   };
 
   return html`

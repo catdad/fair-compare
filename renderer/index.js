@@ -14,10 +14,15 @@ switch (query.route) {
     render(html`<${IndexDirectory} events=${events} />`, document.querySelector('#app'));
     break;
   }
-  case 'image':
-  case 'text':
+  case 'image': {
     render(html`<div>Image view not implemented<//>`, document.querySelector('#app'));
     break;
+  }
+  case 'text': {
+    const IndexText = require('./IndexText/IndexText.js');
+    render(html`<${IndexText} left=${query.left} right=${query.right} />`, document.querySelector('#app'));
+    break;
+  }
   default: {
     const IndexTabs = require('./IndexTabs/IndexTabs.js');
     render(html`<${IndexTabs} events=${events} />`, document.querySelector('#app'));

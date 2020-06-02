@@ -1,0 +1,16 @@
+.main {
+  display: flex;
+  min-height: 100vh;
+}
+
+.file {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  max-width: 50%;
+  min-height: 100%;
+}
+
+.file:first-of-type {
+  border-right: 1px solid var(--color-border);
+}
