@@ -2,7 +2,8 @@ const { html, css } = require('../tools/ui.js');
 
 css('./IndexImage.css');
 
-function Image({ title = 'no file available', filepath = 'data:image/svg+xml;<svg></svg>' }) {
+// TODO this svg is not correct, fix it
+function Image({ title = 'no file available', filepath = 'data:image/svg+xml;utf8,<svg></svg>' }) {
   return html`
     <div class=file>
       <p>${title}</p>
