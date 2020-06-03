@@ -28,6 +28,7 @@
   "dependencies": {
     "callsites": "^3.1.0",
     "fast-glob": "^3.2.2",
+    "file-type": "^14.6.0",
     "fs-extra": "^9.0.0",
     "htm": "^3.0.4",
     "lodash": "^4.17.15",
