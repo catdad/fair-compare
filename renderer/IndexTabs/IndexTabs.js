@@ -12,8 +12,8 @@ function Tabs({ list, onSelect, onClose }) {
   };
   return list.map(tab => {
     return html`<span key=${tab.key} class="tab ${tab.selected ? 'selected' : ''}" onClick=${() => onSelect(tab)}>
-      ${tab.title}
-      <button onclick=${onCloseClick(tab)}>x</button>
+      <span>${tab.title}</span>
+      <button onclick=${onCloseClick(tab)}>🞩</button>
     </span>`;
   });
 }

@@ -6,6 +6,7 @@
 }
 
 .tab {
+  display: flex;
   flex-grow: 1;
   line-height: var(--tab-height);
   padding: 0 10px;
@@ -13,6 +14,8 @@
   max-width: 180px;
   background: var(--lvl3);
   border-right: 1px solid var(--color-border);
+
+  align-items: center;
 }
 
 .tab.selected {
@@ -25,4 +28,29 @@
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+.tab span {
+  flex-grow: 1;
+}
+
+.tab button {
+  --size: 1.1rem;
+
+  font-weight: bold;
+  text-align: center;
+  width: var(--size);
+  height: var(--size);
+  line-height: var(--size);
+  padding: 0;
+  background: none;
+  outline: none;
+  border: none;
+  color: var(--color-text);
+  flex-grow: 0;
+}
+
+.tab button:hover {
+  transform: scale(1.1, 1.1);
+  transform-origin: 50% -50%;
 }
