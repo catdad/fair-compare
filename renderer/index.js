@@ -15,7 +15,8 @@ switch (query.route) {
     break;
   }
   case 'image': {
-    render(html`<div>Image view not implemented<//>`, document.querySelector('#app'));
+    const IndexImage = require('./IndexImage/IndexImage.js');
+    render(html`<${IndexImage} left=${query.left} right=${query.right} />`, document.querySelector('#app'));
     break;
   }
   case 'text': {
