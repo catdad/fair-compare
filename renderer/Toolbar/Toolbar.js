@@ -7,8 +7,8 @@ const setVar = (name, value) => document.documentElement.style.setProperty(`--${
 
 const SIZE = '2rem';
 
-function Toolbar({ children }) {
-  setVar('toolbar-height', SIZE);
+function Toolbar({ children, heightVar = 'toolbar-height' }) {
+  setVar(heightVar, SIZE);
 
   return html`<div class="toolbar">
     ${children}
