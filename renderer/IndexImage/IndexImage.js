@@ -1,4 +1,4 @@
-const { html, css, useState } = require('../tools/ui.js');
+const { html, css, useCallback, useState, useRef } = require('../tools/ui.js');
 const Toolbar = require('../Toolbar/Toolbar.js');
 
 css('./IndexImage.css');
@@ -15,6 +15,12 @@ const MODE = {
 
 function App({ left, right }) {
   const [mode, setMode] = useState(MODE.tolerance);
+  const cache = useRef({});
+
+  const setCache = useCallback((key, value) => {
+    cache.current[key] = value;
+    console.log('cached', key, value);
+  }, [cache.current]);
 
   const dom = [
     html`<${Toolbar} thing=stuff>
@@ -29,7 +35,7 @@ function App({ left, right }) {
     case MODE.tolerance:
       dom.push(html`
         <div class=main>
-          <${Tolerance} left=${left} right=${right} />
+          <${Tolerance} left=${left} right=${right} cache=${cache.current} setCache=${setCache} />
         </div>
       `);
       break;

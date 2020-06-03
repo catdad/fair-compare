@@ -49,24 +49,32 @@ const computeTolerance = async (left, right) => {
   return { leftData, rightData, resultData, imageUrl: canvas.toDataURL() };
 };
 
-function Tolerance({ left, right }) {
+function Tolerance({ left, right, cache, setCache }) {
   const [data, setData] = useState({ tolerance: null, left: null, right: null, imageUrl: null });
 
   useEffect(() => {
+    if (cache.tolerance) {
+      setData(cache.tolerance);
+      return;
+    }
+
     console.time('tolerance');
     computeTolerance(left, right).then(result => {
       console.timeEnd('tolerance');
 
-      setData({
+      const data = {
         left: result.leftData,
         right: result.rightData,
         tolerance: result.resultData,
         imageUrl: result.imageUrl
-      });
+      };
+
+      setData(data);
+      setCache('tolerance', data);
     }).catch(err => {
       console.error(err);
     });
-  }, []);
+  }, [cache.tolerance]);
 
   return data.imageUrl ? html`<div class="single img">
     <${Image} title="Tolerance" filepath=${data.imageUrl} />
