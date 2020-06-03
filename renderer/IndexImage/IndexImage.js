@@ -36,8 +36,8 @@ function App({ left, right }) {
     default:
       dom.push(html`
         <div class=main>
-          <${Image} title=${left} filepath=${left} />
-          <${Image} title=${right} filepath=${right} />
+          <div class="double img"><${Image} title=${left} filepath=${left} /></div>
+          <div class="double img"><${Image} title=${right} filepath=${right} /></div>
         </div>
       `);
   }

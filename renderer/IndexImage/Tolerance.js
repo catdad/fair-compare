@@ -68,7 +68,9 @@ function Tolerance({ left, right }) {
     });
   }, []);
 
-  return data.imageUrl ? html`<${Image} title="Tolerance" filepath=${data.imageUrl} />` : html`<div>Loading...</div>`;
+  return data.imageUrl ? html`<div class="single img">
+    <${Image} title="Tolerance" filepath=${data.imageUrl} />
+  </div>` : html`<div>Loading...</div>`;
 }
 
 module.exports = Tolerance;
