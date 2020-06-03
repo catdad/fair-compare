@@ -1,30 +1,16 @@
 const { html, css } = require('../tools/ui.js');
-const fg = require('fast-glob');
 const { dialog } = require('electron').remote;
 
 css('./Directory.css');
 
-function getDirectoryStructure(path) {
-  return fg(['**/*.*'], {
-    dot: false,
-    cwd: path
-  });
-}
-
 function Directory({ dir, setDir, selected, onSelect, onOpen } = {}) {
   const selectDir = () => {
-    let base;
-
     dialog.showOpenDialog({ properties: ['openDirectory'] }).then(({ cancelled, filePaths }) => {
-      base = filePaths && filePaths.length ? filePaths[0] : null;
-
       if (cancelled || !filePaths || filePaths.length === 0) {
-        return [];
+        return;
       }
 
-      return getDirectoryStructure(filePaths[0]);
-    }).then(files => {
-      setDir({ base, files });
+      setDir(filePaths[0]);
     }).catch(err => {
       // TODO handle this error better
       console.error(err);
