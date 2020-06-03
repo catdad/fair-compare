@@ -10,6 +10,8 @@ const config = require('../../lib/config.js');
 
 css('./IndexDirectory.css');
 
+const sort = files => [...files].sort((a, b) => a.localeCompare(b));
+
 const assertDirectory = async base => {
   let stat;
 
@@ -32,7 +34,7 @@ const getDirectoryStructure = async (base) => {
     cwd: base
   });
 
-  return { base, files };
+  return { base, files: sort(files) };
 };
 
 const fileInDir = (dir, file) => {
