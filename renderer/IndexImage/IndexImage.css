@@ -12,6 +12,7 @@
 }
 
 .file:first-of-type {
+  /* TODO this makes one side smaller than the other by 1 pixel */
   border-right: 1px solid var(--color-border);
 }
 
