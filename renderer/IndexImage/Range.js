@@ -2,12 +2,13 @@ const Panzoom = require('@panzoom/panzoom');
 
 const { html, css, useEffect, useRef } = require('../tools/ui.js');
 const { info } = require('../tools/image-diff.js');
+const Toolbar = require('../Toolbar/Toolbar.js');
 
 css('./Range.css');
 
 const setVar = (elem, name, value) => elem.style.setProperty(`--${name}`, value);
 
-function Range({ left, right }) {
+function Range({ left, right, buttons }) {
   const zoom = useRef(null);
   const view = useRef(null);
 
@@ -55,9 +56,14 @@ function Range({ left, right }) {
     };
   }, [left, right]);
 
-  return html`<div class="range-zoom" ref=${zoom}>
-    <div class="range" ref=${view}></div>
-  </div>`;
+  return html`
+    <${Toolbar}>${buttons}<//>
+    <div class=main>
+      <div class="range-zoom" ref=${zoom}>
+        <div class="range" ref=${view}></div>
+      </div>
+    </div>
+  `;
 }
 
 module.exports = Range;
