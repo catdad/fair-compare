@@ -39,6 +39,8 @@ function Range({ left, right }) {
         startX,
         startY
       });
+
+      zoom.current.addEventListener('wheel', panzoom.zoomWithWheel);
     }).catch(err => {
       console.error(err);
     });
@@ -47,6 +49,7 @@ function Range({ left, right }) {
       destroyed = true;
 
       if (panzoom) {
+        zoom.current.removeEventListener('whee', panzoom.zoomWithWheel);
         panzoom.destroy();
       }
     };
