@@ -1,3 +1,8 @@
+.range-zoom {
+  width: 100%;
+  height: 100%;
+}
+
 .range {
   background: var(--left), var(--right);
   background-blend-mode: difference;
