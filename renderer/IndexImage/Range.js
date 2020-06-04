@@ -34,7 +34,7 @@ function Range({ left, right }) {
       const startY = -((box.height / 2) - (win.height / 2));
 
       panzoom = Panzoom(zoom.current, {
-        maxScale: 1,
+        maxScale: 4,
         startScale,
         startX,
         startY
