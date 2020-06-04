@@ -1,9 +1,10 @@
 const { html, useState, useEffect } = require('../tools/ui.js');
 const { tolerance } = require('../tools/image-diff.js');
 
+const Toolbar = require('../Toolbar/Toolbar.js');
 const Image = require('./Image.js');
 
-function Tolerance({ left, right, cache, setCache }) {
+function Tolerance({ left, right, buttons, cache, setCache }) {
   const [data, setData] = useState({ tolerance: null, left: null, right: null, imageUrl: null });
 
   useEffect(() => {
@@ -27,9 +28,15 @@ function Tolerance({ left, right, cache, setCache }) {
     });
   }, [cache.tolerance]);
 
-  return data.imageUrl ? html`<div class="single img">
-    <${Image} title="Tolerance" filepath=${data.imageUrl} />
-  </div>` : html`<div>Loading...</div>`;
+  return html`
+    <${Toolbar}>${buttons}<//>
+    <div class=main>
+      ${data.imageUrl ? html`
+        <div class="single img">
+          <${Image} title="Tolerance" filepath=${data.imageUrl} />
+        </div>` : html`<div>Loading...</div>`}
+    </div>
+  `;
 }
 
 module.exports = Tolerance;

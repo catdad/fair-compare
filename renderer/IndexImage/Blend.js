@@ -1,16 +1,16 @@
 const Panzoom = require('@panzoom/panzoom');
-
-const { html, css, useEffect, useRef } = require('../tools/ui.js');
+const { html, css, useEffect, useRef, useState } = require('../tools/ui.js');
 const { info } = require('../tools/image-diff.js');
 const Toolbar = require('../Toolbar/Toolbar.js');
 
-css('./Range.css');
+css('./Blend.css');
 
 const setVar = (elem, name, value) => elem.style.setProperty(`--${name}`, value);
 
-function Range({ left, right, buttons }) {
+function Blend({ left, right, buttons }) {
   const zoom = useRef(null);
   const view = useRef(null);
+  const [opacity, setOpacity] = useState(0.5);
 
   useEffect(() => {
     let panzoom;
@@ -56,14 +56,27 @@ function Range({ left, right, buttons }) {
     };
   }, [left, right]);
 
+  useEffect(() => {
+    setVar(view.current, 'opacity', opacity);
+  }, [opacity]);
+
+  const toggleOpacity = () => setOpacity(opacity > 0 ? 0 : 1);
+  const applyOpacity = ({ target: { value } }) => setOpacity(value);
+
+  const viewButtons = [...buttons];
+
+  viewButtons.push(html`<span> | </span>`);
+  viewButtons.push(html`<button onclick=${toggleOpacity}>Toggle</button>`);
+  viewButtons.push(html`<input type=range min=0 max=1 value=${opacity} step=0.01 oninput=${applyOpacity} />`);
+
   return html`
-    <${Toolbar}>${buttons}<//>
+    <${Toolbar}>${viewButtons}<//>
     <div class=main>
-      <div class="range-zoom" ref=${zoom}>
-        <div class="range" ref=${view}></div>
+      <div class="blend-zoom" ref=${zoom}>
+        <div class="blend" ref=${view}></div>
       </div>
     </div>
   `;
 }
 
-module.exports = Range;
+module.exports = Blend;
