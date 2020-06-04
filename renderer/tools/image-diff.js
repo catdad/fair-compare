@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 const pixelmatch = require('pixelmatch');
 
 const loadUrl = (img, url) => {
