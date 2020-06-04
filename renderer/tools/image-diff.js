@@ -28,7 +28,7 @@ const readImageData = async (filepath) => {
 };
 
 const getCanvas = (width, height) => {
-  const canvas = document.createElement('canvas');
+  const canvas = new OffscreenCanvas(width, height);
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext('2d');
@@ -36,7 +36,7 @@ const getCanvas = (width, height) => {
   return { canvas, ctx };
 };
 
-const computeTolerance = async (left, right) => {
+const computeTolerance = async ({ left, right, threshold }) => {
   console.time('read');
   const [leftData, rightData] = await Promise.all([
     readImageData(left),
@@ -50,7 +50,7 @@ const computeTolerance = async (left, right) => {
   console.timeEnd('diff-create');
 
   console.time('diff');
-  const pixels = pixelmatch(leftData.data, rightData.data, resultData.data, leftData.width, leftData.height, { threshold: 0.05 });
+  const pixels = pixelmatch(leftData.data, rightData.data, resultData.data, leftData.width, leftData.height, { threshold });
   console.timeEnd('diff');
 
   console.time('diff-put');
@@ -60,14 +60,18 @@ const computeTolerance = async (left, right) => {
   return { leftData, rightData, pixels, resultData, resultCanvas: canvas };
 };
 
-module.exports = async ({ left, right, threshold = 0.05, url = true, pixels = true }) => {
-  const result = await computeTolerance(left, right);
+module.exports = async ({ left, right, threshold = 0.05, url = true }) => {
+  console.time('tolerance');
+  const result = await computeTolerance({ left, right, threshold });
 
   if (url) {
     console.time('diff-url');
-    result.imageUrl = result.resultCanvas.toDataURL();
+    const blob = await result.resultCanvas.convertToBlob({ type: 'image/jpeg', quality: 1 });
+    const imageUrl = `data:image/jpeg;base64,${Buffer.from(await blob.arrayBuffer()).toString('base64')}`;
+    result.imageUrl = imageUrl;
     console.timeEnd('diff-url');
   }
 
+  console.timeEnd('tolerance');
   return result;
 };
