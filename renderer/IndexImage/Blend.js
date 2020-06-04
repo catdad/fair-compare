@@ -61,9 +61,7 @@ function Blend({ left, right, buttons }) {
   }, [opacity]);
 
   const toggleOpacity = () => setOpacity(opacity > 0 ? 0 : 1);
-  const applyOpacity = (ev) => {
-    setOpacity(ev.target.value);
-  };
+  const applyOpacity = ({ target: { value } }) => setOpacity(value);
 
   const viewButtons = [...buttons];
 
