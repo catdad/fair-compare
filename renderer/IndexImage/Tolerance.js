@@ -6,6 +6,7 @@ const Image = require('./Image.js');
 
 function Tolerance({ left, right, buttons, cache, setCache }) {
   const [data, setData] = useState({ tolerance: null, left: null, right: null, imageUrl: null });
+  const [threshold, setThreshold] = useState(0.05);
 
   useEffect(() => {
     if (cache.tolerance) {
@@ -13,12 +14,13 @@ function Tolerance({ left, right, buttons, cache, setCache }) {
       return;
     }
 
-    tolerance({ left, right }).then(result => {
+    tolerance({ left, right, threshold }).then(result => {
       const data = {
         left: result.leftData,
         right: result.rightData,
         tolerance: result.resultData,
-        imageUrl: result.imageUrl
+        imageUrl: result.imageUrl,
+        threshold
       };
 
       setData(data);
