@@ -56,7 +56,7 @@ function Range({ left, right }) {
   }, [left, right]);
 
   return html`<div class="range-zoom" ref=${zoom}>
-    <div class="range" ref=${view} />
+    <div class="range" ref=${view}></div>
   </div>`;
 }
 

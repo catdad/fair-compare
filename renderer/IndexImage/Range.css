@@ -4,8 +4,19 @@
 }
 
 .range {
-  background: var(--left), var(--right);
-  background-blend-mode: difference;
+  position: relative;
   width: var(--width, '100%');
   height: var(--height, '100%');
+  background: #deaf03;
+}
+
+.range:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--left), var(--right);
+  background-blend-mode: difference;
+  mix-blend-mode: luminosity;
+  filter: grayscale(100%);
 }
