@@ -10,18 +10,24 @@ const loadUrl = (img, url) => {
   });
 };
 
-const readImageData = async (filepath) => {
-  console.time('draw');
+const loadImage = async (filepath) => {
   const img = new window.Image();
   await loadUrl(img, filepath);
-  const { naturalWidth: tw, naturalHeight: th } = img;
-  const { ctx } = getCanvas(tw, th);
+  const { naturalWidth: width, naturalHeight: height } = img;
 
-  ctx.drawImage(img, 0, 0, tw, th);
+  return { img, width, height };
+};
+
+const readImageData = async (filepath) => {
+  console.time('draw');
+  const { img, width, height } = await loadImage(filepath);
+  const { ctx } = getCanvas(width, height);
+
+  ctx.drawImage(img, 0, 0, width, height);
   console.timeEnd('draw');
 
   console.time('draw-data');
-  const data = ctx.getImageData(0, 0, tw, th);
+  const data = ctx.getImageData(0, 0, width, height);
   console.timeEnd('draw-data');
 
   return data;
@@ -60,7 +66,7 @@ const computeTolerance = async ({ left, right, threshold }) => {
   return { leftData, rightData, pixels, resultData, resultCanvas: canvas };
 };
 
-module.exports = async ({ left, right, threshold = 0.05, url = true }) => {
+const tolerance = async ({ left, right, threshold = 0.05, url = true }) => {
   console.time('tolerance');
   const result = await computeTolerance({ left, right, threshold });
 
@@ -75,3 +81,10 @@ module.exports = async ({ left, right, threshold = 0.05, url = true }) => {
   console.timeEnd('tolerance');
   return result;
 };
+
+const info = async (imageFile) => {
+  const { width, height } = await loadImage(imageFile);
+  return { width, height };
+};
+
+module.exports = { info, tolerance };

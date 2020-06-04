@@ -5,6 +5,7 @@ css('./IndexImage.css');
 
 const Image = require('./Image.js');
 const Tolerance = require('./Tolerance.js');
+const Range = require('./Range.js');
 
 const MODE = {
   tolerance: 'tolerance',
@@ -39,6 +40,12 @@ function App({ left, right }) {
       `);
       break;
     case MODE.range:
+      dom.push(html`
+        <div class=main>
+          <${Range} left=${left} right=${right} cache=${cache.current} setCache=${setCache} />
+        </div>
+      `);
+      break;
     case MODE.blend:
       dom.push(html`<div>Not yet implemented.</div>`);
       break;
