@@ -10,7 +10,7 @@ const setVar = (elem, name, value) => elem.style.setProperty(`--${name}`, value)
 function Blend({ left, right, buttons }) {
   const zoom = useRef(null);
   const view = useRef(null);
-  const [opacity, setOpacity] = useState(0);
+  const [opacity, setOpacity] = useState(0.5);
 
   useEffect(() => {
     let panzoom;
@@ -61,11 +61,15 @@ function Blend({ left, right, buttons }) {
   }, [opacity]);
 
   const toggleOpacity = () => setOpacity(opacity > 0 ? 0 : 1);
+  const applyOpacity = (ev) => {
+    setOpacity(ev.target.value);
+  };
 
   const viewButtons = [...buttons];
 
   viewButtons.push(html`<span> | </span>`);
   viewButtons.push(html`<button onclick=${toggleOpacity}>Toggle</button>`);
+  viewButtons.push(html`<input type=range min=0 max=1 value=${opacity} step=0.01 oninput=${applyOpacity} />`);
 
   return html`
     <${Toolbar}>${viewButtons}<//>
