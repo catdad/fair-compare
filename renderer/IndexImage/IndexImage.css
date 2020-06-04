@@ -1,22 +1,24 @@
 .main {
   display: flex;
-  min-height: 100vh;
+  height: calc(100vh - var(--toolbar-height, 0px));
 }
 
-.file {
+.img {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  max-width: 50%;
   min-height: 100%;
 }
 
-.file:first-of-type {
-  /* TODO this makes one side smaller than the other by 1 pixel */
-  border-right: 1px solid var(--color-border);
+.single {
+  max-width: 100%;
 }
 
-.file > div {
+.double {
+  max-width: 50%;
+}
+
+.img > div {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,7 +26,7 @@
   height: 100%;
 }
 
-.file img {
-  max-height: 100%;
-  max-width: 100%;
+.img img {
+  max-height: 98%;
+  max-width: 98%;
 }
