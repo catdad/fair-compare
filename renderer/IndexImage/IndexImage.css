@@ -18,11 +18,6 @@
   max-width: 50%;
 }
 
-.img:first-of-type {
-  /* TODO this makes one side smaller than the other by 1 pixel */
-  border-right: 1px solid var(--color-border);
-}
-
 .img > div {
   display: flex;
   align-items: center;
@@ -32,6 +27,6 @@
 }
 
 .img img {
-  max-height: 100%;
-  max-width: 100%;
+  max-height: 98%;
+  max-width: 98%;
 }
