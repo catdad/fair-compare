@@ -30,8 +30,6 @@ function App({ left, right }) {
     <//>`
   ];
 
-  console.log('mode:', mode);
-
   switch (mode) {
     case MODE.tolerance:
       dom.push(html`
