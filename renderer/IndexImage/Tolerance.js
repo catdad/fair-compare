@@ -1,5 +1,5 @@
 const { html, useState, useEffect } = require('../tools/ui.js');
-const imageDiff = require('../tools/image-diff.js');
+const { tolerance } = require('../tools/image-diff.js');
 
 const Image = require('./Image.js');
 
@@ -12,7 +12,7 @@ function Tolerance({ left, right, cache, setCache }) {
       return;
     }
 
-    imageDiff({ left, right }).then(result => {
+    tolerance({ left, right }).then(result => {
       const data = {
         left: result.leftData,
         right: result.rightData,

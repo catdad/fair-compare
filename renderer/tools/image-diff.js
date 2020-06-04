@@ -60,7 +60,7 @@ const computeTolerance = async ({ left, right, threshold }) => {
   return { leftData, rightData, pixels, resultData, resultCanvas: canvas };
 };
 
-module.exports = async ({ left, right, threshold = 0.05, url = true }) => {
+const tolerance = async ({ left, right, threshold = 0.05, url = true }) => {
   console.time('tolerance');
   const result = await computeTolerance({ left, right, threshold });
 
@@ -75,3 +75,5 @@ module.exports = async ({ left, right, threshold = 0.05, url = true }) => {
   console.timeEnd('tolerance');
   return result;
 };
+
+module.exports = { tolerance };
