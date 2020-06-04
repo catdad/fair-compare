@@ -1,4 +1,5 @@
-const { html, css, useCallback, useState, useRef } = require('../tools/ui.js');
+const { html, css, useCallback, useEffect, useState, useRef } = require('../tools/ui.js');
+const config = require('../../lib/config.js');
 const Toolbar = require('../Toolbar/Toolbar.js');
 
 css('./IndexImage.css');
@@ -16,18 +17,31 @@ const MODE = {
 };
 
 function App({ left, right }) {
-  const [mode, setMode] = useState(MODE.blend);
+  const [mode, setMode] = useState(null);
   const cache = useRef({});
+
+  useEffect(() => {
+    config.getProp('image-mode').then(val => {
+      setMode(MODE[val] || MODE.tolerance);
+    }).catch(err => {
+      console.error(err);
+    });
+  }, []);
 
   const setCache = useCallback((key, value) => {
     cache.current[key] = value;
   }, [cache.current]);
 
+  const changeMode = newMode => () => {
+    setMode(newMode);
+    config.setProp('image-mode', newMode);
+  };
+
   const buttons = [
-    html`<button onClick=${() => setMode(MODE.tolerance)}>Tolerance</button>`,
-    html`<button onClick=${() => setMode(MODE.range)}>Range</button>`,
-    html`<button onClick=${() => setMode(MODE.blend)}>Blend</button>`,
-    html`<button onClick=${() => setMode(MODE.side)}>Side by Side</button>`,
+    html`<button onClick=${changeMode(MODE.tolerance)}>Tolerance</button>`,
+    html`<button onClick=${changeMode(MODE.range)}>Range</button>`,
+    html`<button onClick=${changeMode(MODE.blend)}>Blend</button>`,
+    html`<button onClick=${changeMode(MODE.side)}>Side by Side</button>`,
   ];
 
   switch (mode) {
@@ -52,6 +66,8 @@ function App({ left, right }) {
         </div>
       `;
   }
+
+  return html``;
 }
 
 module.exports = App;
