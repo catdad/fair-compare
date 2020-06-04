@@ -1,0 +1,20 @@
+.blend-zoom {
+  width: 100%;
+  height: 100%;
+}
+
+.blend {
+  position: relative;
+  width: var(--width, '100%');
+  height: var(--height, '100%');
+  background: var(--left);
+}
+
+.blend:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--right);
+  opacity: var(--opacity);
+}
