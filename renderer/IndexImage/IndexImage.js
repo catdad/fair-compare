@@ -10,7 +10,7 @@ const MODE = {
   tolerance: 'tolerance',
   range: 'range',
   blend: 'blend',
-  side: 'blend'
+  side: 'side'
 };
 
 function App({ left, right }) {
@@ -30,6 +30,8 @@ function App({ left, right }) {
     <//>`
   ];
 
+  console.log('mode:', mode);
+
   switch (mode) {
     case MODE.tolerance:
       dom.push(html`
@@ -38,13 +40,18 @@ function App({ left, right }) {
         </div>
       `);
       break;
-    default:
+    case MODE.range:
+    case MODE.blend:
+      dom.push(html`<div>Not yet implemented.</div>`);
+      break;
+    case MODE.side:
       dom.push(html`
         <div class=main>
           <div class="double img"><${Image} title=${left} filepath=${left} /></div>
           <div class="double img"><${Image} title=${right} filepath=${right} /></div>
         </div>
       `);
+      break;
   }
 
   return dom;
