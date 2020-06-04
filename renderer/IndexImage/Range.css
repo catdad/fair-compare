@@ -1,0 +1,6 @@
+.range {
+  background: var(--left), var(--right);
+  background-blend-mode: difference;
+  width: var(--width, '100%');
+  height: var(--height, '100%');
+}
