@@ -12,10 +12,7 @@ function Tolerance({ left, right, cache, setCache }) {
       return;
     }
 
-    console.time('tolerance');
     imageDiff({ left, right }).then(result => {
-      console.timeEnd('tolerance');
-
       const data = {
         left: result.leftData,
         right: result.rightData,

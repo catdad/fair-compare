@@ -19,7 +19,6 @@ function App({ left, right }) {
 
   const setCache = useCallback((key, value) => {
     cache.current[key] = value;
-    console.log('cached', key, value);
   }, [cache.current]);
 
   const dom = [
