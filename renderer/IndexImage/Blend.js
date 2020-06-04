@@ -60,9 +60,15 @@ function Blend({ left, right, buttons }) {
     setVar(view.current, 'opacity', opacity);
   }, [opacity]);
 
+  const toggleOpacity = () => setOpacity(opacity > 0 ? 0 : 1);
+
+  const viewButtons = [...buttons];
+
+  viewButtons.push(html`<span> | </span>`);
+  viewButtons.push(html`<button onclick=${toggleOpacity}>Toggle</button>`);
 
   return html`
-    <${Toolbar}>${buttons}<//>
+    <${Toolbar}>${viewButtons}<//>
     <div class=main>
       <div class="blend-zoom" ref=${zoom}>
         <div class="blend" ref=${view}></div>
