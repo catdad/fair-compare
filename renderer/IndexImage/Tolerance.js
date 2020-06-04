@@ -4,13 +4,15 @@ const { tolerance } = require('../tools/image-diff.js');
 const Toolbar = require('../Toolbar/Toolbar.js');
 const Image = require('./Image.js');
 
-function Tolerance({ left, right, buttons, cache, setCache }) {
+const KEY = 'tolerance';
+
+function Tolerance({ left, right, buttons, cache }) {
   const [data, setData] = useState({ tolerance: null, left: null, right: null, imageUrl: null });
   const [threshold, setThreshold] = useState(0.05);
 
   useEffect(() => {
-    if (cache.tolerance) {
-      setData(cache.tolerance);
+    if (cache.has(KEY)) {
+      setData(cache.get(KEY));
       return;
     }
 
@@ -24,7 +26,7 @@ function Tolerance({ left, right, buttons, cache, setCache }) {
       };
 
       setData(data);
-      setCache('tolerance', data);
+      cache.set(KEY, data);
     }).catch(err => {
       console.error(err);
     });

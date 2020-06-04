@@ -1,4 +1,4 @@
-const { html, css, useCallback, useEffect, useState, useRef } = require('../tools/ui.js');
+const { html, css, useEffect, useState, useRef } = require('../tools/ui.js');
 const config = require('../../lib/config.js');
 const Toolbar = require('../Toolbar/Toolbar.js');
 
@@ -18,7 +18,7 @@ const MODE = {
 
 function App({ left, right }) {
   const [mode, setMode] = useState(null);
-  const cache = useRef({});
+  const cache = useRef(new Map());
 
   useEffect(() => {
     config.getProp('image-mode').then(val => {
@@ -27,10 +27,6 @@ function App({ left, right }) {
       console.error(err);
     });
   }, []);
-
-  const setCache = useCallback((key, value) => {
-    cache.current[key] = value;
-  }, [cache.current]);
 
   const changeMode = newMode => () => {
     setMode(newMode);
@@ -47,15 +43,15 @@ function App({ left, right }) {
   switch (mode) {
     case MODE.tolerance:
       return html`
-        <${Tolerance} buttons=${buttons} left=${left} right=${right} cache=${cache.current} setCache=${setCache} />
+        <${Tolerance} buttons=${buttons} left=${left} right=${right} cache=${cache.current} />
       `;
     case MODE.range:
       return html`
-        <${Range} buttons=${buttons} left=${left} right=${right} cache=${cache.current} setCache=${setCache} />
+        <${Range} buttons=${buttons} left=${left} right=${right} cache=${cache.current} />
       `;
     case MODE.blend:
       return html`
-        <${Blend} buttons=${buttons} left=${left} right=${right} cache=${cache.current} setCache=${setCache} />
+        <${Blend} buttons=${buttons} left=${left} right=${right} cache=${cache.current} />
       `;
     case MODE.side:
       return html`
