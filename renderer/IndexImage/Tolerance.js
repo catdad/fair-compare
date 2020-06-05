@@ -1,23 +1,61 @@
-const { html, useState, useEffect } = require('../tools/ui.js');
+const Panzoom = require('@panzoom/panzoom');
+const { html, css, useCallback, useState, useEffect, useRef } = require('../tools/ui.js');
 const { tolerance } = require('../tools/image-diff.js');
+
+css('./Tolerance.css');
 
 const Toolbar = require('../Toolbar/Toolbar.js');
 const Image = require('./Image.js');
 
 const KEY = 'tolerance';
 
+const setVar = (elem, name, value) => elem.style.setProperty(`--${name}`, value);
+
 function Tolerance({ left, right, buttons, cache }) {
-  const [data, setData] = useState({ tolerance: null, left: null, right: null, imageUrl: null });
+  const zoom = useRef(null);
+  const view = useRef(null);
+
   const [threshold, setThreshold] = useState(0.05);
 
+  const applyCache = useCallback(() => {
+    const data = cache.get(KEY);
+    setVar(view.current, 'width', `${data.width}px`);
+    setVar(view.current, 'height', `${data.height}px`);
+    setVar(view.current, 'base', `url(${JSON.stringify(left)})`);
+    setVar(view.current, 'tol', `url("${data.imageUrl}")`);
+
+    const box = view.current.getBoundingClientRect();
+    const win = zoom.current.getBoundingClientRect();
+
+    const startScale = Math.min(win.width / box.width, win.height / box.height, 1) * 0.98;
+    const startX = -((box.width / 2) - (win.width / 2));
+    const startY = -((box.height / 2) - (win.height / 2));
+
+    const panzoom = Panzoom(zoom.current, {
+      maxScale: 4,
+      startScale,
+      startX,
+      startY
+    });
+
+    zoom.current.addEventListener('wheel', panzoom.zoomWithWheel);
+
+    return panzoom;
+  }, [cache.get(KEY)]);
+
   useEffect(() => {
+    let panzoom;
+    let destroyed = false;
+
     if (cache.has(KEY)) {
-      setData(cache.get(KEY));
+      panzoom = applyCache();
       return;
     }
 
     tolerance({ left, right, threshold }).then(result => {
       const data = {
+        width: result.width,
+        height: result.height,
         left: result.leftData,
         right: result.rightData,
         tolerance: result.resultData,
@@ -25,20 +63,33 @@ function Tolerance({ left, right, buttons, cache }) {
         threshold
       };
 
-      setData(data);
       cache.set(KEY, data);
+
+      if (destroyed) {
+        return;
+      }
+
+      panzoom = applyCache();
     }).catch(err => {
       console.error(err);
     });
-  }, [cache.tolerance]);
+
+    return () => {
+      destroyed = true;
+
+      if (panzoom) {
+        zoom.current.removeEventListener('whee', panzoom.zoomWithWheel);
+        panzoom.destroy();
+      }
+    };
+  }, [left, right]);
 
   return html`
     <${Toolbar}>${buttons}<//>
     <div class=main>
-      ${data.imageUrl ? html`
-        <div class="single img">
-          <${Image} title="Tolerance" filepath=${data.imageUrl} />
-        </div>` : html`<div>Loading...</div>`}
+      <div class="tolerance-zoom" ref=${zoom}>
+        <div class="tolerance" ref=${view}></div>
+      </div>
     </div>
   `;
 }

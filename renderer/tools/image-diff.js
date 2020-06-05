@@ -19,16 +19,16 @@ const loadImage = async (filepath) => {
 };
 
 const readImageData = async (filepath) => {
-  console.time('draw');
+  console.time(`draw ${filepath}`);
   const { img, width, height } = await loadImage(filepath);
   const { ctx } = getCanvas(width, height);
 
   ctx.drawImage(img, 0, 0, width, height);
-  console.timeEnd('draw');
+  console.timeEnd(`draw ${filepath}`);
 
-  console.time('draw-data');
+  console.time(`draw-data ${filepath}`);
   const data = ctx.getImageData(0, 0, width, height);
-  console.timeEnd('draw-data');
+  console.timeEnd(`draw-data ${filepath}`);
 
   return data;
 };
@@ -50,20 +50,25 @@ const computeTolerance = async ({ left, right, threshold }) => {
   ]);
   console.timeEnd('read');
 
+  const { width, height } = leftData;
+
   console.time('diff-create');
-  const { canvas, ctx } = getCanvas(leftData.width, leftData.height);
-  const resultData = ctx.createImageData(leftData.width, leftData.height);
+  const { canvas, ctx } = getCanvas(width, height);
+  const resultData = ctx.createImageData(width, height);
   console.timeEnd('diff-create');
 
   console.time('diff');
-  const pixels = pixelmatch(leftData.data, rightData.data, resultData.data, leftData.width, leftData.height, { threshold });
+  const pixels = pixelmatch(leftData.data, rightData.data, resultData.data, width, height, {
+    threshold,
+    diffMask: true
+  });
   console.timeEnd('diff');
 
   console.time('diff-put');
   ctx.putImageData(resultData, 0, 0);
   console.timeEnd('diff-put');
 
-  return { leftData, rightData, pixels, resultData, resultCanvas: canvas };
+  return { leftData, rightData, pixels, resultData, resultCanvas: canvas, width, height };
 };
 
 const tolerance = async ({ left, right, threshold = 0.05, url = true }) => {
@@ -72,8 +77,8 @@ const tolerance = async ({ left, right, threshold = 0.05, url = true }) => {
 
   if (url) {
     console.time('diff-url');
-    const blob = await result.resultCanvas.convertToBlob({ type: 'image/jpeg', quality: 1 });
-    const imageUrl = `data:image/jpeg;base64,${Buffer.from(await blob.arrayBuffer()).toString('base64')}`;
+    const blob = await result.resultCanvas.convertToBlob({ type: 'image/png' });
+    const imageUrl = `data:image/png;base64,${Buffer.from(await blob.arrayBuffer()).toString('base64')}`;
     result.imageUrl = imageUrl;
     console.timeEnd('diff-url');
   }
