@@ -10,10 +10,13 @@ const KEY = 'tolerance';
 
 const setVar = (elem, name, value) => elem.style.setProperty(`--${name}`, value);
 
+const toBackground = url => `url(${JSON.stringify(url)})`
+
 function Tolerance({ left, right, buttons, cache }) {
   const zoom = useRef(null);
   const view = useRef(null);
   const renderPromise = useRef(null);
+  const [background, setBackground] = useState(toBackground(left));
 
   const [threshold, setThreshold] = useState(0.05);
 
@@ -21,7 +24,7 @@ function Tolerance({ left, right, buttons, cache }) {
     const data = cache.get(KEY);
     setVar(view.current, 'width', `${data.width}px`);
     setVar(view.current, 'height', `${data.height}px`);
-    setVar(view.current, 'base', `url(${JSON.stringify(left)})`);
+    setVar(view.current, 'background', background);
 
     view.current.width = data.width;
     view.current.height = data.height;
@@ -35,6 +38,10 @@ function Tolerance({ left, right, buttons, cache }) {
     const startScale = Math.min(win.width / box.width, win.height / box.height, 1) * 0.98;
     const startX = -((box.width / 2) - (win.width / 2));
     const startY = -((box.height / 2) - (win.height / 2));
+
+    if (zoom.current.__x_panzoom) {
+      return zoom.current.__x_panzoom;
+    }
 
     const panzoom = Panzoom(zoom.current, {
       maxScale: 4,
@@ -55,13 +62,12 @@ function Tolerance({ left, right, buttons, cache }) {
   };
 
   useEffect(() => {
-    let panzoom;
     let destroyed = false;
     const data = cache.get(KEY);
 
     if (data && data.threshold === threshold) {
       // we have a valid cache, reuse it directly
-      panzoom = applyCache();
+      zoom.current.__x_panzoom = applyCache();
       return;
     }
 
@@ -87,22 +93,17 @@ function Tolerance({ left, right, buttons, cache }) {
         return;
       }
 
-      panzoom = applyCache();
+      zoom.current.__x_panzoom = applyCache();
     }).catch(err => {
       console.error('TOLERANCE ERROR:', err);
     });
 
     return () => {
       destroyed = true;
-
-      if (panzoom) {
-        panzoom.__x_destroy();
-      }
     };
-  }, [left, right, threshold]);
+  }, [left, right, threshold, background]);
 
   const applyThreshold = ({ target: { value } }) => {
-
     const setter = '__threshold_setter';
     const final = '__theshold_final';
 
@@ -122,11 +123,21 @@ function Tolerance({ left, right, buttons, cache }) {
     }
   };
 
+  const toggleBackground = () => {
+    if (background === '#000') {
+      setBackground(toBackground(left));
+    } else {
+      setBackground('#000');
+    }
+  };
+
   const viewButtons = [...buttons];
 
   viewButtons.push(html`<span> | </span>`);
   viewButtons.push(html`<input type=range min=0 max=1 value=${threshold} step=0.01 oninput=${applyThreshold} />`);
   viewButtons.push(html`<span>${threshold}</span>`);
+  viewButtons.push(html`<span> | </span>`);
+  viewButtons.push(html`<button onclick=${toggleBackground}>Toggle Background</button>`);
 
   return html`
     <${Toolbar}>${viewButtons}<//>
