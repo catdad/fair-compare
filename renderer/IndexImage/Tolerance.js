@@ -14,11 +14,11 @@ const setVar = (elem, name, value) => elem.style.setProperty(`--${name}`, value)
 const toBackground = url => `url(${JSON.stringify(url)})`;
 
 function Tolerance({ left, right, buttons }) {
+  const cache = useContext(Cache);
   const view = useRef(null);
   const renderPromise = useRef(null);
   const [background, setBackground] = useState(toBackground(left));
   const [zoomElem, setZoomElem] = useState(null);
-  const cache = useContext(Cache);
 
   const [threshold, setThreshold] = useState(0.05);
 
