@@ -1,4 +1,5 @@
-const { html, css, useEffect, useState, useRef } = require('../tools/ui.js');
+const { html, css, useEffect, useState } = require('../tools/ui.js');
+const { withCache } = require('../tools/cache.js');
 const config = require('../../lib/config.js');
 const Toolbar = require('../Toolbar/Toolbar.js');
 
@@ -18,7 +19,6 @@ const MODE = {
 
 function App({ left, right }) {
   const [mode, setMode] = useState(null);
-  const cache = useRef(new Map());
 
   useEffect(() => {
     config.getProp('image-mode').then(val => {
@@ -40,19 +40,15 @@ function App({ left, right }) {
     html`<button onClick=${changeMode(MODE.side)}>Side by Side</button>`,
   ];
 
+  const renderView = View => html`<${View} buttons=${buttons} left=${left} right=${right} />`;
+
   switch (mode) {
     case MODE.tolerance:
-      return html`
-        <${Tolerance} buttons=${buttons} left=${left} right=${right} cache=${cache.current} />
-      `;
+      return renderView(Tolerance);
     case MODE.range:
-      return html`
-        <${Range} buttons=${buttons} left=${left} right=${right} cache=${cache.current} />
-      `;
+      return renderView(Range);
     case MODE.blend:
-      return html`
-        <${Blend} buttons=${buttons} left=${left} right=${right} cache=${cache.current} />
-      `;
+      return renderView(Blend);
     case MODE.side:
       return html`
         <${Toolbar}>${buttons}<//>
@@ -66,4 +62,4 @@ function App({ left, right }) {
   return html``;
 }
 
-module.exports = App;
+module.exports = withCache(App);

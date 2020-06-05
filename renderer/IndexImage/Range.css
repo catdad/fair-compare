@@ -1,8 +1,3 @@
-.range-zoom {
-  width: 100%;
-  height: 100%;
-}
-
 .range {
   position: relative;
   width: var(--width, '100%');
