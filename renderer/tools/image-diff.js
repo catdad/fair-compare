@@ -58,7 +58,10 @@ const computeTolerance = async ({ left, right, threshold }) => {
   console.timeEnd('diff-create');
 
   console.time('diff');
-  const pixels = pixelmatch(leftData.data, rightData.data, resultData.data, width, height, { threshold });
+  const pixels = pixelmatch(leftData.data, rightData.data, resultData.data, width, height, {
+    threshold,
+    diffMask: true
+  });
   console.timeEnd('diff');
 
   console.time('diff-put');
@@ -74,8 +77,8 @@ const tolerance = async ({ left, right, threshold = 0.05, url = true }) => {
 
   if (url) {
     console.time('diff-url');
-    const blob = await result.resultCanvas.convertToBlob({ type: 'image/jpeg', quality: 1 });
-    const imageUrl = `data:image/jpeg;base64,${Buffer.from(await blob.arrayBuffer()).toString('base64')}`;
+    const blob = await result.resultCanvas.convertToBlob({ type: 'image/png' });
+    const imageUrl = `data:image/png;base64,${Buffer.from(await blob.arrayBuffer()).toString('base64')}`;
     result.imageUrl = imageUrl;
     console.timeEnd('diff-url');
   }
