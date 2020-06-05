@@ -1,19 +1,18 @@
-const Panzoom = require('@panzoom/panzoom');
 const { html, css, useEffect, useRef, useState } = require('../tools/ui.js');
 const { info } = require('../tools/image-diff.js');
 const Toolbar = require('../Toolbar/Toolbar.js');
+const Panzoom = require('./Panzoom.js');
 
 css('./Blend.css');
 
 const setVar = (elem, name, value) => elem.style.setProperty(`--${name}`, value);
 
 function Blend({ left, right, buttons }) {
-  const zoom = useRef(null);
+  const [zoomElem, setZoomElem] = useState(null);
   const view = useRef(null);
   const [opacity, setOpacity] = useState(0.5);
 
   useEffect(() => {
-    let panzoom;
     let destroyed = false;
 
     info(left).then(({ width, height }) => {
@@ -27,32 +26,15 @@ function Blend({ left, right, buttons }) {
       setVar(view.current, 'left', `url(${JSON.stringify(left)})`);
       setVar(view.current, 'right', `url(${JSON.stringify(right)})`);
 
-      const box = view.current.getBoundingClientRect();
-      const win = zoom.current.getBoundingClientRect();
-
-      const startScale = Math.min(win.width / box.width, win.height / box.height, 1) * 0.98;
-      const startX = -((box.width / 2) - (win.width / 2));
-      const startY = -((box.height / 2) - (win.height / 2));
-
-      panzoom = Panzoom(zoom.current, {
-        maxScale: 4,
-        startScale,
-        startX,
-        startY
-      });
-
-      zoom.current.addEventListener('wheel', panzoom.zoomWithWheel);
+      if (zoomElem !== view.current) {
+        setZoomElem(view.current);
+      }
     }).catch(err => {
       console.error(err);
     });
 
     return () => {
       destroyed = true;
-
-      if (panzoom) {
-        zoom.current.removeEventListener('whee', panzoom.zoomWithWheel);
-        panzoom.destroy();
-      }
     };
   }, [left, right]);
 
@@ -72,9 +54,9 @@ function Blend({ left, right, buttons }) {
   return html`
     <${Toolbar}>${viewButtons}<//>
     <div class=main>
-      <div class="blend-zoom" ref=${zoom}>
+      <${Panzoom} view=${zoomElem}>
         <div class="blend" ref=${view}></div>
-      </div>
+      <//>
     </div>
   `;
 }

@@ -30,3 +30,8 @@
   max-height: 98%;
   max-width: 98%;
 }
+
+.panzoom {
+  width: 100%;
+  height: 100%;
+}
