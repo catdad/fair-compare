@@ -19,16 +19,16 @@ const loadImage = async (filepath) => {
 };
 
 const readImageData = async (filepath) => {
-  console.time('draw');
+  console.time(`draw ${filepath}`);
   const { img, width, height } = await loadImage(filepath);
   const { ctx } = getCanvas(width, height);
 
   ctx.drawImage(img, 0, 0, width, height);
-  console.timeEnd('draw');
+  console.timeEnd(`draw ${filepath}`);
 
-  console.time('draw-data');
+  console.time(`draw-data ${filepath}`);
   const data = ctx.getImageData(0, 0, width, height);
-  console.timeEnd('draw-data');
+  console.timeEnd(`draw-data ${filepath}`);
 
   return data;
 };
