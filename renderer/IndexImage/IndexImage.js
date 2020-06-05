@@ -1,7 +1,7 @@
-const { html, css, useEffect, useState, useRef } = require('../tools/ui.js');
+const { html, css, useEffect, useState } = require('../tools/ui.js');
 const config = require('../../lib/config.js');
 const Toolbar = require('../Toolbar/Toolbar.js');
-const Cache = require('./cache.js');
+const { withCache } = require('./cache.js');
 
 css('./IndexImage.css');
 
@@ -19,7 +19,6 @@ const MODE = {
 
 function App({ left, right }) {
   const [mode, setMode] = useState(null);
-  const cache = useRef(new Map());
 
   useEffect(() => {
     config.getProp('image-mode').then(val => {
@@ -41,11 +40,7 @@ function App({ left, right }) {
     html`<button onClick=${changeMode(MODE.side)}>Side by Side</button>`,
   ];
 
-  const renderView = View => html`
-    <${Cache.Provider} value=${cache.current}>
-      <${View} buttons=${buttons} left=${left} right=${right} />
-    <//>
-  `;
+  const renderView = View => html`<${View} buttons=${buttons} left=${left} right=${right} />`;
 
   switch (mode) {
     case MODE.tolerance:
@@ -67,4 +62,4 @@ function App({ left, right }) {
   return html``;
 }
 
-module.exports = App;
+module.exports = withCache(App);
