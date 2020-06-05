@@ -1,6 +1,6 @@
 const Panzoom = require('@panzoom/panzoom');
 const { html, css, useState, useEffect, useRef } = require('../tools/ui.js');
-const { tolerance, computeToleranceUrl } = require('../tools/image-diff.js');
+const { tolerance, computeTolerance } = require('../tools/image-diff.js');
 
 css('./Tolerance.css');
 
@@ -22,7 +22,12 @@ function Tolerance({ left, right, buttons, cache }) {
     setVar(view.current, 'width', `${data.width}px`);
     setVar(view.current, 'height', `${data.height}px`);
     setVar(view.current, 'base', `url(${JSON.stringify(left)})`);
-    setVar(view.current, 'tol', `url("${data.imageUrl}")`);
+
+    view.current.width = data.width;
+    view.current.height = data.height;
+
+    const ctx = view.current.getContext('2d');
+    ctx.putImageData(new ImageData(data.output, data.width, data.height), 0, 0);
 
     const box = view.current.getBoundingClientRect();
     const win = zoom.current.getBoundingClientRect();
@@ -63,7 +68,7 @@ function Tolerance({ left, right, buttons, cache }) {
     renderPromise.current = (
       data && data.leftData && data.rightData ?
         // we have data cached but the threshold changed, so compute just that
-        computeToleranceUrl({ ...data, threshold }) :
+        computeTolerance({ ...data, threshold }) :
         // we need new data for everything
         tolerance({ left, right, threshold })
     ).then(result => {
@@ -72,7 +77,7 @@ function Tolerance({ left, right, buttons, cache }) {
         height: result.height,
         leftData: result.leftData,
         rightData: result.rightData,
-        imageUrl: result.imageUrl,
+        output: result.output,
         threshold
       };
 
@@ -127,7 +132,7 @@ function Tolerance({ left, right, buttons, cache }) {
     <${Toolbar}>${viewButtons}<//>
     <div class=main>
       <div class="tolerance-zoom" ref=${zoom}>
-        <div class="tolerance" ref=${view}></div>
+        <canvas class="tolerance" ref=${view}></canvas>
       </div>
     </div>
   `;

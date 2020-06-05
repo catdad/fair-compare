@@ -47,23 +47,18 @@ const computeTolerance = async ({ leftData, rightData, threshold }) => {
   const { width, height } = leftData;
 
   console.time('diff-create');
-  const { canvas, ctx } = getCanvas(width, height);
-  const resultData = ctx.createImageData(width, height);
+  const output = new Uint8ClampedArray(width * height * 4);
   console.timeEnd('diff-create');
 
   console.time('diff');
-  const pixels = pixelmatch(leftData.data, rightData.data, resultData.data, width, height, {
+  const pixels = pixelmatch(leftData.data, rightData.data, output, width, height, {
     threshold,
     diffMask: true
   });
   console.timeEnd('diff');
 
-  console.time('diff-put');
-  ctx.putImageData(resultData, 0, 0);
-  console.timeEnd('diff-put');
-
   console.timeEnd('tolerance-compute');
-  return { leftData, rightData, pixels, resultData, resultCanvas: canvas, width, height };
+  return { leftData, rightData, pixels, output, width, height };
 };
 
 const computeToleranceUrl = async (...args) => {
@@ -78,7 +73,7 @@ const computeToleranceUrl = async (...args) => {
   return result;
 };
 
-const tolerance = async ({ left, right, threshold = 0.05, url = true }) => {
+const tolerance = async ({ left, right, threshold = 0.05 }) => {
   console.time('tolerance');
   console.time('read');
   const [leftData, rightData] = await Promise.all([
@@ -87,9 +82,7 @@ const tolerance = async ({ left, right, threshold = 0.05, url = true }) => {
   ]);
   console.timeEnd('read');
 
-  const result = url ?
-    await computeToleranceUrl({ leftData, rightData, threshold }) :
-    await computeTolerance({ leftData, rightData, threshold });
+  const result = await computeTolerance({ leftData, rightData, threshold });
 
   console.timeEnd('tolerance');
   return result;
@@ -100,4 +93,4 @@ const info = async (imageFile) => {
   return { width, height };
 };
 
-module.exports = { info, tolerance, computeToleranceUrl };
+module.exports = { info, tolerance, computeTolerance };
