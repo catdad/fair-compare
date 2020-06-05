@@ -23,6 +23,24 @@ function Tolerance({ left, right, buttons, cache }) {
     setVar(view.current, 'height', `${data.height}px`);
     setVar(view.current, 'base', `url(${JSON.stringify(left)})`);
     setVar(view.current, 'tol', `url("${data.imageUrl}")`);
+
+    const box = view.current.getBoundingClientRect();
+    const win = zoom.current.getBoundingClientRect();
+
+    const startScale = Math.min(win.width / box.width, win.height / box.height, 1) * 0.98;
+    const startX = -((box.width / 2) - (win.width / 2));
+    const startY = -((box.height / 2) - (win.height / 2));
+
+    const panzoom = Panzoom(zoom.current, {
+      maxScale: 4,
+      startScale,
+      startX,
+      startY
+    });
+
+    zoom.current.addEventListener('wheel', panzoom.zoomWithWheel);
+
+    return panzoom;
   }, [cache.get(KEY)]);
 
   useEffect(() => {
@@ -30,7 +48,8 @@ function Tolerance({ left, right, buttons, cache }) {
     let destroyed = false;
 
     if (cache.has(KEY)) {
-      return void applyCache();
+      panzoom = applyCache();
+      return;
     }
 
     tolerance({ left, right, threshold }).then(result => {
@@ -50,23 +69,7 @@ function Tolerance({ left, right, buttons, cache }) {
         return;
       }
 
-      applyCache();
-
-      const box = view.current.getBoundingClientRect();
-      const win = zoom.current.getBoundingClientRect();
-
-      const startScale = Math.min(win.width / box.width, win.height / box.height, 1) * 0.98;
-      const startX = -((box.width / 2) - (win.width / 2));
-      const startY = -((box.height / 2) - (win.height / 2));
-
-      panzoom = Panzoom(zoom.current, {
-        maxScale: 4,
-        startScale,
-        startX,
-        startY
-      });
-
-      zoom.current.addEventListener('wheel', panzoom.zoomWithWheel);
+      panzoom = applyCache();
     }).catch(err => {
       console.error(err);
     });
@@ -79,7 +82,7 @@ function Tolerance({ left, right, buttons, cache }) {
         panzoom.destroy();
       }
     };
-  }, [cache.get(KEY)]);
+  }, [left, right]);
 
   return html`
     <${Toolbar}>${buttons}<//>
