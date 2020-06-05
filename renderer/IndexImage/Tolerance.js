@@ -10,7 +10,7 @@ const KEY = 'tolerance';
 
 const setVar = (elem, name, value) => elem.style.setProperty(`--${name}`, value);
 
-const toBackground = url => `url(${JSON.stringify(url)})`
+const toBackground = url => `url(${JSON.stringify(url)})`;
 
 function Tolerance({ left, right, buttons, cache }) {
   const zoom = useRef(null);
@@ -43,7 +43,7 @@ function Tolerance({ left, right, buttons, cache }) {
       return zoom.current.__x_panzoom;
     }
 
-    const panzoom = Panzoom(zoom.current, {
+    const panzoom = zoom.current.__x_panzoom = Panzoom(zoom.current, {
       maxScale: 4,
       startScale,
       startX,
@@ -57,8 +57,6 @@ function Tolerance({ left, right, buttons, cache }) {
       zoom.current.removeEventListener('wheel', panzoom.zoomWithWheel);
       panzoom.destroy();
     };
-
-    return panzoom;
   };
 
   useEffect(() => {
@@ -67,8 +65,7 @@ function Tolerance({ left, right, buttons, cache }) {
 
     if (data && data.threshold === threshold) {
       // we have a valid cache, reuse it directly
-      zoom.current.__x_panzoom = applyCache();
-      return;
+      return void applyCache();
     }
 
     renderPromise.current = (
@@ -93,7 +90,7 @@ function Tolerance({ left, right, buttons, cache }) {
         return;
       }
 
-      zoom.current.__x_panzoom = applyCache();
+      applyCache();
     }).catch(err => {
       console.error('TOLERANCE ERROR:', err);
     });
