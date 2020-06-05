@@ -32,9 +32,6 @@ module.exports = function Panzoom ({ children, view }) {
     zoom.current.addEventListener('wheel', instance.zoomWithWheel);
 
     return () => {
-      console.log('SHOULD DESTROY');
-      return;
-
       zoom.current.setAttribute('style', {});
       zoom.current.removeEventListener('wheel', instance.zoomWithWheel);
       instance.destroy();
