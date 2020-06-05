@@ -41,6 +41,7 @@ function Tolerance({ left, right, buttons, cache }) {
     zoom.current.addEventListener('wheel', panzoom.zoomWithWheel);
 
     panzoom.__x_destroy = () => {
+      zoom.current.setAttribute('style', {});
       zoom.current.removeEventListener('wheel', panzoom.zoomWithWheel);
       panzoom.destroy();
     };
