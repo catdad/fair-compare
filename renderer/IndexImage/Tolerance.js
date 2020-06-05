@@ -1,5 +1,5 @@
 const Panzoom = require('@panzoom/panzoom');
-const { html, css, useCallback, useState, useEffect, useRef } = require('../tools/ui.js');
+const { html, css, useState, useEffect, useRef } = require('../tools/ui.js');
 const { tolerance, computeToleranceUrl } = require('../tools/image-diff.js');
 
 css('./Tolerance.css');
@@ -88,7 +88,6 @@ function Tolerance({ left, right, buttons, cache }) {
     });
 
     return () => {
-      console.log('destroying tolerance');
       destroyed = true;
 
       if (panzoom) {
@@ -101,20 +100,15 @@ function Tolerance({ left, right, buttons, cache }) {
 
     const setter = '__threshold_setter';
     const final = '__theshold_final';
-    console.log('apply', value, renderPromise.current, renderPromise.current && renderPromise.current[setter] === undefined);
 
     if (renderPromise.current) {
-      console.log('saving new final value');
       renderPromise.current[final] = value;
     }
 
     if (renderPromise.current && renderPromise.current[setter] === undefined) {
-      console.log('saving new setter');
-
       renderPromise.current[setter] = () => {
         const finalValue = renderPromise.current[final];
         renderPromise.current = null;
-        console.log('ACTUALLY SETTING', finalValue);
 
         setThreshold(finalValue);
       };
