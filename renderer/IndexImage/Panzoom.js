@@ -1,10 +1,12 @@
 const panzoom = require('@panzoom/panzoom');
-const { html, useEffect, useRef } = require('../tools/ui.js');
+const { html, useContext, useEffect, useRef } = require('../tools/ui.js');
+const Cache = require('./cache.js');
 
 const KEY = '__x_panzoom';
 
 module.exports = function Panzoom ({ children, view }) {
   const zoom = useRef(null);
+  const cache = useContext(Cache);
 
   useEffect(() => {
     if (!view) {

@@ -1,5 +1,6 @@
-const { html, css, useState, useEffect, useRef } = require('../tools/ui.js');
+const { html, css, useContext, useEffect, useState, useRef } = require('../tools/ui.js');
 const { tolerance, computeTolerance } = require('../tools/image-diff.js');
+const Cache = require('./cache.js');
 
 css('./Tolerance.css');
 
@@ -12,11 +13,12 @@ const setVar = (elem, name, value) => elem.style.setProperty(`--${name}`, value)
 
 const toBackground = url => `url(${JSON.stringify(url)})`;
 
-function Tolerance({ left, right, buttons, cache }) {
+function Tolerance({ left, right, buttons }) {
   const view = useRef(null);
   const renderPromise = useRef(null);
   const [background, setBackground] = useState(toBackground(left));
   const [zoomElem, setZoomElem] = useState(null);
+  const cache = useContext(Cache);
 
   const [threshold, setThreshold] = useState(0.05);
 

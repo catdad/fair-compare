@@ -1,6 +1,7 @@
 const { html, css, useEffect, useState, useRef } = require('../tools/ui.js');
 const config = require('../../lib/config.js');
 const Toolbar = require('../Toolbar/Toolbar.js');
+const Cache = require('./cache.js');
 
 css('./IndexImage.css');
 
@@ -40,19 +41,19 @@ function App({ left, right }) {
     html`<button onClick=${changeMode(MODE.side)}>Side by Side</button>`,
   ];
 
+  const renderView = View => html`
+    <${Cache.Provider} value=${cache.current}>
+      <${View} buttons=${buttons} left=${left} right=${right} />
+    <//>
+  `;
+
   switch (mode) {
     case MODE.tolerance:
-      return html`
-        <${Tolerance} buttons=${buttons} left=${left} right=${right} cache=${cache.current} />
-      `;
+      return renderView(Tolerance);
     case MODE.range:
-      return html`
-        <${Range} buttons=${buttons} left=${left} right=${right} cache=${cache.current} />
-      `;
+      return renderView(Range);
     case MODE.blend:
-      return html`
-        <${Blend} buttons=${buttons} left=${left} right=${right} cache=${cache.current} />
-      `;
+      return renderView(Blend);
     case MODE.side:
       return html`
         <${Toolbar}>${buttons}<//>
