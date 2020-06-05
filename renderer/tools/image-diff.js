@@ -42,14 +42,8 @@ const getCanvas = (width, height) => {
   return { canvas, ctx };
 };
 
-const computeTolerance = async ({ left, right, threshold }) => {
-  console.time('read');
-  const [leftData, rightData] = await Promise.all([
-    readImageData(left),
-    readImageData(right)
-  ]);
-  console.timeEnd('read');
-
+const computeTolerance = async ({ leftData, rightData, threshold }) => {
+  console.time('tolerance-compute');
   const { width, height } = leftData;
 
   console.time('diff-create');
@@ -68,20 +62,34 @@ const computeTolerance = async ({ left, right, threshold }) => {
   ctx.putImageData(resultData, 0, 0);
   console.timeEnd('diff-put');
 
+  console.timeEnd('tolerance-compute');
   return { leftData, rightData, pixels, resultData, resultCanvas: canvas, width, height };
+};
+
+const computeToleranceUrl = async (...args) => {
+  const result = await computeTolerance(...args);
+
+  console.time('diff-url');
+  const blob = await result.resultCanvas.convertToBlob({ type: 'image/png' });
+  const imageUrl = `data:image/png;base64,${Buffer.from(await blob.arrayBuffer()).toString('base64')}`;
+  result.imageUrl = imageUrl;
+  console.timeEnd('diff-url');
+
+  return result;
 };
 
 const tolerance = async ({ left, right, threshold = 0.05, url = true }) => {
   console.time('tolerance');
-  const result = await computeTolerance({ left, right, threshold });
+  console.time('read');
+  const [leftData, rightData] = await Promise.all([
+    readImageData(left),
+    readImageData(right)
+  ]);
+  console.timeEnd('read');
 
-  if (url) {
-    console.time('diff-url');
-    const blob = await result.resultCanvas.convertToBlob({ type: 'image/png' });
-    const imageUrl = `data:image/png;base64,${Buffer.from(await blob.arrayBuffer()).toString('base64')}`;
-    result.imageUrl = imageUrl;
-    console.timeEnd('diff-url');
-  }
+  const result = url ?
+    await computeToleranceUrl({ leftData, rightData, threshold }) :
+    await computeTolerance({ leftData, rightData, threshold });
 
   console.timeEnd('tolerance');
   return result;
@@ -92,4 +100,4 @@ const info = async (imageFile) => {
   return { width, height };
 };
 
-module.exports = { info, tolerance };
+module.exports = { info, tolerance, computeToleranceUrl };
