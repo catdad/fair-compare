@@ -127,6 +127,7 @@ function Tolerance({ left, right, buttons, cache }) {
 
   viewButtons.push(html`<span> | </span>`);
   viewButtons.push(html`<input type=range min=0 max=1 value=${threshold} step=0.01 oninput=${applyThreshold} />`);
+  viewButtons.push(html`<span>${threshold}</span>`);
 
   return html`
     <${Toolbar}>${viewButtons}<//>
