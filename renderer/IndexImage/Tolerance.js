@@ -1,6 +1,6 @@
 const { html, css, useContext, useEffect, useState, useRef } = require('../tools/ui.js');
 const { tolerance, computeTolerance } = require('../tools/image-diff.js');
-const Cache = require('../tools/cache.js');
+const { Cache } = require('../tools/cache.js');
 
 css('./Tolerance.css');
 
