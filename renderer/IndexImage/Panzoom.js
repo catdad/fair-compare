@@ -1,6 +1,6 @@
 const panzoom = require('@panzoom/panzoom');
 const { html, useContext, useEffect, useRef } = require('../tools/ui.js');
-const Cache = require('./cache.js');
+const Cache = require('../tools/cache.js');
 
 const KEY = '__x_panzoom';
 const maxScale = 4;
