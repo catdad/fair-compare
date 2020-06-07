@@ -1,11 +1,25 @@
 const { html, css, useState } = require('../tools/ui.js');
 
-function File({ file, selected, side }) {
+function File({ file, selected, onSelect, onOpen, side }) {
   const classes = `node file ${file.path === selected ? 'selected' : ''} ${file[side] ? '' : 'missing'}`;
-  return html`<div class=${classes}>${file[side] ? file.name : '-'}</div>`;
+  const text = file[side] ? file.name : '-';
+
+  const onclick = ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    onSelect(file.path);
+  };
+
+  const ondblclick = ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    onOpen(file.path);
+  };
+
+  return html`<div key=${file.path} class=${classes} onclick=${onclick} ondblclick=${ondblclick}>${text}</div>`;
 }
 
-function Directory({ dir, side }) {
+function Directory({ dir, side, ...props }) {
   const [open, setOpen] = useState(dir.open || true);
 
   const toggleOpen = () => setOpen(!open);
@@ -13,23 +27,23 @@ function Directory({ dir, side }) {
   return html`
     <div class="directory">
       <div class="name node" onClick=${toggleOpen}>${dir.name}</div>
-      ${ open ? html`<${Tree} tree=${dir.children} side=${side} />` : html`` }
+      ${ open ? html`<${Tree} tree=${dir.children} ...${({ side, ...props })} />` : html`` }
     </div>
   `;
 }
 
-function Tree({ tree, selected, side }) {
+function Tree({ tree, side, ...props }) {
   const keys = Object.keys(tree).sort((a, b) => a.localeCompare(b));
 
   const dirs = keys
     .map(key => tree[key])
     .filter(item => item.type === 'dir')
-    .map(dir => html`<${Directory} dir=${dir} side=${side} />`);
+    .map(dir => html`<${Directory} ...${({ dir, side, ...props })} />`);
 
   const files = keys
     .map(key => tree[key])
     .filter(item => item.type === 'file')
-    .map(file => html`<${File} file=${file} side=${side} selected=${selected} />`);
+    .map(file => html`<${File} ...${({ file, side, ...props })} />`);
 
   return [...dirs, ...files];
 }

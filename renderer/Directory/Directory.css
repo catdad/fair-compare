@@ -32,7 +32,7 @@
   padding: var(--pad);
 }
 
-.half .list .selected {
+.half .selected {
   background: var(--color-text);
   color: var(--color-background);
 }
