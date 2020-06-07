@@ -29,10 +29,11 @@ const createDirectory = (tree, dir) => {
   return obj.children;
 };
 
-const createFile = (dir, name, side) => {
+const createFile = (dir, path, name, side) => {
   const file = dir[name] || {
     type: 'file',
-    name: name,
+    path,
+    name,
     left: false,
     right: false,
     selected: false
@@ -50,7 +51,7 @@ const buildTree = (tree, files, side) => {
 
     const dir = dirs.reduce((tree, dir) => createDirectory(tree, dir), tree);
 
-    createFile(dir, name, side);
+    createFile(dir, file, name, side);
   });
 };
 
