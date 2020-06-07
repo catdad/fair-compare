@@ -6,8 +6,6 @@ const query = require('./tools/query.js');
 
 css('./base.css');
 
-console.log('INDEX LOADED', query);
-
 switch (query.route) {
   case 'directory': {
     const IndexDirectory = require('./IndexDirectory/IndexDirectory.js');
