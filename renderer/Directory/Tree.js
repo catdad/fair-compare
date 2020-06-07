@@ -4,19 +4,10 @@ function File({ file, selected, onSelect, onOpen, side }) {
   const classes = `node file ${file.path === selected ? 'selected' : ''} ${file[side] ? '' : 'missing'}`;
   const text = file[side] ? file.name : '-';
 
-  const onclick = ev => {
-    ev.preventDefault();
-    ev.stopPropagation();
-    onSelect(file.path);
-  };
+  const onclick = () => onSelect(file.path);
+  const ondblclick = () => onOpen(file.path);
 
-  const ondblclick = ev => {
-    ev.preventDefault();
-    ev.stopPropagation();
-    onOpen(file.path);
-  };
-
-  return html`<div key=${file.path} class=${classes} onclick=${onclick} ondblclick=${ondblclick}>${text}</div>`;
+  return html`<div key=${file.path} class=${classes} ...${({ onclick, ondblclick })}>${text}</div>`;
 }
 
 function Directory({ dir, side, ...props }) {
