@@ -1,11 +1,11 @@
-const { html, css, useContext, useEffect, useState } = require('../tools/ui.js');
+const { html, css, useState } = require('../tools/ui.js');
 
 function File({ file, side }) {
-  return `<div class="node">${file[side] ? file.name : ''}</div>`;
+  return html`<div class="node">${file[side] ? file.name : ''}</div>`;
 }
 
 function Directory({ dir, side }) {
-  const [open, setOpen] = useState(dir.open);
+  const [open, setOpen] = useState(dir.open || true);
 
   const toggleOpen = () => setOpen(!open);
 
@@ -13,6 +13,7 @@ function Directory({ dir, side }) {
     <div class="directory">
       <div class="node" onClick=${toggleOpen}>${dir.name}</div>
       ${ open ? html`<${Tree} tree=${dir.children} side=${side} />` : html`` }
+    </div>
   `;
 }
 
@@ -20,16 +21,16 @@ function Tree({ tree, side }) {
   const keys = Object.keys(tree).sort((a, b) => a.localeCompare(b));
 
   const dirs = keys
-    .filter(key => tree[key].type === 'dir')
     .map(key => tree[key])
-    .map(dir => html`<${Directory} dir=${dir.children} side=${side} />`);
+    .filter(item => item.type === 'dir')
+    .map(dir => html`<${Directory} dir=${dir} side=${side} />`);
 
   const files = keys
-    .filter(key => tree[key].type === 'file')
     .map(key => tree[key])
-    .map(file => html`<${File} file=${file} side=${side}`);
+    .filter(item => item.type === 'file')
+    .map(file => html`<${File} file=${file} side=${side} />`);
 
-  return [...dirs, ...files];
+  return html`<div>${[...dirs, ...files]}</div>`;
 }
 
 module.exports = Tree;
