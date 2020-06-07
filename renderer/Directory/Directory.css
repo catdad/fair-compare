@@ -1,4 +1,4 @@
-.directory {
+.half {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
@@ -6,30 +6,30 @@
   min-height: 100%;
 }
 
-.directory:first-of-type {
+.half:first-of-type {
   border-right: 1px solid var(--color-border);
 }
 
-.directory .header {
+.half .header {
   display: flex;
   margin: 10px;
 }
 
-.directory .header span {
+.half .header span {
   flex-grow: 1;
 }
 
-.directory .list {
+.half .list {
   margin: 10px;
   word-wrap: break-word;
 }
 
-.directory .list p {
+.half .list p {
   margin: 0;
   padding: 6px;
 }
 
-.directory .list .selected {
+.half .list .selected {
   background: var(--color-text);
   color: var(--color-background);
 }

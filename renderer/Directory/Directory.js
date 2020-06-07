@@ -18,7 +18,7 @@ function Directory({ dir, setDir, selected, onSelect, onOpen } = {}) {
   };
 
   return html`
-    <div class="directory">
+    <div class="half">
       <div class="header">
         <span>${dir.base || 'no directory selected'}</span>
         <button onClick=${selectDir}>Pick Directory</button>
