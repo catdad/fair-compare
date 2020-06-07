@@ -1,6 +1,7 @@
 const { html, css, useContext, useEffect, useState, useRef } = require('../tools/ui.js');
 const { tolerance, computeTolerance } = require('../tools/image-diff.js');
-const Cache = require('../tools/cache.js');
+const { Cache } = require('../tools/cache.js');
+const { Config } = require('../tools/config.js');
 
 css('./Tolerance.css');
 
@@ -8,19 +9,21 @@ const Toolbar = require('../Toolbar/Toolbar.js');
 const Panzoom = require('./Panzoom.js');
 
 const KEY = 'tolerance';
+const THRESHOLD = `${KEY}-threshold`;
 
 const setVar = (elem, name, value) => elem.style.setProperty(`--${name}`, value);
 
 const toBackground = url => `url(${JSON.stringify(url)})`;
 
 function Tolerance({ left, right, buttons }) {
+  const config = useContext(Config);
   const cache = useContext(Cache);
   const view = useRef(null);
   const renderPromise = useRef(null);
   const [background, setBackground] = useState(toBackground(left));
   const [zoomElem, setZoomElem] = useState(null);
 
-  const [threshold, setThreshold] = useState(0.05);
+  const [threshold, setThreshold] = useState(config.get(THRESHOLD, 0.05));
 
   const applyCache = () => {
     const data = cache.get(KEY);
@@ -94,6 +97,7 @@ function Tolerance({ left, right, buttons }) {
         renderPromise.current = null;
 
         setThreshold(finalValue);
+        config.set(THRESHOLD, finalValue);
       };
 
       renderPromise.current.then(() => renderPromise.current[setter]());

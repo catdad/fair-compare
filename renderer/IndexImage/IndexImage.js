@@ -1,6 +1,6 @@
-const { html, css, useEffect, useState } = require('../tools/ui.js');
+const { html, css, useContext, useState } = require('../tools/ui.js');
 const { withCache } = require('../tools/cache.js');
-const config = require('../../lib/config.js');
+const { Config, withConfig } = require('../tools/config.js');
 const Toolbar = require('../Toolbar/Toolbar.js');
 
 css('./IndexImage.css');
@@ -18,19 +18,12 @@ const MODE = {
 };
 
 function App({ left, right }) {
-  const [mode, setMode] = useState(null);
-
-  useEffect(() => {
-    config.getProp('image-mode').then(val => {
-      setMode(MODE[val] || MODE.tolerance);
-    }).catch(err => {
-      console.error(err);
-    });
-  }, []);
+  const config = useContext(Config);
+  const [mode, setMode] = useState(config.get('image-mode', null));
 
   const changeMode = newMode => () => {
     setMode(newMode);
-    config.setProp('image-mode', newMode);
+    config.set('image-mode', newMode);
   };
 
   const buttons = [
@@ -62,4 +55,4 @@ function App({ left, right }) {
   return html``;
 }
 
-module.exports = withCache(App);
+module.exports = withConfig(withCache(App));
