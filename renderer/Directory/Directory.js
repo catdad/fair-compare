@@ -5,10 +5,10 @@ css('./Directory.css');
 
 const Tree = require('./Tree.js');
 
-function ListView({ files, selected, onSelect, onOpen }) {
+function List({ dir, selected, onSelect, onOpen }) {
   return html`
     <div class="list">
-      ${files.map(file => html`
+      ${dir.files.map(file => html`
         <p class=${selected === file ? 'selected' : ''} onclick=${() => onSelect(file)} ondblclick=${() => onOpen(file)}>${file}</p>
       `)}
     </div>`;
@@ -22,7 +22,7 @@ function Header({ base = 'no directory selected', selectDir }) {
     </div>`;
 }
 
-function Directory({ dir, setDir, selected, onSelect, onOpen, type = 'list', side } = {}) {
+const withDirHelpers = Component => ({ children, base, setDir, ...props }) => {
   const selectDir = () => {
     dialog.showOpenDialog({ properties: ['openDirectory'] }).then(({ cancelled, filePaths }) => {
       if (cancelled || !filePaths || filePaths.length === 0) {
@@ -36,15 +36,15 @@ function Directory({ dir, setDir, selected, onSelect, onOpen, type = 'list', sid
     });
   };
 
-  const view = type === 'list' ?
-    html`<${ListView} files=${dir.files} selected=${selected} onSelect=${onSelect} onOpen=${onOpen} />` :
-    html`<${Tree} tree=${dir} side=${side} />`;
-
   return html`
     <div class="half">
-      <${Header} base=${dir.base} selectDir=${selectDir} />
-      ${view}
-    </div>`;
-}
+      <${Header} base=${base} selectDir=${selectDir} />
+      <${Component} ...${props}>${children}<//>
+    </div>
+  `;
+};
 
-module.exports = Directory;
+module.exports = {
+  List: withDirHelpers(List),
+  Tree: withDirHelpers(Tree)
+};

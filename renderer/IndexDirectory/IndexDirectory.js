@@ -6,7 +6,7 @@ const { Config, withConfig } = require('../tools/config.js');
 const directoryTree = require('../tools/directory-tree.js');
 
 const { ipcRenderer } = require('electron');
-const Directory = require('../Directory/Directory.js');
+const { List } = require('../Directory/Directory.js');
 
 css('./IndexDirectory.css');
 
@@ -18,38 +18,33 @@ const fileInDir = (dir, file) => {
 
 function App() {
   const config = useContext(Config);
-  const [dir1, setDir1] = useState({ base: null, files: [] });
-  const [dir2, setDir2] = useState({ base: null, files: [] });
+  const [treeData, setTreeData] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
-    if (dir1.base || dir2.base) {
-      return;
-    }
-
     directoryTree({
       left: config.get('directories.left'),
       right: config.get('directories.right')
-    }).then(({ left, right }) => {
-      if (dir1.base || dir2.base) {
-        return;
-      }
-
-      setDir1(left);
-      setDir2(right);
+    }).then(data => {
+      setTreeData(data);
     }).catch((err) => {
       console.error(err);
     });
   }, [/* execute only once */]);
 
-  const setDir = (side, setter) => async (data) => {
-    await config.setProp(`directories.${side}`, data.base);
-    setter(data);
+  const setDir = (side) => async (data) => {
+    config.setProp(`directories.${side}`, data.base);
+
+    const left = side === 'left' ? data.base : treeData.left.base;
+    const right = side === 'right' ? data.base : treeData.right.base;
+
+    const newTreeData = await directoryTree({ left, right });
+    setTreeData(newTreeData);
   };
 
   const onOpen = (dir) => async (file) => {
-    const left = fileInDir(dir1, file);
-    const right = fileInDir(dir2, file);
+    const left = fileInDir(treeData.left, file);
+    const right = fileInDir(treeData.right, file);
 
     // TODO handle errors
     const result = await FileType.fromFile(fileInDir(dir, file));
@@ -81,10 +76,14 @@ function App() {
     ipcRenderer.sendToHost('new-tab', data);
   };
 
+  if (!treeData) {
+    return html`<div></div>`;
+  }
+
   return html`
     <div class=main>
-      <${Directory} dir=${dir1} setDir=${setDir('left', setDir1)} selected=${selectedFile} onSelect=${setSelectedFile} onOpen=${onOpen(dir1)} />
-      <${Directory} dir=${dir2} setDir=${setDir('right', setDir2)} selected=${selectedFile} onSelect=${setSelectedFile} onOpen=${onOpen(dir2)} />
+      <${List} dir=${treeData.left} base=${treeData.left.base} setDir=${setDir('left')} selected=${selectedFile} onSelect=${setSelectedFile} onOpen=${onOpen(treeData.left)} />
+      <${List} dir=${treeData.right} base=${treeData.right.base} setDir=${setDir('right')} selected=${selectedFile} onSelect=${setSelectedFile} onOpen=${onOpen(treeData.right)} />
     </div>
   `;
 }
