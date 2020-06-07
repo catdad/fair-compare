@@ -3,10 +3,10 @@ const fs = require('fs-extra');
 const FileType = require('file-type');
 const fg = require('fast-glob');
 
-const { html, css, useEffect, useState } = require('../tools/ui.js');
+const { html, css, useContext, useEffect, useState } = require('../tools/ui.js');
+const { Config, withConfig } = require('../tools/config.js');
 const { ipcRenderer } = require('electron');
 const Directory = require('../Directory/Directory.js');
-const config = require('../../lib/config.js');
 
 css('./IndexDirectory.css');
 
@@ -26,15 +26,27 @@ const assertDirectory = async base => {
   }
 };
 
-const getDirectoryStructure = async (base) => {
-  await assertDirectory(base);
+const getDirectoryStructure = async ({ left = '', right = '' }) => {
+  await Promise.all([
+    left ? assertDirectory(left) : Promise.resolve(),
+    right ? assertDirectory(right) : Promise.resolve()
+  ]);
 
-  const files = await fg(['**/*.*'], {
-    dot: false,
-    cwd: base
-  });
+  const [leftFiles, rightFiles] = await Promise.all([
+    fg(['**/*.*'], {
+      dot: false,
+      cwd: left
+    }),
+    fg(['**/*.*'], {
+      dot: false,
+      cwd: right
+    })
+  ]);
 
-  return { base, files: sort(files) };
+  return {
+    left: { base: left, files: sort(leftFiles) },
+    right: { base: right, files: sort(rightFiles) }
+  };
 };
 
 const fileInDir = (dir, file) => {
@@ -44,6 +56,7 @@ const fileInDir = (dir, file) => {
 };
 
 function App() {
+  const config = useContext(Config);
   const [dir1, setDir1] = useState({ base: null, files: [] });
   const [dir2, setDir2] = useState({ base: null, files: [] });
   const [selectedFile, setSelectedFile] = useState(null);
@@ -53,19 +66,10 @@ function App() {
       return;
     }
 
-    Promise.all([
-      config.getProp('directories.left'),
-      config.getProp('directories.right'),
-    ]).then(([left, right]) => {
-      if (dir1.base || dir2.base) {
-        return;
-      }
-
-      return Promise.all([
-        getDirectoryStructure(left),
-        getDirectoryStructure(right)
-      ]);
-    }).then(([left, right]) => {
+    getDirectoryStructure({
+      left: config.get('directories.left'),
+      right: config.get('directories.right')
+    }).then(({ left, right }) => {
       if (dir1.base || dir2.base) {
         return;
       }
@@ -124,4 +128,4 @@ function App() {
   `;
 }
 
-module.exports = App;
+module.exports = withConfig(App);
