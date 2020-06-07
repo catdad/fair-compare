@@ -6,7 +6,7 @@ const { Config, withConfig } = require('../tools/config.js');
 const directoryTree = require('../tools/directory-tree.js');
 
 const { ipcRenderer } = require('electron');
-const { List } = require('../Directory/Directory.js');
+const { List, Tree } = require('../Directory/Directory.js');
 
 css('./IndexDirectory.css');
 
@@ -20,6 +20,7 @@ function App() {
   const config = useContext(Config);
   const [treeData, setTreeData] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [view] = useState('list');
 
   useEffect(() => {
     directoryTree({
@@ -80,10 +81,24 @@ function App() {
     return html`<div></div>`;
   }
 
+  function render(side) {
+    const props = {
+      base: treeData[side].base,
+      setDir: setDir(side),
+      selected: selectedFile,
+      onSelect: setSelectedFile,
+      onOpen: onOpen(treeData[side])
+    };
+
+    return view === 'tree' ?
+      html`<${Tree} tree=${treeData.tree} side=${side} ...${props} />` :
+      html`<${List} dir=${treeData[side]} ...${props} />`;
+  }
+
   return html`
     <div class=main>
-      <${List} dir=${treeData.left} base=${treeData.left.base} setDir=${setDir('left')} selected=${selectedFile} onSelect=${setSelectedFile} onOpen=${onOpen(treeData.left)} />
-      <${List} dir=${treeData.right} base=${treeData.right.base} setDir=${setDir('right')} selected=${selectedFile} onSelect=${setSelectedFile} onOpen=${onOpen(treeData.right)} />
+      ${render('left')}
+      ${render('right')}
     </div>
   `;
 }
