@@ -1,7 +1,8 @@
 const { html, css, useState } = require('../tools/ui.js');
 
-function File({ file, side }) {
-  return html`<div class="node">${file[side] ? file.name : ''}</div>`;
+function File({ file, selected, side }) {
+  const classes = `node file ${file.path === selected ? 'selected' : ''} ${file[side] ? '' : 'missing'}`;
+  return html`<div class=${classes}>${file[side] ? file.name : '-'}</div>`;
 }
 
 function Directory({ dir, side }) {
@@ -11,13 +12,13 @@ function Directory({ dir, side }) {
 
   return html`
     <div class="directory">
-      <div class="node" onClick=${toggleOpen}>${dir.name}</div>
+      <div class="name node" onClick=${toggleOpen}>${dir.name}</div>
       ${ open ? html`<${Tree} tree=${dir.children} side=${side} />` : html`` }
     </div>
   `;
 }
 
-function Tree({ tree, side }) {
+function Tree({ tree, selected, side }) {
   const keys = Object.keys(tree).sort((a, b) => a.localeCompare(b));
 
   const dirs = keys
@@ -28,9 +29,9 @@ function Tree({ tree, side }) {
   const files = keys
     .map(key => tree[key])
     .filter(item => item.type === 'file')
-    .map(file => html`<${File} file=${file} side=${side} />`);
+    .map(file => html`<${File} file=${file} side=${side} selected=${selected} />`);
 
-  return html`<div>${[...dirs, ...files]}</div>`;
+  return [...dirs, ...files];
 }
 
 module.exports = Tree;

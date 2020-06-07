@@ -4,6 +4,8 @@
   flex-direction: column;
   max-width: 50%;
   min-height: 100%;
+
+  --pad: 6px;
 }
 
 .half:first-of-type {
@@ -24,12 +26,21 @@
   word-wrap: break-word;
 }
 
-.half .list p {
+.half .list p,
+.half .node {
   margin: 0;
-  padding: 6px;
+  padding: var(--pad);
 }
 
 .half .list .selected {
   background: var(--color-text);
   color: var(--color-background);
+}
+
+.half .directory .file {
+  padding-left: calc(1rem + var(--pad));
+}
+
+.half .file.missing {
+  opacity: 0;
 }
