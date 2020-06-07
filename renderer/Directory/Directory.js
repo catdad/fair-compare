@@ -3,7 +3,26 @@ const { dialog } = require('electron').remote;
 
 css('./Directory.css');
 
-function Directory({ dir, setDir, selected, onSelect, onOpen } = {}) {
+const Tree = require('./Tree.js');
+
+function ListView({ files, selected, onSelect, onOpen }) {
+  return html`
+    <div class="list">
+      ${files.map(file => html`
+        <p class=${selected === file ? 'selected' : ''} onclick=${() => onSelect(file)} ondblclick=${() => onOpen(file)}>${file}</p>
+      `)}
+    </div>`;
+}
+
+function Header({ base = 'no directory selected', selectDir }) {
+  return html`
+    <div class="header">
+      <span>${base}</span>
+      <button onClick=${selectDir}>Pick Directory</button>
+    </div>`;
+}
+
+function Directory({ dir, setDir, selected, onSelect, onOpen, type = 'list', side } = {}) {
   const selectDir = () => {
     dialog.showOpenDialog({ properties: ['openDirectory'] }).then(({ cancelled, filePaths }) => {
       if (cancelled || !filePaths || filePaths.length === 0) {
@@ -17,17 +36,14 @@ function Directory({ dir, setDir, selected, onSelect, onOpen } = {}) {
     });
   };
 
+  const view = type === 'list' ?
+    html`<${ListView} files=${dir.files} selected=${selected} onSelect=${onSelect} onOpen=${onOpen} />` :
+    html`<${Tree} tree=${dir} side=${side} />`;
+
   return html`
     <div class="half">
-      <div class="header">
-        <span>${dir.base || 'no directory selected'}</span>
-        <button onClick=${selectDir}>Pick Directory</button>
-      </div>
-      <div class="list">
-        ${dir.files.map(file => html`
-          <p class=${selected === file ? 'selected' : ''} onclick=${() => onSelect(file)} ondblclick=${() => onOpen(file)}>${file}</p>
-        `)}
-      </div>
+      <${Header} base=${dir.base} selectDir=${selectDir} />
+      ${view}
     </div>`;
 }
 
