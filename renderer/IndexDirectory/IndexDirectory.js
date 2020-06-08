@@ -7,7 +7,7 @@ const directoryTree = require('../tools/directory-tree.js');
 
 const { ipcRenderer } = require('electron');
 const { List, Tree } = require('../Directory/Directory.js');
-const Toolbar = require('../Toolbar/Toolbar.js');
+const { Toolbar } = require('../Toolbar/Toolbar.js');
 
 css('./IndexDirectory.css');
 

@@ -1,7 +1,7 @@
 const { html, css, useContext, useState } = require('../tools/ui.js');
 const { withCache } = require('../tools/cache.js');
 const { Config, withConfig } = require('../tools/config.js');
-const Toolbar = require('../Toolbar/Toolbar.js');
+const { Toolbar } = require('../Toolbar/Toolbar.js');
 
 css('./IndexImage.css');
 

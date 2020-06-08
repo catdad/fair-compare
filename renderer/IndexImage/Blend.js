@@ -1,6 +1,6 @@
 const { html, css, useEffect, useRef, useState, setVar } = require('../tools/ui.js');
 const { info } = require('../tools/image-diff.js');
-const Toolbar = require('../Toolbar/Toolbar.js');
+const { Toolbar, ToolbarSeparator } = require('../Toolbar/Toolbar.js');
 const Panzoom = require('./Panzoom.js');
 
 css('./Blend.css');
@@ -45,7 +45,7 @@ function Blend({ left, right, buttons }) {
 
   const viewButtons = [...buttons];
 
-  viewButtons.push(html`<span> | </span>`);
+  viewButtons.push(html`<${ToolbarSeparator} />`);
   viewButtons.push(html`<button onclick=${toggleOpacity}>Toggle</button>`);
   viewButtons.push(html`<input type=range min=0 max=1 value=${opacity} step=0.01 oninput=${applyOpacity} />`);
 

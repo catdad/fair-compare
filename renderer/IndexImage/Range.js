@@ -1,6 +1,6 @@
 const { html, css, useEffect, useRef, useState, setVar } = require('../tools/ui.js');
 const { info } = require('../tools/image-diff.js');
-const Toolbar = require('../Toolbar/Toolbar.js');
+const { Toolbar } = require('../Toolbar/Toolbar.js');
 const Panzoom = require('./Panzoom.js');
 
 css('./Range.css');

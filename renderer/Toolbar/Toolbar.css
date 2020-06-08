@@ -1,7 +1,16 @@
 .toolbar {
+  --padding: 10px;
+
   height: var(--toolbar-height, 0px);
   border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 var(--padding);
+}
+
+.toolbar .sep {
+  width: 1px;
+  height: calc(100% - var(--padding));
+  border-left: 1px solid var(--color-border);
+  margin: 0 var(--padding);
 }

@@ -12,4 +12,8 @@ function Toolbar({ children, heightVar = 'toolbar-height' }) {
   </div>`;
 }
 
-module.exports = Toolbar;
+function ToolbarSeparator() {
+  return html`<span class=sep />`;
+}
+
+module.exports = { Toolbar, ToolbarSeparator };

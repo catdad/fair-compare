@@ -5,7 +5,7 @@ const { Config } = require('../tools/config.js');
 
 css('./Tolerance.css');
 
-const Toolbar = require('../Toolbar/Toolbar.js');
+const { Toolbar, ToolbarSeparator } = require('../Toolbar/Toolbar.js');
 const Panzoom = require('./Panzoom.js');
 
 const KEY = 'tolerance';
@@ -112,10 +112,10 @@ function Tolerance({ left, right, buttons }) {
 
   const viewButtons = [...buttons];
 
-  viewButtons.push(html`<span> | </span>`);
+  viewButtons.push(html`<${ToolbarSeparator} />`);
   viewButtons.push(html`<input type=range min=0 max=1 value=${threshold} step=0.01 oninput=${applyThreshold} />`);
   viewButtons.push(html`<span>${threshold}</span>`);
-  viewButtons.push(html`<span> | </span>`);
+  viewButtons.push(html`<${ToolbarSeparator} />`);
   viewButtons.push(html`<button onclick=${toggleBackground}>Toggle Background</button>`);
 
   return html`
