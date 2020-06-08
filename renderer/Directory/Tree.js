@@ -1,4 +1,4 @@
-const { html, css, useState } = require('../tools/ui.js');
+const { html, useState } = require('../tools/ui.js');
 
 function File({ file, selected, onSelect, onOpen, side }) {
   const classes = `node file ${file.path === selected ? 'selected' : ''} ${file[side] ? '' : 'missing'}`;
@@ -6,18 +6,20 @@ function File({ file, selected, onSelect, onOpen, side }) {
 
   const onclick = () => onSelect(file.path);
   const ondblclick = () => onOpen(file.path);
+  const icon = '📄';
 
-  return html`<div key=${file.path} class=${classes} ...${({ onclick, ondblclick })}>${text}</div>`;
+  return html`<div key=${file.path} class=${classes} ...${({ onclick, ondblclick })}>${icon} ${text}</div>`;
 }
 
 function Directory({ dir, side, ...props }) {
-  const [open, setOpen] = useState(dir.open || true);
+  const [open, setOpen] = useState(dir.open);
 
   const toggleOpen = () => setOpen(!open);
+  const openChar = open ? '📂' : '📁';
 
   return html`
+    <div class="name node" onClick=${toggleOpen}>${openChar} ${dir.name}</div>
     <div class="directory">
-      <div class="name node" onClick=${toggleOpen}>${dir.name}</div>
       ${ open ? html`<${Tree} tree=${dir.children} ...${({ side, ...props })} />` : html`` }
     </div>
   `;

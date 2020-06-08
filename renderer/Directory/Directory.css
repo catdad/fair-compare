@@ -39,8 +39,9 @@
   color: var(--color-background);
 }
 
-.half .directory .file {
-  padding-left: calc(1rem + var(--pad));
+.half .directory {
+  padding-left: calc(1.5rem);
+
 }
 
 .half .file.missing {
