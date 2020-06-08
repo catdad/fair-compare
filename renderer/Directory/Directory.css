@@ -5,6 +5,7 @@
   max-width: 50%;
   min-height: 100%;
   user-select: none;
+  font-size: calc(var(--font-size) - 1pt);
 
   --pad: 6px;
 }
