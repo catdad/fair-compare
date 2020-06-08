@@ -33,11 +33,11 @@ function App() {
     });
   }, [/* execute only once */]);
 
-  const setDir = (side) => async (data) => {
-    config.setProp(`directories.${side}`, data.base);
+  const setDir = (side) => async (dir) => {
+    config.set(`directories.${side}`, dir);
 
-    const left = side === 'left' ? data.base : treeData.left.base;
-    const right = side === 'right' ? data.base : treeData.right.base;
+    const left = side === 'left' ? dir : treeData.left.base;
+    const right = side === 'right' ? dir : treeData.right.base;
 
     const newTreeData = await directoryTree({ left, right });
     setTreeData(newTreeData);

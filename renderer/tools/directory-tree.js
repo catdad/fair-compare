@@ -55,6 +55,8 @@ const buildTree = (tree, files, side) => {
   });
 };
 
+const getFiles = cwd => cwd ? fg(['**/*.*'], { cwd }).then(files => sort(files)) : [];
+
 const getDirectoryStructure = async ({ left = '', right = '' }) => {
   await Promise.all([
     left ? assertDirectory(left) : Promise.resolve(),
@@ -62,14 +64,8 @@ const getDirectoryStructure = async ({ left = '', right = '' }) => {
   ]);
 
   const [leftFiles, rightFiles] = await Promise.all([
-    fg(['**/*.*'], {
-      dot: false,
-      cwd: left
-    }).then(files => sort(files)),
-    fg(['**/*.*'], {
-      dot: false,
-      cwd: right
-    }).then(files => sort(files))
+    getFiles(left),
+    getFiles(right)
   ]);
 
   const tree = {};
