@@ -7,6 +7,7 @@ const directoryTree = require('../tools/directory-tree.js');
 
 const { ipcRenderer } = require('electron');
 const { List, Tree } = require('../Directory/Directory.js');
+const Toolbar = require('../Toolbar/Toolbar.js');
 
 css('./IndexDirectory.css');
 
@@ -20,7 +21,7 @@ function App() {
   const config = useContext(Config);
   const [treeData, setTreeData] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [view] = useState('list');
+  const [view, setView] = useState('tree');
 
   useEffect(() => {
     directoryTree({
@@ -96,6 +97,10 @@ function App() {
   }
 
   return html`
+    <${Toolbar}>
+      <button onClick=${() => setView('tree')}>Tree View</button>
+      <button onClick=${() => setView('list')}>List View</button>
+    <//>
     <div class=main>
       ${render('left')}
       ${render('right')}
