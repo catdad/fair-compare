@@ -1,4 +1,4 @@
-const { html, css, useContext, useEffect, useState, useRef } = require('../tools/ui.js');
+const { html, css, useContext, useEffect, useState, useRef, setVar } = require('../tools/ui.js');
 const { tolerance, computeTolerance } = require('../tools/image-diff.js');
 const { Cache } = require('../tools/cache.js');
 const { Config } = require('../tools/config.js');
@@ -10,8 +10,6 @@ const Panzoom = require('./Panzoom.js');
 
 const KEY = 'tolerance';
 const THRESHOLD = `${KEY}-threshold`;
-
-const setVar = (elem, name, value) => elem.style.setProperty(`--${name}`, value);
 
 const toBackground = url => `url(${JSON.stringify(url)})`;
 

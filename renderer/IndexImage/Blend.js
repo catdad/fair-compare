@@ -1,11 +1,9 @@
-const { html, css, useEffect, useRef, useState } = require('../tools/ui.js');
+const { html, css, useEffect, useRef, useState, setVar } = require('../tools/ui.js');
 const { info } = require('../tools/image-diff.js');
 const Toolbar = require('../Toolbar/Toolbar.js');
 const Panzoom = require('./Panzoom.js');
 
 css('./Blend.css');
-
-const setVar = (elem, name, value) => elem.style.setProperty(`--${name}`, value);
 
 function Blend({ left, right, buttons }) {
   const [zoomElem, setZoomElem] = useState(null);

@@ -1,41 +1,15 @@
 const path = require('path');
-const fs = require('fs-extra');
 const FileType = require('file-type');
-const fg = require('fast-glob');
 
-const { html, css, useEffect, useState } = require('../tools/ui.js');
+const { html, css, useContext, useEffect, useState } = require('../tools/ui.js');
+const { Config, withConfig } = require('../tools/config.js');
+const directoryTree = require('../tools/directory-tree.js');
+
 const { ipcRenderer } = require('electron');
-const Directory = require('../Directory/Directory.js');
-const config = require('../../lib/config.js');
+const { List, Tree } = require('../Directory/Directory.js');
+const Toolbar = require('../Toolbar/Toolbar.js');
 
 css('./IndexDirectory.css');
-
-const sort = files => [...files].sort((a, b) => a.localeCompare(b));
-
-const assertDirectory = async base => {
-  let stat;
-
-  try {
-    stat = await fs.stat(base);
-  } catch (err) {
-    throw new Error(err.code === 'ENOENT' ? `"${base}" does not exist` : `"${base}" cannot be opened`);
-  }
-
-  if (!stat.isDirectory()) {
-    throw new Error(`"${base}" is not a directory`);
-  }
-};
-
-const getDirectoryStructure = async (base) => {
-  await assertDirectory(base);
-
-  const files = await fg(['**/*.*'], {
-    dot: false,
-    cwd: base
-  });
-
-  return { base, files: sort(files) };
-};
 
 const fileInDir = (dir, file) => {
   if (dir.files.includes(file)) {
@@ -44,47 +18,35 @@ const fileInDir = (dir, file) => {
 };
 
 function App() {
-  const [dir1, setDir1] = useState({ base: null, files: [] });
-  const [dir2, setDir2] = useState({ base: null, files: [] });
+  const config = useContext(Config);
+  const [treeData, setTreeData] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [view, setView] = useState('tree');
 
   useEffect(() => {
-    if (dir1.base || dir2.base) {
-      return;
-    }
-
-    Promise.all([
-      config.getProp('directories.left'),
-      config.getProp('directories.right'),
-    ]).then(([left, right]) => {
-      if (dir1.base || dir2.base) {
-        return;
-      }
-
-      return Promise.all([
-        getDirectoryStructure(left),
-        getDirectoryStructure(right)
-      ]);
-    }).then(([left, right]) => {
-      if (dir1.base || dir2.base) {
-        return;
-      }
-
-      setDir1(left);
-      setDir2(right);
+    directoryTree({
+      left: config.get('directories.left'),
+      right: config.get('directories.right')
+    }).then(data => {
+      setTreeData(data);
     }).catch((err) => {
       console.error(err);
     });
   }, [/* execute only once */]);
 
-  const setDir = (side, setter) => async (data) => {
-    await config.setProp(`directories.${side}`, data.base);
-    setter(data);
+  const setDir = (side) => async (dir) => {
+    config.set(`directories.${side}`, dir);
+
+    const left = side === 'left' ? dir : treeData.left.base;
+    const right = side === 'right' ? dir : treeData.right.base;
+
+    const newTreeData = await directoryTree({ left, right });
+    setTreeData(newTreeData);
   };
 
   const onOpen = (dir) => async (file) => {
-    const left = fileInDir(dir1, file);
-    const right = fileInDir(dir2, file);
+    const left = fileInDir(treeData.left, file);
+    const right = fileInDir(treeData.right, file);
 
     // TODO handle errors
     const result = await FileType.fromFile(fileInDir(dir, file));
@@ -116,12 +78,34 @@ function App() {
     ipcRenderer.sendToHost('new-tab', data);
   };
 
+  if (!treeData) {
+    return html`<div></div>`;
+  }
+
+  function render(side) {
+    const props = {
+      base: treeData[side].base,
+      setDir: setDir(side),
+      selected: selectedFile,
+      onSelect: setSelectedFile,
+      onOpen: onOpen(treeData[side])
+    };
+
+    return view === 'tree' ?
+      html`<${Tree} tree=${treeData.tree} side=${side} ...${props} />` :
+      html`<${List} dir=${treeData[side]} ...${props} />`;
+  }
+
   return html`
+    <${Toolbar}>
+      <button onClick=${() => setView('tree')}>Tree View</button>
+      <button onClick=${() => setView('list')}>List View</button>
+    <//>
     <div class=main>
-      <${Directory} dir=${dir1} setDir=${setDir('left', setDir1)} selected=${selectedFile} onSelect=${setSelectedFile} onOpen=${onOpen(dir1)} />
-      <${Directory} dir=${dir2} setDir=${setDir('right', setDir2)} selected=${selectedFile} onSelect=${setSelectedFile} onOpen=${onOpen(dir2)} />
+      ${render('left')}
+      ${render('right')}
     </div>
   `;
 }
 
-module.exports = App;
+module.exports = withConfig(App);
