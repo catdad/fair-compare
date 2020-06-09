@@ -59,15 +59,20 @@ const compare = async ({ tree, threshold, onUpdate }) => {
     const left = path.resolve(leftBase, file.path);
     const right = path.resolve(rightBase, file.path);
 
-    const result = await FileType.fromFile(left);
-    const { mime } = result || { mime: 'text/plain' };
-    const route = mime.split('/')[0];
+    try {
+      const result = await FileType.fromFile(left);
+      const { mime } = result || { mime: 'text/plain' };
+      const route = mime.split('/')[0];
 
-    file.compare = route === 'image' ?
-      await diffImage({ left, right, threshold }) :
-      route === 'text' ?
-        await diffText({ left, right }) :
-        'unknown';
+      file.compare = route === 'image' ?
+        await diffImage({ left, right, threshold }) :
+        route === 'text' ?
+          await diffText({ left, right }) :
+          'unknown';
+    } catch (err) {
+      console.error(`failed to diff "${file.path}"`, err);
+      file.compare = 'error';
+    }
   }
 
   clearInterval(interval);
