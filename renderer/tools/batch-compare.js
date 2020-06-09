@@ -1,5 +1,6 @@
 const path = require('path');
 const FileType = require('file-type');
+const fs = require('fs-extra');
 
 const imageDiff = require('./image-diff.js');
 
@@ -18,8 +19,12 @@ const flatFiles = (tree) => {
 };
 
 const diffText = async ({ left, right }) => {
-  // TODO implement
-  return 'unknown';
+  const [ leftBuffer, rightBuffer ] = await Promise.all([
+    fs.readFile(left),
+    fs.readFile(right)
+  ]);
+
+  return leftBuffer.equals(rightBuffer) ? 'same' : 'different';
 };
 
 const diffImage = async ({ left, right, ...opts }) => {
