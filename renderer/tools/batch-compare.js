@@ -48,6 +48,7 @@ const compare = async ({ tree, threshold, onUpdate }) => {
 
   for (let file of allFiles) {
     if (!file.left || !file.right) {
+      file.compare = 'invalid';
       continue;
     }
 
