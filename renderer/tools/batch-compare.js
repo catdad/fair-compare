@@ -42,6 +42,9 @@ const compare = async ({ tree, threshold, onUpdate }) => {
   }
 
   const allFiles = flatFiles(tree.tree);
+  const interval = setInterval(() => {
+    onUpdate();
+  }, 1000);
 
   for (let file of allFiles) {
     if (!file.left || !file.right) {
@@ -60,9 +63,9 @@ const compare = async ({ tree, threshold, onUpdate }) => {
       route === 'text' ?
         await diffText({ left, right }) :
         'unknown';
-
-    onUpdate();
   }
+
+  clearInterval(interval);
 };
 
 module.exports = compare;
