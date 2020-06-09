@@ -4,7 +4,7 @@ module.exports = (function parseQuery(){
 
   for (let part of temp) {
     var q = part.split('=');
-    query[q.shift()] = q.join('=');
+    query[q.shift()] = decodeURIComponent(q.join('='));
   }
 
   return query;

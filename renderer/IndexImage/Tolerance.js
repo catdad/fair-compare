@@ -9,7 +9,7 @@ const { Toolbar, ToolbarSeparator } = require('../Toolbar/Toolbar.js');
 const Panzoom = require('./Panzoom.js');
 
 const KEY = 'tolerance';
-const THRESHOLD = `${KEY}-threshold`;
+const THRESHOLD = `${KEY}.threshold`;
 
 const toBackground = url => `url(${JSON.stringify(url)})`;
 
@@ -86,7 +86,7 @@ function Tolerance({ left, right, buttons }) {
     const final = '__theshold_final';
 
     if (renderPromise.current) {
-      renderPromise.current[final] = value;
+      renderPromise.current[final] = Number(value);
     }
 
     if (renderPromise.current && renderPromise.current[setter] === undefined) {

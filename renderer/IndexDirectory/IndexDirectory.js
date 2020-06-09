@@ -12,6 +12,8 @@ const { Toolbar, ToolbarSeparator } = require('../Toolbar/Toolbar.js');
 
 css('./IndexDirectory.css');
 
+const VIEW = 'directory-view';
+
 const fileInDir = (dir, file) => {
   if (dir.files.includes(file)) {
     return path.resolve(dir.base, file);
@@ -22,7 +24,12 @@ function App() {
   const config = useContext(Config);
   const [treeData, setTreeData] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [view, setView] = useState('tree');
+  const [view, setView] = useState(config.get(VIEW, 'tree'));
+
+  const changeView = (value) => {
+    config.set(VIEW, value);
+    setView(value);
+  };
 
   useEffect(() => {
     directoryTree({
@@ -111,8 +118,8 @@ function App() {
 
   return html`
     <${Toolbar}>
-      <button onClick=${() => setView('tree')}>Tree View</button>
-      <button onClick=${() => setView('list')}>List View</button>
+      <button onClick=${() => changeView('tree')}>Tree View</button>
+      <button onClick=${() => changeView('list')}>List View</button>
       <${ToolbarSeparator} />
       <button onClick=${() => batch()}>Batch Compare</button>
     <//>
