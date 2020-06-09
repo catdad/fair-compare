@@ -4,10 +4,11 @@ const FileType = require('file-type');
 const { html, css, useContext, useEffect, useState } = require('../tools/ui.js');
 const { Config, withConfig } = require('../tools/config.js');
 const directoryTree = require('../tools/directory-tree.js');
+const batchCompare = require('../tools/batch-compare.js');
 
 const { ipcRenderer } = require('electron');
 const { List, Tree } = require('../Directory/Directory.js');
-const { Toolbar } = require('../Toolbar/Toolbar.js');
+const { Toolbar, ToolbarSeparator } = require('../Toolbar/Toolbar.js');
 
 css('./IndexDirectory.css');
 
@@ -82,6 +83,15 @@ function App() {
     return html`<div></div>`;
   }
 
+  function batch() {
+    batchCompare({ tree: treeData }).then(() => {
+      console.log('DONE', treeData);
+      setTreeData({ ...treeData });
+    }).catch(err => {
+      console.error('BATCH COMPARE ERROR', err);
+    });
+  }
+
   function render(side) {
     const props = {
       base: treeData[side].base,
@@ -100,6 +110,8 @@ function App() {
     <${Toolbar}>
       <button onClick=${() => setView('tree')}>Tree View</button>
       <button onClick=${() => setView('list')}>List View</button>
+      <${ToolbarSeparator} />
+      <button onClick=${() => batch()}>Batch Compare</button>
     <//>
     <div class=main>
       ${render('left')}
