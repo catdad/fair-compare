@@ -19,7 +19,7 @@ const MODE = {
 
 function App({ left, right }) {
   const config = useContext(Config);
-  const [mode, setMode] = useState(config.get('image-mode', null));
+  const [mode, setMode] = useState(config.get('image-mode', MODE.tolerance));
 
   const changeMode = newMode => () => {
     setMode(newMode);
