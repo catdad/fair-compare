@@ -42,6 +42,16 @@ const getCanvas = (width, height) => {
   return { canvas, ctx };
 };
 
+const pixelsAreEqual = (leftData, rightData) => {
+  for (let i = 0, l = leftData.length; i < l; i++) {
+    if (leftData[i] !== rightData[i]) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 const computeTolerance = async ({ leftData, rightData, threshold }) => {
   console.time('tolerance-compute');
   const { width, height } = leftData;
@@ -51,7 +61,7 @@ const computeTolerance = async ({ leftData, rightData, threshold }) => {
   console.timeEnd('diff-create');
 
   console.time('diff');
-  const pixels = pixelmatch(leftData.data, rightData.data, output, width, height, {
+  const pixels = pixelsAreEqual(leftData.data, rightData.data) ? -1 : pixelmatch(leftData.data, rightData.data, output, width, height, {
     threshold,
     diffMask: true
   });
