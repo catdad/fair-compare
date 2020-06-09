@@ -30,7 +30,7 @@ const diffText = async ({ left, right }) => {
 const diffImage = async ({ left, right, ...opts }) => {
   const { pixels } = await imageDiff.tolerance({ left, right, ...opts });
 
-  return pixels ? 'different' : 'similar';
+  return pixels === -1 ? 'same' : pixels ? 'different' : 'similar';
 };
 
 const compare = async ({ tree, threshold, onUpdate }) => {
