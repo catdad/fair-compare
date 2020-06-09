@@ -1,5 +1,6 @@
-const { html, css, useState, useEffect, useRef, useCallback } = require('../tools/ui.js');
+const { html, css, useContext, useState, useEffect, useRef, useCallback } = require('../tools/ui.js');
 const viewBus = new (require('events'))();
+const { Config, withConfig } = require('../tools/config.js');
 
 css('./IndexTabs.css');
 
@@ -18,12 +19,18 @@ function Tabs({ list, onSelect, onClose }) {
   });
 }
 
-function createTab({ title, url, view, selected = true }) {
+function createTab({ title, url, view, devTools = false, selected = true }) {
+  let frame;
+
   const onMessage = ({ channel, args }) => {
     viewBus.emit(channel, ...args);
   };
 
-  let frame;
+  const onLoadFinish = () => {
+    if (devTools && frame) {
+      frame.openDevTools();
+    }
+  };
 
   return Object.defineProperties({
     key: Math.random(),
@@ -38,14 +45,13 @@ function createTab({ title, url, view, selected = true }) {
 
       frame.addEventListener('ipc-message', onMessage);
 
-      frame.addEventListener('did-finish-load', () => {
-        frame.openDevTools();
-      });
+      frame.addEventListener('did-finish-load', onLoadFinish);
 
       return frame;
     })(),
     close: () => {
       frame.removeEventListener('new-tab', onMessage);
+      frame.removeEventListener('did-finish-load', onLoadFinish);
       frame.remove();
     },
     selected
@@ -68,6 +74,7 @@ function createTab({ title, url, view, selected = true }) {
 function App() {
   const [tabs, setTabs] = useState([]);
   const view = useRef(null);
+  const config = useContext(Config);
 
   useEffect(() => {
     setTabs([
@@ -80,7 +87,7 @@ function App() {
       const query = Object.keys(data).map(key => `${key}=${data[key]}`).join('&');
       const url = `${window.location.href}?${query}`;
 
-      const tab = createTab({ title, url, view });
+      const tab = createTab({ title, url, view, devTools: config.get('devToolsOpen', false) });
       const newTabs = [...(tabs.map(t => {
         t.selected = false;
         return t;
@@ -130,4 +137,4 @@ function App() {
   `;
 }
 
-module.exports = App;
+module.exports = withConfig(App);
