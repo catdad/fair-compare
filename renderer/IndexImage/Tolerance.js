@@ -10,15 +10,18 @@ const Panzoom = require('./Panzoom.js');
 
 const KEY = 'tolerance';
 const THRESHOLD = `${KEY}.threshold`;
+const BACKGROUND = `${KEY}.background`;
 
 const toBackground = url => `url(${JSON.stringify(url)})`;
 
 function Tolerance({ left, right, buttons }) {
+  const getBackground = mode => mode === 'image' ? toBackground(left) : '#000';
+
   const config = useContext(Config);
   const cache = useContext(Cache);
   const view = useRef(null);
   const renderPromise = useRef(null);
-  const [background, setBackground] = useState(toBackground(left));
+  const [background, setBackground] = useState(config.get(BACKGROUND, 'image'));
   const [zoomElem, setZoomElem] = useState(null);
 
   const [threshold, setThreshold] = useState(config.get(THRESHOLD, 0.05));
@@ -27,7 +30,7 @@ function Tolerance({ left, right, buttons }) {
     const data = cache.get(KEY);
     setVar(view.current, 'width', `${data.width}px`);
     setVar(view.current, 'height', `${data.height}px`);
-    setVar(view.current, 'background', background);
+    setVar(view.current, 'background', getBackground(background));
 
     view.current.width = data.width;
     view.current.height = data.height;
@@ -103,11 +106,9 @@ function Tolerance({ left, right, buttons }) {
   };
 
   const toggleBackground = () => {
-    if (background === '#000') {
-      setBackground(toBackground(left));
-    } else {
-      setBackground('#000');
-    }
+    const value = background === 'image' ? 'black' : 'image';
+    config.set(BACKGROUND, value);
+    setBackground(value);
   };
 
   const viewButtons = [...buttons];
