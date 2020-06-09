@@ -11,7 +11,7 @@ function marker({ file }) {
   return MARKERS[file.compare];
 }
 
-function File({ file, selected, onSelect, onOpen, side, compareMarkers }) {
+function File({ file, selected, onSelect, onOpen, side }) {
   const classes = `node file ${file.path === selected ? 'selected' : ''} ${file[side] ? '' : 'missing'} ${marker({ file })}`;
   const text = file[side] ? file.name : '-';
 
