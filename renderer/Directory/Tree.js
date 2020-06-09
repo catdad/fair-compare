@@ -1,12 +1,26 @@
 const { html, useState } = require('../tools/ui.js');
 
-function File({ file, selected, onSelect, onOpen, side }) {
-  const classes = `node file ${file.path === selected ? 'selected' : ''} ${file[side] ? '' : 'missing'}`;
+function marker({ file }) {
+  let char;
+
+  if (file.compare === 'same') {
+    char = '🟢';
+  } else if (file.compare === 'similar') {
+    char = '🟡';
+  } else if (file.compare === 'different') {
+    char = '🔴';
+  }
+
+  return char;
+}
+
+function File({ file, selected, onSelect, onOpen, side, compareMarkers }) {
+  const classes = `node file ${file.path === selected ? 'selected' : ''} ${file[side] ? '' : 'missing'} ${marker({ file })}`;
   const text = file[side] ? file.name : '-';
 
   const onclick = () => onSelect(file.path);
   const ondblclick = () => onOpen(file.path);
-  const icon = '📄';
+  const icon = marker({ file }) || '📄';
 
   return html`<div key=${file.path} class=${classes} ...${({ onclick, ondblclick })}>${icon} ${text}</div>`;
 }
