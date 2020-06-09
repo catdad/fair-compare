@@ -17,13 +17,15 @@ const MODE = {
   side: 'side'
 };
 
+const VIEW = 'image-view';
+
 function App({ left, right }) {
   const config = useContext(Config);
-  const [mode, setMode] = useState(config.get('image-mode', MODE.tolerance));
+  const [mode, setMode] = useState(config.get(VIEW, MODE.tolerance));
 
   const changeMode = newMode => () => {
     setMode(newMode);
-    config.set('image-mode', newMode);
+    config.set(VIEW, newMode);
   };
 
   const buttons = [
