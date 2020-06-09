@@ -124,6 +124,10 @@ function App() {
         tab.selected = false;
       }
 
+      if (tab === TAB) {
+        tab.close();
+      }
+
       return tab !== TAB;
     });
 
