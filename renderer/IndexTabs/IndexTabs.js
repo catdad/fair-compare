@@ -75,10 +75,11 @@ function App() {
   const [tabs, setTabs] = useState([]);
   const view = useRef(null);
   const config = useContext(Config);
+  const devTools = config.get('devToolsOpen', false);
 
   useEffect(() => {
     setTabs([
-      createTab({ title: 'Main', url: `${window.location.href}?route=directory`, view }),
+      createTab({ title: 'Main', url: `${window.location.href}?route=directory`, view, devTools }),
     ]);
   }, [/* execute once */]);
 
@@ -87,7 +88,7 @@ function App() {
       const query = Object.keys(data).map(key => `${key}=${data[key]}`).join('&');
       const url = `${window.location.href}?${query}`;
 
-      const tab = createTab({ title, url, view, devTools: config.get('devToolsOpen', false) });
+      const tab = createTab({ title, url, view, devTools });
       const newTabs = [...(tabs.map(t => {
         t.selected = false;
         return t;
