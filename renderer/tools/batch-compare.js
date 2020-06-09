@@ -7,7 +7,11 @@ const imageDiff = require('./image-diff.js');
 const flatFiles = (tree) => {
   const files = [];
 
-  for (let entry of Object.values(tree)) {
+  const keys = Object.keys(tree).sort((a, b) => a.localeCompare(b));
+
+  for (let key of keys) {
+    const entry = tree[key];
+
     if (entry.type === 'file') {
       files.push(entry);
     } else if (entry.type === 'dir' && entry.children) {
