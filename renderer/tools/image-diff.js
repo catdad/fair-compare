@@ -61,18 +61,6 @@ const computeTolerance = async ({ leftData, rightData, threshold }) => {
   return { leftData, rightData, pixels, output, width, height };
 };
 
-const computeToleranceUrl = async (...args) => {
-  const result = await computeTolerance(...args);
-
-  console.time('diff-url');
-  const blob = await result.resultCanvas.convertToBlob({ type: 'image/png' });
-  const imageUrl = `data:image/png;base64,${Buffer.from(await blob.arrayBuffer()).toString('base64')}`;
-  result.imageUrl = imageUrl;
-  console.timeEnd('diff-url');
-
-  return result;
-};
-
 const tolerance = async ({ left, right, threshold = 0.05 }) => {
   console.time('tolerance');
   console.time('read');
