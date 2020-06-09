@@ -48,8 +48,8 @@ function App({ left, right }) {
       return html`
         <${Toolbar}>${buttons}<//>
         <div class=main>
-          <div class="double img"><${Image} title=${left} filepath=${left} /></div>
-          <div class="double img"><${Image} title=${right} filepath=${right} /></div>
+          <div class="double img"><${Image} filepath=${left} /></div>
+          <div class="double img"><${Image} filepath=${right} /></div>
         </div>
       `;
   }
