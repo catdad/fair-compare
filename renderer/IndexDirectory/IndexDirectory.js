@@ -84,9 +84,11 @@ function App() {
   }
 
   function batch() {
-    batchCompare({ tree: treeData }).then(() => {
+    const onUpdate = () => setTreeData({ ...treeData });
+
+    batchCompare({ tree: treeData, onUpdate }).then(() => {
       console.log('DONE', treeData);
-      setTreeData({ ...treeData });
+      onUpdate();
     }).catch(err => {
       console.error('BATCH COMPARE ERROR', err);
     });

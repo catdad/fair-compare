@@ -33,7 +33,7 @@ const diffImage = async ({ left, right, ...opts }) => {
   return pixels ? 'different' : 'similar';
 };
 
-const compare = async ({ tree, threshold }) => {
+const compare = async ({ tree, threshold, onUpdate }) => {
   const leftBase = tree.left.base;
   const rightBase = tree.right.base;
 
@@ -60,6 +60,8 @@ const compare = async ({ tree, threshold }) => {
       route === 'text' ?
         await diffText({ left, right }) :
         'unknown';
+
+    onUpdate();
   }
 };
 
