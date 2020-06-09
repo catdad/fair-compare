@@ -31,7 +31,7 @@
 .half .list p,
 .half .node {
   margin: 0;
-  padding: var(--pad);
+  padding: calc(var(--pad) / 2) var(--pad);
 }
 
 .half .selected {
