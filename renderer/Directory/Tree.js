@@ -1,17 +1,14 @@
 const { html, useState } = require('../tools/ui.js');
 
+const MARKERS = {
+  same: '🟢',
+  similar: '🟡',
+  different: '🔴',
+  invalid: '🚫'
+};
+
 function marker({ file }) {
-  let char;
-
-  if (file.compare === 'same') {
-    char = '🟢';
-  } else if (file.compare === 'similar') {
-    char = '🟡';
-  } else if (file.compare === 'different') {
-    char = '🔴';
-  }
-
-  return char;
+  return MARKERS[file.compare];
 }
 
 function File({ file, selected, onSelect, onOpen, side, compareMarkers }) {
