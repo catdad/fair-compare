@@ -32,6 +32,10 @@
 
 .tab span {
   flex-grow: 1;
+  font-size: calc(var(--font-size) - 1pt);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .tab button {

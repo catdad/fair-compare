@@ -13,7 +13,7 @@ function Tabs({ list, onSelect, onClose }) {
   };
   return list.map(tab => {
     return html`<span key=${tab.key} class="tab ${tab.selected ? 'selected' : ''}" onClick=${() => onSelect(tab)}>
-      <span>${tab.title}</span>
+      <span title=${tab.title}>${tab.title}</span>
       <button onclick=${onCloseClick(tab)}>🞩</button>
     </span>`;
   });
