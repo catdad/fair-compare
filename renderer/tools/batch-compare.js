@@ -1,8 +1,5 @@
 const path = require('path');
-const FileType = require('file-type');
-const fs = require('fs-extra');
-
-const imageDiff = require('./image-diff.js');
+const worker = require('../workers/batch-compare.js');
 
 const flatFiles = (tree) => {
   const files = [];
@@ -20,21 +17,6 @@ const flatFiles = (tree) => {
   }
 
   return files;
-};
-
-const diffText = async ({ left, right }) => {
-  const [ leftBuffer, rightBuffer ] = await Promise.all([
-    fs.readFile(left),
-    fs.readFile(right)
-  ]);
-
-  return leftBuffer.equals(rightBuffer) ? 'same' : 'different';
-};
-
-const diffImage = async ({ left, right, ...opts }) => {
-  const { pixels } = await imageDiff.tolerance({ left, right, ...opts });
-
-  return pixels === -1 ? 'same' : pixels ? 'different' : 'similar';
 };
 
 const compare = async ({ tree, threshold, onUpdate }) => {
@@ -60,17 +42,9 @@ const compare = async ({ tree, threshold, onUpdate }) => {
     const right = path.resolve(rightBase, file.path);
 
     try {
-      const result = await FileType.fromFile(left);
-      const { mime } = result || { mime: 'text/plain' };
-      const route = mime.split('/')[0];
-
-      file.compare = route === 'image' ?
-        await diffImage({ left, right, threshold }) :
-        route === 'text' ?
-          await diffText({ left, right }) :
-          'unknown';
+      file.compare = await worker.compare({ left, right, threshold });
     } catch (err) {
-      console.error(`failed to diff "${file.path}"`, err);
+      console.warn('comparison failed', err);
       file.compare = 'error';
     }
   }
@@ -78,4 +52,4 @@ const compare = async ({ tree, threshold, onUpdate }) => {
   clearInterval(interval);
 };
 
-module.exports = compare;
+module.exports = { compare };

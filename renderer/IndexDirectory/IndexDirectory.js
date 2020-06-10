@@ -4,7 +4,7 @@ const FileType = require('file-type');
 const { html, css, useContext, useEffect, useState } = require('../tools/ui.js');
 const { Config, withConfig } = require('../tools/config.js');
 const directoryTree = require('../tools/directory-tree.js');
-const batchCompare = require('../tools/batch-compare.js');
+const { compare } = require('../tools/batch-compare.js');
 
 const { ipcRenderer } = require('electron');
 const { List, Tree } = require('../Directory/Directory.js');
@@ -94,7 +94,7 @@ function App() {
     const onUpdate = () => setTreeData({ ...treeData });
 
     console.time('batch compare');
-    batchCompare({ tree: treeData, onUpdate }).then(() => {
+    compare({ tree: treeData, onUpdate }).then(() => {
       console.timeEnd('batch compare');
       onUpdate();
     }).catch(err => {
