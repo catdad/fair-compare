@@ -41,13 +41,7 @@ const getCanvas = (width, height) => {
 };
 
 const pixelsAreEqual = (leftData, rightData) => {
-  for (let i = 0, l = leftData.length; i < l; i++) {
-    if (leftData[i] !== rightData[i]) {
-      return false;
-    }
-  }
-
-  return true;
+  return Buffer.from(leftData.buffer).equals(Buffer.from(rightData.buffer));
 };
 
 const computeTolerance = async ({ leftData, rightData, threshold }) => {
