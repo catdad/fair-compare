@@ -4,7 +4,8 @@ const MARKERS = {
   same: '🟢',
   similar: '🟡',
   different: '🔴',
-  invalid: '🚫'
+  invalid: '🚫',
+  error: '‼'
 };
 
 function marker({ file }) {
