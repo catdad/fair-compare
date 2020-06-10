@@ -54,13 +54,9 @@ if (isParent) {
 
       const [id, ARGS] = args;
 
-      console.log('MESSAGE', channel, id, ARGS);
-
       implementation[channel](...ARGS).then(data => {
-        console.log('got response', data);
         frame.send(id, { ok: true, data });
       }).catch(err => {
-        console.log('got error', err);
         frame.send(id, { ok: false, err: {
           message: err.message,
           stack: err.stack
@@ -80,8 +76,6 @@ if (isParent) {
 
   const compare = (...args) => {
     const id = `${CB_CHANNEL}-${gid()}`;
-
-    console.log('COMPARE', args);
 
     return new Promise((resolve, reject) => {
       ipcRenderer.on(id, (info, { err, data }) => {
