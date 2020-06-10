@@ -2,11 +2,15 @@
 
 //const comlink = require('comlink');
 const get = require('lodash/get');
+const is = require('../../lib/is.js');
 
-const isParent = get(window, 'process.argv', []).includes('--node-integration-in-worker');
+const global = () => typeof window === 'undefined' ? {} : window;
+const isParent = get(global(), 'process.argv', []).includes('--node-integration-in-worker');
+const isWorker = is.worker;
 
-if (isParent) {
-  // this is the primary renderer thread, it will create and communicate with the worker
+if (isWorker) {
+  const comlink = require('comlink');
+
   const fs = require('fs-extra');
   const FileType = require('file-type');
 
@@ -14,10 +18,7 @@ if (isParent) {
   const imageDiff = require('../tools/image-diff.js');
 
   const diffImage = async ({ left, right, ...opts }) => {
-    console.log(4);
     const { pixels } = await imageDiff.tolerance({ left, right, ...opts });
-    console.log(5, pixels);
-
     return pixels === -1 ? 'same' : pixels ? 'different' : 'similar';
   };
 
@@ -32,7 +33,7 @@ if (isParent) {
 
   const compare = async ({ left, right, threshold }) => {
     // TODO why does FileType not work?
-    const result = { mime: 'image/thing' }; //await FileType.fromFile(left);
+    const result = await FileType.fromFile(left);
     const { mime } = result || { mime: 'text/plain' };
     const route = mime.split('/')[0];
 
@@ -41,6 +42,21 @@ if (isParent) {
       route === 'text' ?
         await diffText({ left, right }) :
         'unknown';
+  };
+
+  module.exports = () => {
+    comlink.expose({ compare });
+  };
+} else if (isParent) {
+  // this is the primary renderer thread, it will create and communicate with the worker
+  const comlink = require('comlink');
+  const worker = new Worker(URL.createObjectURL(
+    new Blob(['require("../renderer/workers/batch-compare.js")();'])
+  ));
+  const api = comlink.wrap(worker);
+
+  const compare = async (...args) => {
+    return await api.compare(...args);
   };
 
   const implementation = { compare };

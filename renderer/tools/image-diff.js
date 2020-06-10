@@ -1,19 +1,13 @@
 /* eslint-disable no-console */
 
 const pixelmatch = require('pixelmatch');
-
-const loadUrl = (img, url) => {
-  return new Promise((resolve, reject) => {
-    img.onload = () => resolve();
-    img.onerror = e => reject(e);
-    img.src = url;
-  });
-};
+const fs = require('fs-extra');
 
 const loadImage = async (filepath) => {
-  const img = new window.Image();
-  await loadUrl(img, filepath);
-  const { naturalWidth: width, naturalHeight: height } = img;
+  const buffer = await fs.readFile(filepath);
+  const blob = new Blob([buffer.buffer]);
+  const img = await createImageBitmap(blob);
+  const { width, height } = img;
 
   return { img, width, height };
 };
@@ -29,6 +23,10 @@ const readImageData = async (filepath) => {
   console.time(`draw-data ${filepath}`);
   const data = ctx.getImageData(0, 0, width, height);
   console.timeEnd(`draw-data ${filepath}`);
+
+  console.time(`close ${filepath}`);
+  img.close();
+  console.timeEnd(`close ${filepath}`);
 
   return data;
 };
