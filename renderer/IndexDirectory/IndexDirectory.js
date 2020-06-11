@@ -126,7 +126,6 @@ function App() {
 
   if (treeData.progress) {
     const { count, total } = treeData.progress;
-    console.log({ count, total });
     buttons.push(html`<progress max=${total} value=${count} /><span>${Math.floor(count / total * 100)}%</span>`);
   }
 
