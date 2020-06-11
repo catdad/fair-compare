@@ -1,5 +1,6 @@
-const { html, createContext, useEffect, useState } = require('../tools/ui.js');
 const { get, set } = require('lodash');
+const { html, createContext, useEffect, useState } = require('../tools/ui.js');
+const toast = require('../tools/toast.js');
 const CONFIG = require('../../lib/config.js');
 
 const noop = () => {};
@@ -22,7 +23,11 @@ const withConfig = Component => ({ children, ...props }) => {
       delete obj.__loading;
       setLocalConfig(obj);
     }).catch(err => {
-      console.error('CONFIG FAILED TO LOAD', err);
+      toast.error([
+        'failed to load configuration',
+        'try restarting the application',
+        err.toString()
+      ].join('<br/>'), { duration: -1 });
     });
   }, []);
 
