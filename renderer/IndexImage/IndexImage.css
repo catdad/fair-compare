@@ -1,6 +1,7 @@
 .main {
   display: flex;
   height: calc(100vh - var(--toolbar-height, 0px));
+  overflow: hidden;
 }
 
 .img {
