@@ -1,12 +1,13 @@
 /* eslint-disable no-console */
 
-//const comlink = require('comlink');
+const os = require('os');
 const get = require('lodash/get');
 const is = require('../../lib/is.js');
 
 const global = () => typeof window === 'undefined' ? {} : window;
 const isParent = get(global(), 'process.argv', []).includes('--node-integration-in-worker');
 const isWorker = is.worker;
+const count = Math.max(Math.min(os.cpus().length - 1, 6), 1);
 
 if (isWorker) {
   const comlink = require('comlink');
@@ -50,13 +51,32 @@ if (isWorker) {
 } else if (isParent) {
   // this is the primary renderer thread, it will create and communicate with the worker
   const comlink = require('comlink');
-  const worker = new Worker(URL.createObjectURL(
-    new Blob(['require("../renderer/workers/batch-compare.js")();'])
-  ));
-  const api = comlink.wrap(worker);
+  const promises = new Map();
+
+  const workers = new Array(count).fill(true).map(() => {
+    return new Worker(URL.createObjectURL(
+      new Blob(['require("../renderer/workers/batch-compare.js")();'])
+    ));
+  });
+  const apis = workers.map(worker => comlink.wrap(worker));
 
   const compare = async (...args) => {
-    return await api.compare(...args);
+    if (apis.length === 0) {
+      await Promise.race([...promises.values()]);
+      return await compare(...args);
+    }
+
+    const api = apis.pop();
+    promises.set(api, api.compare(...args));
+
+    try {
+      return await promises.get(api);
+    } catch (err) {
+      throw err;
+    } finally {
+      promises.delete(api);
+      apis.push(api);
+    }
   };
 
   const implementation = { compare };
@@ -83,7 +103,7 @@ if (isWorker) {
     frame.addEventListener('ipc-message', frame._onMessage);
   };
 
-  module.exports = { ...implementation, register };
+  module.exports = { ...implementation, register, count };
 } else {
   // this is a webview, it will forward all work to the primary thread
   const { ipcRenderer } = require('electron');
@@ -106,5 +126,5 @@ if (isWorker) {
     });
   };
 
-  module.exports = { compare };
+  module.exports = { compare, count };
 }

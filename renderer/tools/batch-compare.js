@@ -1,5 +1,8 @@
 const path = require('path');
+const { default: Queue } = require('p-queue');
 const worker = require('../workers/batch-compare.js');
+
+const queue = new Queue({ concurrency: worker.count });
 
 const flatFiles = (tree) => {
   const files = [];
@@ -41,13 +44,17 @@ const compare = async ({ tree, threshold, onUpdate }) => {
     const left = path.resolve(leftBase, file.path);
     const right = path.resolve(rightBase, file.path);
 
-    try {
-      file.compare = await worker.compare({ left, right, threshold });
-    } catch (err) {
-      console.warn('comparison failed', err);
-      file.compare = 'error';
-    }
+    queue.add(async () => {
+      try {
+        file.compare = await worker.compare({ left, right, threshold });
+      } catch (err) {
+        console.warn('comparison failed', err);
+        file.compare = 'error';
+      }
+    });
   }
+
+  await queue.onEmpty();
 
   clearInterval(interval);
 };
