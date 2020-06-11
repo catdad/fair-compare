@@ -1,4 +1,5 @@
 const { html, css, useEffect, useRef, useState, setVar } = require('../tools/ui.js');
+const toast = require('../tools/toast.js');
 const { info } = require('../tools/image-diff.js');
 const { Toolbar, ToolbarSeparator } = require('../Toolbar/Toolbar.js');
 const Panzoom = require('./Panzoom.js');
@@ -28,7 +29,7 @@ function Blend({ left, right, buttons }) {
         setZoomElem(view.current);
       }
     }).catch(err => {
-      console.error(err);
+      toast.error(err);
     });
 
     return () => {

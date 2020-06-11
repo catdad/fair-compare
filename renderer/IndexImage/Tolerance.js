@@ -1,4 +1,5 @@
 const { html, css, useContext, useEffect, useState, useRef, setVar } = require('../tools/ui.js');
+const toast = require('../tools/toast.js');
 const { tolerance, computeTolerance } = require('../tools/image-diff.js');
 const { Cache } = require('../tools/cache.js');
 const { Config } = require('../tools/config.js');
@@ -76,7 +77,7 @@ function Tolerance({ left, right, buttons }) {
 
       applyCache();
     }).catch(err => {
-      console.error('TOLERANCE ERROR:', err);
+      toast.error('TOLERANCE ERROR:', err);
     });
 
     return () => {
