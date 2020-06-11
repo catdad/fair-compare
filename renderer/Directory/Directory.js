@@ -1,4 +1,5 @@
 const { html, css } = require('../tools/ui.js');
+const toast = require('../tools/toast.js');
 const { dialog } = require('electron').remote;
 
 css('./Directory.css');
@@ -31,8 +32,7 @@ const withDirHelpers = Component => ({ children, base, setDir, ...props }) => {
 
       setDir(filePaths[0]);
     }).catch(err => {
-      // TODO handle this error better
-      console.error(err);
+      toast.error(err);
     });
   };
 

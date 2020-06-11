@@ -49,3 +49,9 @@ html, body {
 * {
   box-sizing: border-box;
 }
+
+.toastify.toastify.toastify {
+  width: 33%;
+  max-width: 400px;
+  text-align: center;
+}

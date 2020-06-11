@@ -4,6 +4,7 @@ const FileType = require('file-type');
 const { html, css, useContext, useEffect, useState } = require('../tools/ui.js');
 const { Config, withConfig } = require('../tools/config.js');
 const directoryTree = require('../tools/directory-tree.js');
+const toast = require('../tools/toast.js');
 
 const { ipcRenderer } = require('electron');
 const { List, Tree } = require('../Directory/Directory.js');
@@ -37,7 +38,10 @@ function App() {
     }).then(data => {
       setTreeData(data);
     }).catch((err) => {
-      console.error(err);
+      toast.error([
+        'failed to load directories',
+        err.toString()
+      ].join('<br/>'));
     });
   }, [/* execute only once */]);
 
