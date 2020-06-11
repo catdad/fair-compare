@@ -19,7 +19,7 @@ const toast = (color) => {
     Toastify(Object.assign({
       text: text,
       gravity: 'top',
-      position: 'center',
+      position: 'right',
       backgroundColor: color,
       duration: 4000
     }, opts)).showToast();
