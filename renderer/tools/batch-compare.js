@@ -35,6 +35,8 @@ const compare = async ({ tree, threshold, onUpdate }) => {
     onUpdate();
   }, 1000);
 
+  tree.progress = { count: 0, total: allFiles.length };
+
   for (let file of allFiles) {
     if (!file.left || !file.right) {
       file.compare = 'invalid';
@@ -45,6 +47,8 @@ const compare = async ({ tree, threshold, onUpdate }) => {
     const right = path.resolve(rightBase, file.path);
 
     queue.add(async () => {
+      tree.progress.count += 1;
+
       try {
         file.compare = await worker.compare({ left, right, threshold });
       } catch (err) {
@@ -57,6 +61,8 @@ const compare = async ({ tree, threshold, onUpdate }) => {
   await queue.onEmpty();
 
   clearInterval(interval);
+
+  delete tree.progress;
 };
 
 module.exports = { compare };

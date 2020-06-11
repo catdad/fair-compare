@@ -116,13 +116,22 @@ function App() {
       html`<${List} dir=${treeData[side]} ...${props} />`;
   }
 
+
+  const buttons = [
+    html`<button onClick=${() => changeView('tree')}>Tree View</button>`,
+    html`<button onClick=${() => changeView('list')}>List View</button>`,
+    html`<${ToolbarSeparator} />`,
+    html`<button onClick=${() => batch()}>Batch Compare</button>`,
+  ];
+
+  if (treeData.progress) {
+    const { count, total } = treeData.progress;
+    console.log({ count, total });
+    buttons.push(html`<progress max=${total} value=${count} /><span>${Math.floor(count / total * 100)}%</span>`);
+  }
+
   return html`
-    <${Toolbar}>
-      <button onClick=${() => changeView('tree')}>Tree View</button>
-      <button onClick=${() => changeView('list')}>List View</button>
-      <${ToolbarSeparator} />
-      <button onClick=${() => batch()}>Batch Compare</button>
-    <//>
+    <${Toolbar}>${buttons}<//>
     <div class=main>
       ${render('left')}
       ${render('right')}
