@@ -13,14 +13,13 @@ function marker({ file }) {
 }
 
 function File({ file, selected, onSelect, onOpen, side }) {
-  const classes = `node file ${file.path === selected ? 'selected' : ''} ${file[side] ? '' : 'missing'} ${marker({ file })}`;
-  const text = file[side] ? file.name : '-';
+  const classes = `node file ${file.path === selected ? 'selected' : ''} ${file[side] ? '' : 'missing'}`;
 
   const onclick = () => onSelect(file.path);
   const ondblclick = () => onOpen(file.path);
   const icon = marker({ file }) || '📄';
 
-  return html`<div key=${file.path} class=${classes} ...${({ onclick, ondblclick })}>${icon} ${text}</div>`;
+  return html`<div key=${file.path} class=${classes} ...${({ onclick, ondblclick })}>${icon} ${file.name}</div>`;
 }
 
 function Directory({ dir, side, ...props }) {
