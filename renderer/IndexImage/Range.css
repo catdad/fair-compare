@@ -15,3 +15,8 @@
   mix-blend-mode: luminosity;
   filter: grayscale(100%);
 }
+
+.range, .range:before {
+  background-repeat: no-repeat;
+  background-position: top left;
+}
