@@ -1,7 +1,9 @@
 const path = require('path');
 const { default: Queue } = require('p-queue');
 const worker = require('../workers/batch-compare.js');
+const progress = require('../../lib/progress.js');
 
+const noop = () => {};
 const queue = new Queue({ concurrency: worker.count });
 
 const flatFiles = (tree) => {
@@ -37,9 +39,17 @@ const compare = async ({ tree, threshold, onUpdate }) => {
 
   tree.progress = { count: 0, total: allFiles.length };
 
+  progress.init(allFiles.length).catch(noop);
+
+  const tick = () => {
+    tree.progress.count += 1;
+    progress.tick().catch(noop);
+  };
+
   for (let file of allFiles) {
     if (!file.left || !file.right) {
       file.compare = 'invalid';
+      tick();
       continue;
     }
 
@@ -47,22 +57,26 @@ const compare = async ({ tree, threshold, onUpdate }) => {
     const right = path.resolve(rightBase, file.path);
 
     queue.add(async () => {
-      tree.progress.count += 1;
-
       try {
         file.compare = await worker.compare({ left, right, threshold });
       } catch (err) {
         console.warn('comparison failed', err);
         file.compare = 'error';
       }
+
+      tick();
     });
   }
 
-  await queue.onEmpty();
+  // do one initial update immediately to start the progress bars
+  onUpdate();
+
+  await queue.onIdle();
 
   clearInterval(interval);
 
   delete tree.progress;
+  progress.clear().catch(noop);
 };
 
 module.exports = { compare };
