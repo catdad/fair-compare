@@ -17,7 +17,7 @@ const colors = {
 const toast = (color) => {
   return (text, opts = {}) => {
     Toastify(Object.assign({
-      text: text,
+      text: text.split('\n').join('<br/>'),
       gravity: 'top',
       position: 'right',
       backgroundColor: color,
