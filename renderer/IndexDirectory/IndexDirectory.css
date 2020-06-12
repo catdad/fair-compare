@@ -13,7 +13,7 @@ progress {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,7 +25,27 @@ progress {
   background-color: var(--color-background);
 }
 
-.modal .dialog .buttons {
-  padding-top: 20px;
+.modal .dialog h1,
+.modal .dialog h2,
+.modal .dialog h3 {
+  padding: 0;
+  margin: 0 0 10px 0;
 }
 
+.modal .dialog .inline {
+  display: flex;
+  align-items: flex-end;
+}
+
+.modal .dialog .inline > * {
+  margin-right: 10px;
+}
+
+.modal .dialog .buttons {
+  padding-top: 20px;
+  text-align: right;
+}
+
+.modal .dialog button {
+  margin-left: 10px;
+}

@@ -17,8 +17,8 @@ const Dialog = ({ children, onUpdate }) => {
   return html`
     <div class=dialog>
       <h1>Comparison Rules<//>
-      <div>Tolerance Threshold<//>
-      <div>
+      <h3>Tolerance Threshold<//>
+      <div class=inline>
         <input type=range min=0 max=1 value=${threshold} step=0.01 oninput=${applyThreshold} />
         <span>${threshold}</span>
       </div>
