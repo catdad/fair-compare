@@ -9,6 +9,7 @@ require('./lib/app-id.js')(app);
 const log = require('./lib/log.js')('main');
 const config = require('./lib/config.js');
 const debounce = require('./lib/debounce.js');
+require('./lib/progress.js');
 
 log.info(`electron node version: ${process.version}`);
 

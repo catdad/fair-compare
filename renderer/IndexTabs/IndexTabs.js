@@ -1,6 +1,7 @@
 const { html, css, useContext, useState, useEffect, useRef, useCallback } = require('../tools/ui.js');
 const viewBus = new (require('events'))();
 const { Config, withConfig } = require('../tools/config.js');
+const batchCompare = require('../workers/batch-compare.js');
 
 css('./IndexTabs.css');
 
@@ -40,6 +41,7 @@ function createTab({ title, url, view, devTools = false, selected = true }) {
       frame.classList.add('view');
       frame.setAttribute('src', url);
       frame.setAttribute('nodeintegration', true);
+      frame.setAttribute('nodeintegrationinworker', true);
 
       view.current.appendChild(frame);
 
@@ -78,9 +80,10 @@ function App() {
   const devTools = config.get('devToolsOpen', false);
 
   useEffect(() => {
-    setTabs([
-      createTab({ title: 'Main', url: `${window.location.href}?route=directory`, view, devTools }),
-    ]);
+    const tab = createTab({ title: 'Main', url: `${window.location.href}?route=directory`, view, devTools });
+    batchCompare.register(tab.frame);
+
+    setTabs([tab]);
   }, [/* execute once */]);
 
   useEffect(() => {

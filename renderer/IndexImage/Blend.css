@@ -13,3 +13,8 @@
   background: var(--right);
   opacity: var(--opacity);
 }
+
+.blend, .blend:before {
+  background-repeat: no-repeat;
+  background-position: top left;
+}

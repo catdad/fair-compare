@@ -1,14 +1,15 @@
 const { html, useState } = require('../tools/ui.js');
+const marker = require('./markers.js');
+const Icon = require('./Icon.js');
 
 function File({ file, selected, onSelect, onOpen, side }) {
   const classes = `node file ${file.path === selected ? 'selected' : ''} ${file[side] ? '' : 'missing'}`;
-  const text = file[side] ? file.name : '-';
 
-  const onclick = () => onSelect(file.path);
-  const ondblclick = () => onOpen(file.path);
-  const icon = '📄';
+  const onclick = () => onSelect(file);
+  const ondblclick = () => onOpen(file);
+  const icon = marker(file);
 
-  return html`<div key=${file.path} class=${classes} ...${({ onclick, ondblclick })}>${icon} ${text}</div>`;
+  return html`<div key=${file.path} class=${classes} ...${({ onclick, ondblclick })}>${icon} ${file.name}</div>`;
 }
 
 function Directory({ dir, side, ...props }) {
@@ -18,7 +19,7 @@ function Directory({ dir, side, ...props }) {
   const openChar = open ? '📂' : '📁';
 
   return html`
-    <div class="name node" onClick=${toggleOpen}>${openChar} ${dir.name}</div>
+    <div class="name node" onClick=${toggleOpen}><${Icon}>${openChar}<//> ${dir.name}</div>
     <div class="directory">
       ${ open ? html`<${Tree} tree=${dir.children} ...${({ side, ...props })} />` : html`` }
     </div>

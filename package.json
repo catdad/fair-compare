@@ -28,11 +28,13 @@
   "dependencies": {
     "@panzoom/panzoom": "^4.1.0",
     "callsites": "^3.1.0",
+    "comlink": "^4.3.0",
     "fast-glob": "^3.2.2",
     "file-type": "^14.6.0",
     "fs-extra": "^9.0.0",
     "htm": "^3.0.4",
     "lodash": "^4.17.15",
+    "p-queue": "^6.4.0",
     "pixelmatch": "^5.2.0",
     "preact": "^10.4.4",
     "toastify-js": "^1.8.0"

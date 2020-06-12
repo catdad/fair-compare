@@ -1,8 +1,9 @@
 .half {
+  position: relative;
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  max-width: 50%;
+  width: 50%;
   min-height: 100%;
   user-select: none;
   font-size: calc(var(--font-size) - 1pt);
@@ -10,7 +11,11 @@
   --pad: 6px;
 }
 
-.half:first-of-type {
+.half:first-of-type::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  height: 100%;
   border-right: 1px solid var(--color-border);
 }
 
@@ -41,9 +46,14 @@
 
 .half .directory {
   padding-left: calc(1.5rem);
-
 }
 
 .half .file.missing {
   opacity: 0;
+}
+
+.half .icon {
+  width: 1.3rem;
+  display: inline-block;
+  text-align: center;
 }
