@@ -2,8 +2,8 @@ const MARKERS = {
   same: '🟢',
   similar: '🟡',
   different: '🔴',
-  invalid: '🚫',
-  error: '‼'
+  invalid: '⚪',
+  error: '💢'
 };
 
 module.exports = ({ compare }) => {
