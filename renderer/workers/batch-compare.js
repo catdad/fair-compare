@@ -7,7 +7,7 @@ const is = require('../../lib/is.js');
 const global = () => typeof window === 'undefined' ? {} : window;
 const isParent = get(global(), 'process.argv', []).includes('--node-integration-in-worker');
 const isWorker = is.worker;
-const count = Math.max(Math.min(os.cpus().length - 1, 6), 1);
+const count = Math.max(Math.floor(os.cpus().length * 0.75), 1);
 
 if (isWorker) {
   const comlink = require('comlink');
