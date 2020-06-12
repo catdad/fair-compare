@@ -51,3 +51,9 @@
 .half .file.missing {
   opacity: 0;
 }
+
+.half .icon {
+  width: 1.3rem;
+  display: inline-block;
+  text-align: center;
+}

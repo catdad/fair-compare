@@ -1,5 +1,6 @@
 const { html, useState } = require('../tools/ui.js');
 const marker = require('./markers.js');
+const Icon = require('./Icon.js');
 
 function File({ file, selected, onSelect, onOpen, side }) {
   const classes = `node file ${file.path === selected ? 'selected' : ''} ${file[side] ? '' : 'missing'}`;
@@ -18,7 +19,7 @@ function Directory({ dir, side, ...props }) {
   const openChar = open ? '📂' : '📁';
 
   return html`
-    <div class="name node" onClick=${toggleOpen}>${openChar} ${dir.name}</div>
+    <div class="name node" onClick=${toggleOpen}><${Icon}>${openChar}<//> ${dir.name}</div>
     <div class="directory">
       ${ open ? html`<${Tree} tree=${dir.children} ...${({ side, ...props })} />` : html`` }
     </div>
