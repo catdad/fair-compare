@@ -41,7 +41,7 @@ const compare = async ({ tree, threshold, onUpdate }) => {
 
     queue.add(async () => {
       try {
-        file.compare = await worker.compare({ left, right, threshold });
+        file.compare = await worker.compare({ left, right, threshold, outputImage: false });
       } catch (err) {
         console.warn('comparison failed', err);
         file.compare = 'error';

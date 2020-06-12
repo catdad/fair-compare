@@ -32,14 +32,14 @@ if (isWorker) {
     return leftBuffer.equals(rightBuffer) ? 'same' : 'different';
   };
 
-  const compare = async ({ left, right, threshold }) => {
+  const compare = async ({ left, right, ...opts }) => {
     // TODO why does FileType not work?
     const result = await FileType.fromFile(left);
     const { mime } = result || { mime: 'text/plain' };
     const route = mime.split('/')[0];
 
     return route === 'image' ?
-      await diffImage({ left, right, threshold }) :
+      await diffImage({ left, right, ...opts }) :
       route === 'text' ?
         await diffText({ left, right }) :
         'unknown';

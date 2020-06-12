@@ -44,12 +44,12 @@ const pixelsAreEqual = (leftData, rightData) => {
   return Buffer.from(leftData.buffer).equals(Buffer.from(rightData.buffer));
 };
 
-const computeTolerance = async ({ leftData, rightData, threshold }) => {
+const computeTolerance = async ({ leftData, rightData, threshold, outputImage = true }) => {
   console.time('tolerance-compute');
   const { width, height } = leftData;
 
   console.time('diff-create');
-  const output = new Uint8ClampedArray(width * height * 4);
+  const output = outputImage ? new Uint8ClampedArray(width * height * 4) : null;
   console.timeEnd('diff-create');
 
   console.time('diff');
@@ -63,7 +63,7 @@ const computeTolerance = async ({ leftData, rightData, threshold }) => {
   return { leftData, rightData, pixels, output, width, height };
 };
 
-const tolerance = async ({ left, right, threshold = 0.05 }) => {
+const tolerance = async ({ left, right, threshold = 0.05, outputImage = true }) => {
   console.time('tolerance');
   console.time('read');
   const [leftData, rightData] = await Promise.all([
@@ -72,7 +72,7 @@ const tolerance = async ({ left, right, threshold = 0.05 }) => {
   ]);
   console.timeEnd('read');
 
-  const result = await computeTolerance({ leftData, rightData, threshold });
+  const result = await computeTolerance({ leftData, rightData, threshold, outputImage });
 
   console.timeEnd('tolerance');
   return result;
