@@ -73,11 +73,25 @@ const getDirectoryStructure = async ({ left = '', right = '' }) => {
   buildTree(tree, leftFiles, 'left');
   buildTree(tree, rightFiles, 'right');
 
-  return {
-    left: { base: left, files: leftFiles },
-    right: { base: right, files: rightFiles },
-    tree: tree
-  };
+  return { left, right, tree };
 };
 
-module.exports = getDirectoryStructure;
+const flatFiles = (tree) => {
+  const files = [];
+
+  const keys = Object.keys(tree).sort((a, b) => a.localeCompare(b));
+
+  for (let key of keys) {
+    const entry = tree[key];
+
+    if (entry.type === 'file') {
+      files.push(entry);
+    } else if (entry.type === 'dir' && entry.children) {
+      files.push(...flatFiles(entry.children));
+    }
+  }
+
+  return files;
+};
+
+module.exports = { getDirectoryStructure, flatFiles };

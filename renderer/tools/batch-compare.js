@@ -2,31 +2,14 @@ const path = require('path');
 const { default: Queue } = require('p-queue');
 const worker = require('../workers/batch-compare.js');
 const progress = require('../../lib/progress.js');
+const { flatFiles } = require('./directory-tree.js');
 
 const noop = () => {};
 const queue = new Queue({ concurrency: worker.count });
 
-const flatFiles = (tree) => {
-  const files = [];
-
-  const keys = Object.keys(tree).sort((a, b) => a.localeCompare(b));
-
-  for (let key of keys) {
-    const entry = tree[key];
-
-    if (entry.type === 'file') {
-      files.push(entry);
-    } else if (entry.type === 'dir' && entry.children) {
-      files.push(...flatFiles(entry.children));
-    }
-  }
-
-  return files;
-};
-
 const compare = async ({ tree, threshold, onUpdate }) => {
-  const leftBase = tree.left.base;
-  const rightBase = tree.right.base;
+  const leftBase = tree.left;
+  const rightBase = tree.right;
 
   if (!leftBase || !rightBase) {
     return;

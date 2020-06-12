@@ -4,16 +4,8 @@ const { dialog } = require('electron').remote;
 
 css('./Directory.css');
 
+const List = require('./List.js');
 const Tree = require('./Tree.js');
-
-function List({ dir, selected, onSelect, onOpen }) {
-  return html`
-    <div class="list">
-      ${dir.files.map(file => html`
-        <p class=${selected === file ? 'selected' : ''} onclick=${() => onSelect(file)} ondblclick=${() => onOpen(file)}>${file}</p>
-      `)}
-    </div>`;
-}
 
 function Header({ base = 'no directory selected', selectDir }) {
   return html`
