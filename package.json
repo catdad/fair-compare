@@ -36,6 +36,7 @@
     "lodash": "^4.17.15",
     "p-queue": "^6.4.0",
     "pixelmatch": "^5.2.0",
-    "preact": "^10.4.4"
+    "preact": "^10.4.4",
+    "toastify-js": "^1.8.0"
   }
 }
