@@ -6,7 +6,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron-background .",
     "dev": "electronmon .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,6 +22,7 @@
   "homepage": "https://github.com/catdad/all-compare#readme",
   "devDependencies": {
     "electron": "^9.0.3",
+    "electron-background": "^1.0.0",
     "electronmon": "^1.1.0",
     "eslint": "^5.16.0"
   },
