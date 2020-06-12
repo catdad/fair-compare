@@ -2,7 +2,7 @@
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  max-width: 50%;
+  width: 50%;
   min-height: 100%;
   user-select: none;
   font-size: calc(var(--font-size) - 1pt);
@@ -12,6 +12,7 @@
 
 .half:first-of-type {
   border-right: 1px solid var(--color-border);
+  width: calc(50% + 1px);
 }
 
 .half .header {
