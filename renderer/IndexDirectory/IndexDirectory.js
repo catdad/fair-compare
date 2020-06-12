@@ -6,6 +6,7 @@ const { Config, withConfig } = require('../tools/config.js');
 const directoryTree = require('../tools/directory-tree.js');
 const toast = require('../tools/toast.js');
 const { compare } = require('../tools/batch-compare.js');
+const dialog = require('./batch-dialog.js');
 
 const { ipcRenderer } = require('electron');
 const { List, Tree } = require('../Directory/Directory.js');
@@ -95,13 +96,19 @@ function App() {
   }
 
   function batch() {
-    const onUpdate = () => setTreeData({ ...treeData });
+    dialog().then(({ threshold }) => {
+      const onUpdate = () => setTreeData({ ...treeData });
 
-    console.time('batch compare');
-    compare({ tree: treeData, onUpdate }).then(() => {
-      console.timeEnd('batch compare');
-      onUpdate();
+      console.time('batch compare');
+      return compare({ tree: treeData, onUpdate, threshold }).then(() => {
+        console.timeEnd('batch compare');
+        onUpdate();
+      });
     }).catch(err => {
+      if (err && err.message === 'user cancel') {
+        return;
+      }
+
       console.error('BATCH COMPARE ERROR', err);
     });
   }
@@ -119,7 +126,6 @@ function App() {
       html`<${Tree} tree=${treeData.tree} side=${side} ...${props} />` :
       html`<${List} dir=${treeData[side]} ...${props} />`;
   }
-
 
   const buttons = [
     html`<button onClick=${() => changeView('tree')}>Tree View</button>`,

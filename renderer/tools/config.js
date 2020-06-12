@@ -42,4 +42,4 @@ const withConfig = Component => ({ children, ...props }) => {
   `;
 };
 
-module.exports = { Config, withConfig };
+module.exports = { Config, withConfig, CONFIG };

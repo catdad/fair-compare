@@ -6,3 +6,26 @@
 progress {
   margin: 0 var(--toolbar-spacing, 10px);
 }
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal .dialog {
+  padding: 20px;
+  border-radius: 5px;
+  background-color: var(--color-background);
+}
+
+.modal .dialog .buttons {
+  padding-top: 20px;
+}
+
