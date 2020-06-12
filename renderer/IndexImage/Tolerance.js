@@ -77,7 +77,7 @@ function Tolerance({ left, right, buttons }) {
 
       applyCache();
     }).catch(err => {
-      toast.error('TOLERANCE ERROR:', err);
+      toast.error(`TOLERANCE ERROR:\n${err.message || err.toString()}`);
     });
 
     return () => {
