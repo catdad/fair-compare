@@ -6,7 +6,7 @@ function List({ tree, side, selected, onSelect, onOpen }) {
   const files = flatFiles(tree);
 
   const elems = files.map(file => {
-    const classes = `${selected === file ? 'selected' : ''} ${file[side] ? '' : 'missing'}`;
+    const classes = `file ${file.path === selected ? 'selected' : ''} ${file[side] ? '' : 'missing'}`;
 
     const onclick = () => onSelect(file);
     const ondblclick = () => onOpen(file);
