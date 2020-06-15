@@ -2,6 +2,19 @@ const pixelmatch = require('pixelmatch');
 const fs = require('fs-extra');
 const timing = require('../../lib/timing.js')('image-diff');
 
+const pixelsAreEqual = (leftData, rightData) => {
+  return Buffer.from(leftData.buffer).equals(Buffer.from(rightData.buffer));
+};
+
+const getCanvas = (width, height) => {
+  const canvas = new OffscreenCanvas(width, height);
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+
+  return { canvas, ctx };
+};
+
 const loadImage = async (filepath) => {
   return await timing({
     label: `create-image "${filepath}`,
@@ -45,19 +58,6 @@ const readImageData = async (filepath) => {
   return data;
 };
 
-const getCanvas = (width, height) => {
-  const canvas = new OffscreenCanvas(width, height);
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext('2d');
-
-  return { canvas, ctx };
-};
-
-const pixelsAreEqual = (leftData, rightData) => {
-  return Buffer.from(leftData.buffer).equals(Buffer.from(rightData.buffer));
-};
-
 const computeTolerance = async ({ leftData, rightData, threshold, outputImage = true, left }) => {
   return await timing({
     label: `tolerance-compute "${left}"`,
@@ -90,7 +90,7 @@ const tolerance = async ({ left, right, threshold = 0.05, outputImage = true }) 
         ])
       });
 
-      return await computeTolerance({ leftData, rightData, threshold, outputImage });
+      return await computeTolerance({ leftData, rightData, threshold, outputImage, left });
     }
   });
 };
