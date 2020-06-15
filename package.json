@@ -23,7 +23,7 @@
   "devDependencies": {
     "electron": "^9.0.3",
     "electron-background": "^1.0.0",
-    "electronmon": "^1.1.0",
+    "electronmon": "^1.1.1",
     "eslint": "^5.16.0"
   },
   "dependencies": {
