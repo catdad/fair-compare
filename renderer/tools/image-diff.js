@@ -1,7 +1,6 @@
-/* eslint-disable no-console */
-
 const pixelmatch = require('pixelmatch');
 const fs = require('fs-extra');
+const timing = require('../../lib/timing.js')('image-diff');
 
 const loadImage = async (filepath) => {
   const buffer = await fs.readFile(filepath);
@@ -13,20 +12,27 @@ const loadImage = async (filepath) => {
 };
 
 const readImageData = async (filepath) => {
-  console.time(`draw ${filepath}`);
-  const { img, width, height } = await loadImage(filepath);
-  const { ctx } = getCanvas(width, height);
+  const { img, ctx, width, height } = await timing({
+    label: `draw "${filepath}"`,
+    func: async () => {
+      const { img, width, height } = await loadImage(filepath);
+      const { ctx } = getCanvas(width, height);
 
-  ctx.drawImage(img, 0, 0, width, height);
-  console.timeEnd(`draw ${filepath}`);
+      ctx.drawImage(img, 0, 0, width, height);
 
-  console.time(`draw-data ${filepath}`);
-  const data = ctx.getImageData(0, 0, width, height);
-  console.timeEnd(`draw-data ${filepath}`);
+      return { img, ctx, width, height };
+    }
+  });
 
-  console.time(`close ${filepath}`);
-  img.close();
-  console.timeEnd(`close ${filepath}`);
+  const data = await timing({
+    label: `draw-data ${filepath}`,
+    func: () => ctx.getImageData(0, 0, width, height)
+  });
+
+  await timing({
+    label: `close ${filepath}`,
+    func: () => img.close()
+  });
 
   return data;
 };
@@ -44,38 +50,41 @@ const pixelsAreEqual = (leftData, rightData) => {
   return Buffer.from(leftData.buffer).equals(Buffer.from(rightData.buffer));
 };
 
-const computeTolerance = async ({ leftData, rightData, threshold, outputImage = true }) => {
-  console.time('tolerance-compute');
-  const { width, height } = leftData;
+const computeTolerance = async ({ leftData, rightData, threshold, outputImage = true, left }) => {
+  return await timing({
+    label: `tolerance-compute "${left}"`,
+    func: async () => {
+      const { width, height } = leftData;
+      const output = outputImage ? new Uint8ClampedArray(width * height * 4) : null;
 
-  console.time('diff-create');
-  const output = outputImage ? new Uint8ClampedArray(width * height * 4) : null;
-  console.timeEnd('diff-create');
+      const pixels = await timing({
+        label: `diff "${left}"`,
+        func: () => pixelsAreEqual(leftData.data, rightData.data) ? -1 : pixelmatch(leftData.data, rightData.data, output, width, height, {
+          threshold,
+          diffMask: true
+        })
+      });
 
-  console.time('diff');
-  const pixels = pixelsAreEqual(leftData.data, rightData.data) ? -1 : pixelmatch(leftData.data, rightData.data, output, width, height, {
-    threshold,
-    diffMask: true
+      return { leftData, rightData, pixels, output, width, height };
+    }
   });
-  console.timeEnd('diff');
-
-  console.timeEnd('tolerance-compute');
-  return { leftData, rightData, pixels, output, width, height };
 };
 
 const tolerance = async ({ left, right, threshold = 0.05, outputImage = true }) => {
-  console.time('tolerance');
-  console.time('read');
-  const [leftData, rightData] = await Promise.all([
-    readImageData(left),
-    readImageData(right)
-  ]);
-  console.timeEnd('read');
+  return await timing({
+    label: `tolerance "${left}"`,
+    func : async () => {
+      const [leftData, rightData] = await timing({
+        label: `read-total "${left}"`,
+        func: async () => await Promise.all([
+          readImageData(left),
+          readImageData(right)
+        ])
+      });
 
-  const result = await computeTolerance({ leftData, rightData, threshold, outputImage });
-
-  console.timeEnd('tolerance');
-  return result;
+      return await computeTolerance({ leftData, rightData, threshold, outputImage });
+    }
+  });
 };
 
 const info = async (imageFile) => {
