@@ -3,30 +3,38 @@ const fs = require('fs-extra');
 const timing = require('../../lib/timing.js')('image-diff');
 
 const loadImage = async (filepath) => {
-  const buffer = await fs.readFile(filepath);
-  const blob = new Blob([buffer.buffer]);
-  const img = await createImageBitmap(blob);
-  const { width, height } = img;
+  return await timing({
+    label: `create-image "${filepath}`,
+    func: async () => {
+      const buffer = await fs.readFile(filepath);
+      const blob = new Blob([buffer.buffer]);
+      const img = await timing({
+        label: `create-bitmap "${filepath}"`,
+        func: async () => await createImageBitmap(blob)
+      });
 
-  return { img, width, height };
+      return img;
+    }
+  });
 };
 
 const readImageData = async (filepath) => {
-  const { img, ctx, width, height } = await timing({
-    label: `draw "${filepath}"`,
+  const img = await loadImage(filepath);
+
+  const { ctx } = await timing({
+    label: `ctx-draw "${filepath}"`,
     func: async () => {
-      const { img, width, height } = await loadImage(filepath);
-      const { ctx } = getCanvas(width, height);
+      const { ctx } = getCanvas(img.width, img.height);
 
-      ctx.drawImage(img, 0, 0, width, height);
+      ctx.drawImage(img, 0, 0, img.width, img.height);
 
-      return { img, ctx, width, height };
+      return { ctx };
     }
   });
 
   const data = await timing({
-    label: `draw-data ${filepath}`,
-    func: () => ctx.getImageData(0, 0, width, height)
+    label: `ctx-get-data ${filepath}`,
+    func: () => ctx.getImageData(0, 0, img.width, img.height)
   });
 
   await timing({
