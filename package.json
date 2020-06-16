@@ -1,7 +1,7 @@
 {
-  "name": "all-compare",
-  "productName": "All Compare",
-  "appId": "com.catdad.all-compare",
+  "name": "fair-compare",
+  "productName": "Fair Compare",
+  "appId": "com.catdad.fair-compare",
   "version": "1.0.0-beta0",
   "description": "",
   "main": "main.js",
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/catdad/all-compare.git"
+    "url": "git+https://github.com/catdad/fair-compare.git"
   },
   "author": "Kiril Vatev <vatev.1@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/catdad/all-compare/issues"
+    "url": "https://github.com/catdad/fair-compare/issues"
   },
-  "homepage": "https://github.com/catdad/all-compare#readme",
+  "homepage": "https://github.com/catdad/fair-compare#readme",
   "devDependencies": {
     "electron": "^9.0.3",
     "electron-background": "^1.0.0",
