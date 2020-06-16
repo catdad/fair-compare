@@ -21,7 +21,7 @@ const VIEW = 'image-view';
 
 function App({ left, right }) {
   const config = useContext(Config);
-  const [mode, setMode] = useState(config.get(VIEW, MODE.tolerance));
+  const [mode, setMode] = useState(MODE[config.get(VIEW)] || MODE.tolerance);
 
   const changeMode = newMode => () => {
     setMode(newMode);
