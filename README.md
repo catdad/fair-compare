@@ -1,6 +1,6 @@
 # 🎡 fair compare
 
-> You know... it's okay
+> You know... it's just okay
 
 Simple and easy comparison of images and text across whole directories, with no confusing frills.
 
