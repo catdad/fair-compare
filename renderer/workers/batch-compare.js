@@ -10,12 +10,12 @@ const isWorker = is.worker;
 const count = Math.max(Math.floor(os.cpus().length * 0.75), 1);
 
 if (isWorker) {
+  // this is a worker, it will take actions from the primary renderer thread and complete them
   const comlink = require('comlink');
 
   const fs = require('fs-extra');
   const FileType = require('file-type');
 
-  // TODO move this work to a worker
   const imageDiff = require('../tools/image-diff.js');
 
   const diffImage = async ({ left, right, ...opts }) => {
@@ -33,7 +33,6 @@ if (isWorker) {
   };
 
   const compare = async ({ left, right, ...opts }) => {
-    // TODO why does FileType not work?
     const result = await FileType.fromFile(left);
     const { mime } = result || { mime: 'text/plain' };
     const route = mime.split('/')[0];
@@ -50,6 +49,7 @@ if (isWorker) {
   };
 } else if (isParent) {
   // this is the primary renderer thread, it will create and communicate with the worker
+  // and accept actions from the webview threads
   const comlink = require('comlink');
   const promises = new Map();
 
