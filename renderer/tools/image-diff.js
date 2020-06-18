@@ -31,13 +31,13 @@ const loadImage = async (filepath) => {
   });
 };
 
-const readImageData = async (filepath) => {
+const readImageData = async (filepath, FORCE_WIDTH, FORCE_HEIGHT) => {
   const img = await loadImage(filepath);
 
   const { ctx } = await timing({
     label: `ctx-draw "${filepath}"`,
     func: async () => {
-      const { ctx } = getCanvas(img.width, img.height);
+      const { ctx } = getCanvas(FORCE_WIDTH || img.width, FORCE_HEIGHT || img.height);
 
       ctx.drawImage(img, 0, 0, img.width, img.height);
 
@@ -47,7 +47,7 @@ const readImageData = async (filepath) => {
 
   const data = await timing({
     label: `ctx-get-data ${filepath}`,
-    func: () => ctx.getImageData(0, 0, img.width, img.height)
+    func: () => ctx.getImageData(0, 0, FORCE_WIDTH || img.width, FORCE_HEIGHT || img.height)
   });
 
   await timing({
@@ -84,10 +84,12 @@ const tolerance = async ({ left, right, threshold = 0.05, outputImage = true }) 
     func : async () => {
       const [leftData, rightData] = await timing({
         label: `read-total "${left}"`,
-        func: async () => await Promise.all([
-          readImageData(left),
-          readImageData(right)
-        ])
+        func: async () => {
+          const leftData = await readImageData(left);
+          const rightData = await readImageData(right, leftData.width, leftData.height);
+
+          return [leftData, rightData];
+        }
       });
 
       return await computeTolerance({ leftData, rightData, threshold, outputImage, left });
