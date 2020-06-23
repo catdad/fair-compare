@@ -12,8 +12,15 @@ function Tabs({ list, onSelect, onClose }) {
 
     onClose(tab);
   };
+
+  const onAuxClick = tab => ev => {
+    if (ev.button === 1) {
+      onCloseClick(tab)(ev);
+    }
+  };
+
   return list.map(tab => {
-    return html`<span key=${tab.key} class="tab ${tab.selected ? 'selected' : ''}" onClick=${() => onSelect(tab)}>
+    return html`<span key=${tab.key} class="tab ${tab.selected ? 'selected' : ''}" onclick=${() => onSelect(tab)} onauxclick=${onAuxClick(tab)}>
       <span title=${tab.title}>${tab.title}</span>
       <button onclick=${onCloseClick(tab)}>🞩</button>
     </span>`;
