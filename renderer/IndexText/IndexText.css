@@ -14,3 +14,15 @@
 .file:first-of-type {
   border-right: 1px solid var(--color-border);
 }
+
+.file .green {
+  color: green;
+}
+
+.file .red {
+  color: red;
+}
+
+.file .hide {
+  color: rgba(0, 0, 0, 0);
+}
