@@ -9,8 +9,22 @@
   flex-direction: column;
   max-width: 50%;
   min-height: 100%;
+  font-size: 0.9rem;
 }
 
 .file:first-of-type {
   border-right: 1px solid var(--color-border);
+}
+
+.file .green {
+  color: green;
+}
+
+.file .red {
+  color: red;
+}
+
+.file .hide {
+  color: rgba(0, 0, 0, 0);
+  user-select: none;
 }
