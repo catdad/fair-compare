@@ -1,6 +1,9 @@
-const { html, css } = require('../tools/ui.js');
+const { html, css, useContext, useState } = require('../tools/ui.js');
 const fs = require('fs-extra');
 const { diffLines } = require('diff');
+
+const { Config, withConfig } = require('../tools/config.js');
+const { Toolbar } = require('../Toolbar/Toolbar.js');
 
 css('./IndexText.css');
 
@@ -36,8 +39,26 @@ function FileInline({ title, chunks }) {
   `;
 }
 
+const MODE = {
+  inline: 'inline',
+  side: 'side'
+};
+
+const VIEW = 'text-view';
+
 function App({ left, right }) {
+  const config = useContext(Config);
+  const [mode, setMode] = useState(MODE[config.get(VIEW)] || MODE.side);
   let leftText, rightText;
+
+  const applyMode = value => () => {
+    if (mode === value) {
+      return;
+    }
+
+    config.set(VIEW, value);
+    setMode(value);
+  };
 
   if (left) {
     // TODO don't do this sync
@@ -51,14 +72,21 @@ function App({ left, right }) {
 
   const diff = diffLines(leftText, rightText);
 
-//      <${FileSide} title=${left} chunks=${diff} side=left />
-//      <${FileSide} title=${right} chunks=${diff} side=right />
+  const view = mode === MODE.side ?
+    html`
+      <${FileSide} title=${left} chunks=${diff} side=left />
+      <${FileSide} title=${right} chunks=${diff} side=right />
+    ` : html`
+      <${FileInline} title=${`${left} vs. ${right}`} chunks=${diff} />
+    `;
 
   return html`
-    <div class=main>
-      <${FileInline} title=${`${left} vs. ${right}`} chunks=${diff} />
-    </div>
+    <${Toolbar}>
+      <button onclick=${applyMode(MODE.side)}>Side by Side</button>
+      <button onclick=${applyMode(MODE.inline)}>Inline</button>
+    <//>
+    <div class=main>${view}</div>
   `;
 }
 
-module.exports = App;
+module.exports = withConfig(App);
