@@ -17,7 +17,7 @@ const getCanvas = (width, height) => {
 
 const loadImage = async (filepath) => {
   return await timing({
-    label: `create-image "${filepath}`,
+    label: `create-image "${filepath}"`,
     func: async () => {
       const buffer = await fs.readFile(filepath);
       const blob = new Blob([buffer.buffer]);
@@ -46,12 +46,12 @@ const readImageData = async (filepath, FORCE_WIDTH, FORCE_HEIGHT) => {
   });
 
   const data = await timing({
-    label: `ctx-get-data ${filepath}`,
+    label: `ctx-get-data "${filepath}"`,
     func: () => ctx.getImageData(0, 0, FORCE_WIDTH || img.width, FORCE_HEIGHT || img.height)
   });
 
   await timing({
-    label: `close ${filepath}`,
+    label: `close "${filepath}"`,
     func: () => img.close()
   });
 
