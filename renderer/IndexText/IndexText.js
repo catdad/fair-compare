@@ -1,11 +1,28 @@
-const { html, css, useContext, useState } = require('../tools/ui.js');
+const { html, css, useContext, useEffect, useState } = require('../tools/ui.js');
 const fs = require('fs-extra');
 const { diffLines } = require('diff');
 
 const { Config, withConfig } = require('../tools/config.js');
 const { Toolbar } = require('../Toolbar/Toolbar.js');
+const toast = require('../tools/toast.js');
 
 css('./IndexText.css');
+
+const readFile = async path => {
+  if (!path) {
+    return '';
+  }
+
+  try {
+    return await fs.readFile(path, 'utf-8');
+  } catch (e) {
+    if (e.code !== 'ENOENT') {
+      throw e;
+    }
+  }
+
+  return '';
+};
 
 function FileSide({ title = 'no file available', chunks = [], side }) {
   const lines = chunks.map(({ added, removed, value }) => {
@@ -49,7 +66,18 @@ const VIEW = 'text-view';
 function App({ left, right }) {
   const config = useContext(Config);
   const [mode, setMode] = useState(MODE[config.get(VIEW)] || MODE.side);
-  let leftText, rightText;
+  const [diff, setDiff] = useState([]);
+
+  useEffect(() => {
+    Promise.all([
+      readFile(left),
+      readFile(right),
+    ]).then(([leftText = '', rightText = '']) => {
+      setDiff(diffLines(leftText, rightText));
+    }).catch(err => {
+      toast.error(`Failed to read a file:\n${err.message || err.toString()}`);
+    });
+  }, [left, right]);
 
   const applyMode = value => () => {
     if (mode === value) {
@@ -59,18 +87,6 @@ function App({ left, right }) {
     config.set(VIEW, value);
     setMode(value);
   };
-
-  if (left) {
-    // TODO don't do this sync
-    leftText = fs.readFileSync(left, 'utf-8') || '';
-  }
-
-  if (right) {
-    // TODO don't do this sync
-    rightText = fs.readFileSync(right, 'utf-8') || '';
-  }
-
-  const diff = diffLines(leftText, rightText);
 
   const view = mode === MODE.side ?
     html`
