@@ -7,9 +7,12 @@
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  max-width: 50%;
   min-height: 100%;
   font-size: 0.9rem;
+}
+
+.file.half {
+  max-width: 50%;
 }
 
 .file:first-of-type {
