@@ -1,15 +1,18 @@
 .main {
   display: flex;
-  min-height: 100vh;
+  height: calc(100vh - var(--toolbar-height, 0px));
 }
 
 .file {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  max-width: 50%;
   min-height: 100%;
   font-size: 0.9rem;
+}
+
+.file.half {
+  max-width: 50%;
 }
 
 .file:first-of-type {
