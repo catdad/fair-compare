@@ -27,23 +27,19 @@ module.exports = function Panzoom ({ children, view }) {
     const startX = -((box.width / 2) - (win.width / 2));
     const startY = -((box.height / 2) - (win.height / 2));
 
-    const defaultOptions = {
+    const instance = zoom.current[KEY] = panzoom(zoom.current, {
       maxScale,
       startScale,
       startX,
-      startY
-    };
-
-    const instance = zoom.current[KEY] = panzoom(zoom.current, {
-      ...defaultOptions,
+      startY,
       ...cache.get(KEY, {})
     });
 
     zoom.current.addEventListener('wheel', instance.zoomWithWheel);
 
     const onReset = () => {
-      instance.pan(defaultOptions.startX, defaultOptions.startY);
-      instance.zoom(defaultOptions.startScale, { animate: true });
+      instance.pan(startX, startY);
+      instance.zoom(startScale, { animate: true });
     };
     const onFull = () => void instance.zoom(1, { animate: true });
 
