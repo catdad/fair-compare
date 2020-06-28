@@ -1,7 +1,8 @@
 const { html, css, useContext, useState } = require('../tools/ui.js');
 const { withCache } = require('../tools/cache.js');
 const { Config, withConfig } = require('../tools/config.js');
-const { Toolbar } = require('../Toolbar/Toolbar.js');
+const { Events, withEvents } = require('../tools/events.js');
+const { Toolbar, ToolbarSeparator } = require('../Toolbar/Toolbar.js');
 
 css('./IndexImage.css');
 
@@ -20,6 +21,7 @@ const MODE = {
 const VIEW = 'image-view';
 
 function App({ left, right }) {
+  const events = useContext(Events);
   const config = useContext(Config);
   const [mode, setMode] = useState(MODE[config.get(VIEW)] || MODE.tolerance);
 
@@ -33,6 +35,9 @@ function App({ left, right }) {
     html`<button onClick=${changeMode(MODE.range)}>Range</button>`,
     html`<button onClick=${changeMode(MODE.blend)}>Blend</button>`,
     html`<button onClick=${changeMode(MODE.side)}>Side by Side</button>`,
+    html`<${ToolbarSeparator} />`,
+    html`<button onclick=${() => events.emit('panzoom:reset')}>Reset<//>`,
+    html`<button onclick=${() => events.emit('panzoom:full')}>1:1<//>`,
   ];
 
   const renderView = View => html`<${View} buttons=${buttons} left=${left} right=${right} />`;
@@ -57,4 +62,4 @@ function App({ left, right }) {
   return html``;
 }
 
-module.exports = withConfig(withCache(App));
+module.exports = withConfig(withCache(withEvents(App)));
