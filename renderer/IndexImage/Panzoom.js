@@ -41,7 +41,9 @@ module.exports = function Panzoom ({ children, view }) {
       instance.pan(startX, startY);
       instance.zoom(startScale, { animate: true });
     };
-    const onFull = () => void instance.zoom(1, { animate: true });
+    const onFull = () => {
+      instance.zoom(1, { animate: true });
+    };
 
     const onChange = ({ detail }) => {
       events.emit('panzoom:change', { id, ...detail });
