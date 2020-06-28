@@ -6,6 +6,7 @@
 .side.double:first-of-type::after {
   content: '';
   position: absolute;
+  top: 0;
   right: 0;
   height: 100%;
   border-right: 1px solid var(--color-border);
