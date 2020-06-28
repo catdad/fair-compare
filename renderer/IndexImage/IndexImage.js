@@ -36,7 +36,8 @@ function App({ left, right }) {
     html`<button onClick=${changeMode(MODE.blend)}>Blend</button>`,
     html`<button onClick=${changeMode(MODE.side)}>Side by Side</button>`,
     html`<${ToolbarSeparator} />`,
-    html`<button onclick=${() => events.emit('panzoom:reset')}>Reset<//>`
+    html`<button onclick=${() => events.emit('panzoom:reset')}>Reset<//>`,
+    html`<button onclick=${() => events.emit('panzoom:full')}>1:1<//>`,
   ];
 
   const renderView = View => html`<${View} buttons=${buttons} left=${left} right=${right} />`;

@@ -48,8 +48,10 @@ module.exports = function Panzoom ({ children, view }) {
     zoom.current.addEventListener('wheel', instance.zoomWithWheel);
 
     const onReset = () => void instance.reset();
+    const onFull = () => void instance.zoom(1, { animate: true });
 
     events.on('panzoom:reset', onReset);
+    events.on('panzoom:full', onFull);
 
     return () => {
       const { x: startX, y: startY } = instance.getPan();
@@ -62,6 +64,7 @@ module.exports = function Panzoom ({ children, view }) {
       instance.destroy();
 
       events.off('panzoom:reset', onReset);
+      events.off('panzoom:full', onFull);
     };
   }, [view, events]);
 
