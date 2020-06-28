@@ -22,7 +22,6 @@ function Directory({ dir, side, ...props }) {
   };
   const openChar = open ? '📂' : '📁';
 
-
   useEffect(() => {
     const toggle = () => setOpen(!open);
 
