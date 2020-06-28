@@ -20,34 +20,31 @@ module.exports = function Panzoom ({ children, view }) {
       return;
     }
 
-    const data = cache.get(KEY);
+    const win = zoom.current.getBoundingClientRect();
+    const box = view.getBoundingClientRect();
 
-    if (data) {
-      zoom.current[KEY] = panzoom(zoom.current, {
-        maxScale,
-        ...data
-      });
-    } else {
-      const win = zoom.current.getBoundingClientRect();
-      const box = view.getBoundingClientRect();
+    const startScale = Math.min(win.width / box.width, win.height / box.height, 1) * 0.98;
+    const startX = -((box.width / 2) - (win.width / 2));
+    const startY = -((box.height / 2) - (win.height / 2));
 
-      const startScale = Math.min(win.width / box.width, win.height / box.height, 1) * 0.98;
-      const startX = -((box.width / 2) - (win.width / 2));
-      const startY = -((box.height / 2) - (win.height / 2));
+    const defaultOptions = {
+      maxScale,
+      startScale,
+      startX,
+      startY
+    };
 
-      zoom.current[KEY] = panzoom(zoom.current, {
-        maxScale,
-        startScale,
-        startX,
-        startY
-      });
-    }
-
-    const instance = zoom.current[KEY];
+    const instance = zoom.current[KEY] = panzoom(zoom.current, {
+      ...defaultOptions,
+      ...cache.get(KEY, {})
+    });
 
     zoom.current.addEventListener('wheel', instance.zoomWithWheel);
 
-    const onReset = () => void instance.reset();
+    const onReset = () => {
+      instance.pan(defaultOptions.startX, defaultOptions.startY);
+      instance.zoom(defaultOptions.startScale, { animate: true });
+    };
     const onFull = () => void instance.zoom(1, { animate: true });
 
     events.on('panzoom:reset', onReset);
