@@ -20,6 +20,8 @@ module.exports = function Panzoom ({ children, view }) {
       return;
     }
 
+    const id = Math.random();
+
     const win = zoom.current.getBoundingClientRect();
     const box = view.getBoundingClientRect();
 
@@ -35,16 +37,38 @@ module.exports = function Panzoom ({ children, view }) {
       ...cache.get(KEY, {})
     });
 
-    zoom.current.addEventListener('wheel', instance.zoomWithWheel);
-
     const onReset = () => {
       instance.pan(startX, startY);
       instance.zoom(startScale, { animate: true });
     };
     const onFull = () => void instance.zoom(1, { animate: true });
 
+    const onChange = ({ detail }) => {
+      events.emit('panzoom:change', { id, ...detail });
+    };
+
+    const onSync = detail => {
+      if (detail.id === id) {
+        return;
+      }
+
+      const { x, y } = instance.getPan();
+      const scale = instance.getScale();
+
+      if (detail.x !== x || detail.y !== y) {
+        instance.pan(detail.x, detail.y);
+      }
+
+      if (detail.scale !== scale) {
+        instance.zoom(detail.scale);
+      }
+    };
+
     events.on('panzoom:reset', onReset);
     events.on('panzoom:full', onFull);
+    events.on('panzoom:change', onSync);
+    zoom.current.addEventListener('wheel', instance.zoomWithWheel);
+    zoom.current.addEventListener('panzoomchange', onChange);
 
     return () => {
       const { x: startX, y: startY } = instance.getPan();
@@ -54,10 +78,12 @@ module.exports = function Panzoom ({ children, view }) {
 
       zoom.current.setAttribute('style', {});
       zoom.current.removeEventListener('wheel', instance.zoomWithWheel);
+      zoom.current.removeEventListener('panzoomchange', onChange);
       instance.destroy();
 
       events.off('panzoom:reset', onReset);
       events.off('panzoom:full', onFull);
+      events.off('panzoom:change', onSync);
     };
   }, [view, events]);
 
