@@ -17,11 +17,6 @@ function Directory({ dir, side, ...props }) {
   const events = useContext(Events);
   const [open, setOpen] = useState(dir.open);
 
-  const toggleOpen = () => {
-    events.emit(`toggle:"${dir.name}"`);
-  };
-  const openChar = open ? '📂' : '📁';
-
   useEffect(() => {
     const toggle = () => setOpen(!open);
 
@@ -31,6 +26,11 @@ function Directory({ dir, side, ...props }) {
       events.off(`toggle:"${dir.name}"`, toggle);
     };
   }, [events, dir, side, open]);
+
+  const toggleOpen = () => {
+    events.emit(`toggle:"${dir.name}"`);
+  };
+  const openChar = open ? '📂' : '📁';
 
   return html`
     <div class="name node" onClick=${toggleOpen}><${Icon}>${openChar}<//> ${dir.name}</div>
