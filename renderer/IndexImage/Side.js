@@ -2,7 +2,6 @@ const { html, css, useEffect, useRef, useState, setVar } = require('../tools/ui.
 const { info } = require('../tools/image-diff.js');
 const toast = require('../tools/toast.js');
 
-const Image = require('./Image.js');
 const { Toolbar } = require('../Toolbar/Toolbar.js');
 const Panzoom = require('./Panzoom.js');
 
@@ -31,10 +30,8 @@ function Side({ buttons, left, right }) {
         setZoomElem(view.current);
       }
     }).catch(err => {
-      console.error(`"${file}" side info error:`, err);
       toast.error(err);
     });
-
 
     return () => {
       destroyed = true;
