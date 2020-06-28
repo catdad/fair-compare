@@ -11,14 +11,6 @@
   min-height: 100%;
 }
 
-.single {
-  max-width: 100%;
-}
-
-.double {
-  max-width: 50%;
-}
-
 .img > div {
   display: flex;
   align-items: center;

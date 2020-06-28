@@ -1,0 +1,12 @@
+.side.double {
+  max-width: 50%;
+  border: 1px solid red;
+}
+
+
+.side .img {
+  position: relative;
+  width: var(--width, '100%');
+  height: var(--height, '100%');
+  background: var(--background);
+}
