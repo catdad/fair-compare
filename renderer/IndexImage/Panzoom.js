@@ -29,6 +29,8 @@ module.exports = function Panzoom ({ children, view }) {
     const startX = -((box.width / 2) - (win.width / 2));
     const startY = -((box.height / 2) - (win.height / 2));
 
+    const initOptions = { startX, startY, startScale };
+
     const instance = zoom.current[KEY] = panzoom(zoom.current, {
       maxScale,
       startScale,
@@ -76,7 +78,9 @@ module.exports = function Panzoom ({ children, view }) {
       const { x: startX, y: startY } = instance.getPan();
       const startScale = instance.getScale();
 
-      cache.set(KEY, { startX, startY, startScale });
+      const isInit = startX === initOptions.startX && startY === initOptions.startY && startScale === initOptions.startScale;
+
+      cache.set(KEY, isInit ? {} : { startX, startY, startScale });
 
       zoom.current.setAttribute('style', {});
       zoom.current.removeEventListener('wheel', instance.zoomWithWheel);
