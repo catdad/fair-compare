@@ -1,6 +1,7 @@
-const { html, useState } = require('../tools/ui.js');
+const { html, useContext, useEffect, useState } = require('../tools/ui.js');
 const marker = require('./markers.js');
 const Icon = require('./Icon.js');
+const { Events, withEvents } = require('../tools/events.js');
 
 function File({ file, selected, onSelect, onOpen, side }) {
   const classes = `node file ${file.path === selected ? 'selected' : ''} ${file[side] ? '' : 'missing'}`;
@@ -13,10 +14,24 @@ function File({ file, selected, onSelect, onOpen, side }) {
 }
 
 function Directory({ dir, side, ...props }) {
+  const events = useContext(Events);
   const [open, setOpen] = useState(dir.open);
 
-  const toggleOpen = () => setOpen(!open);
+  const toggleOpen = () => {
+    events.emit(`toggle:"${dir.name}"`);
+  };
   const openChar = open ? '📂' : '📁';
+
+
+  useEffect(() => {
+    const toggle = () => setOpen(!open);
+
+    events.on(`toggle:"${dir.name}"`, toggle);
+
+    return () => {
+      events.off(`toggle:"${dir.name}"`, toggle);
+    };
+  }, [events, dir, side, open]);
 
   return html`
     <div class="name node" onClick=${toggleOpen}><${Icon}>${openChar}<//> ${dir.name}</div>
@@ -42,4 +57,4 @@ function Tree({ tree, side, ...props }) {
   return [...dirs, ...files];
 }
 
-module.exports = Tree;
+module.exports = withEvents(Tree);
