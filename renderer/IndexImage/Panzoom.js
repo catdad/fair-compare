@@ -1,6 +1,7 @@
 const panzoom = require('@panzoom/panzoom');
 const { html, useContext, useEffect, useRef } = require('../tools/ui.js');
 const { Cache } = require('../tools/cache.js');
+const { Events } = require('../tools/events.js');
 
 const KEY = '__x_panzoom';
 const maxScale = 4;
@@ -8,6 +9,7 @@ const maxScale = 4;
 module.exports = function Panzoom ({ children, view }) {
   const zoom = useRef(null);
   const cache = useContext(Cache);
+  const events = useContext(Events);
 
   useEffect(() => {
     if (!view) {
@@ -45,6 +47,10 @@ module.exports = function Panzoom ({ children, view }) {
 
     zoom.current.addEventListener('wheel', instance.zoomWithWheel);
 
+    const onReset = () => void instance.reset();
+
+    events.on('panzoom:reset', onReset);
+
     return () => {
       const { x: startX, y: startY } = instance.getPan();
       const startScale = instance.getScale();
@@ -54,8 +60,10 @@ module.exports = function Panzoom ({ children, view }) {
       zoom.current.setAttribute('style', {});
       zoom.current.removeEventListener('wheel', instance.zoomWithWheel);
       instance.destroy();
+
+      events.off('panzoom:reset', onReset);
     };
-  }, [view]);
+  }, [view, events]);
 
   return html`<div class="panzoom" ref=${zoom}>${children}</div>`;
 };
