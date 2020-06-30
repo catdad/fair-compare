@@ -2,14 +2,14 @@ const { html, css, useContext, useState } = require('../tools/ui.js');
 const { withCache } = require('../tools/cache.js');
 const { Config, withConfig } = require('../tools/config.js');
 const { Events, withEvents } = require('../tools/events.js');
-const { Toolbar, ToolbarSeparator } = require('../Toolbar/Toolbar.js');
+const { ToolbarSeparator } = require('../Toolbar/Toolbar.js');
 
 css('./IndexImage.css');
 
-const Image = require('./Image.js');
 const Tolerance = require('./Tolerance.js');
 const Range = require('./Range.js');
 const Blend = require('./Blend.js');
+const Side = require('./Side.js');
 
 const MODE = {
   tolerance: 'tolerance',
@@ -32,8 +32,8 @@ function App({ left, right }) {
 
   const buttons = [
     html`<button onClick=${changeMode(MODE.tolerance)}>Tolerance</button>`,
-    html`<button onClick=${changeMode(MODE.range)}>Range</button>`,
-    html`<button onClick=${changeMode(MODE.blend)}>Blend</button>`,
+    html`<button onClick=${changeMode(MODE.range)}>Highlight</button>`,
+    html`<button onClick=${changeMode(MODE.blend)}>Transparency</button>`,
     html`<button onClick=${changeMode(MODE.side)}>Side by Side</button>`,
     html`<${ToolbarSeparator} />`,
     html`<button onclick=${() => events.emit('panzoom:reset')}>Reset<//>`,
@@ -50,13 +50,7 @@ function App({ left, right }) {
     case MODE.blend:
       return renderView(Blend);
     case MODE.side:
-      return html`
-        <${Toolbar}>${buttons}<//>
-        <div class=main>
-          <div class="double img"><${Image} filepath=${left} /></div>
-          <div class="double img"><${Image} filepath=${right} /></div>
-        </div>
-      `;
+      return renderView(Side);
   }
 
   return html``;

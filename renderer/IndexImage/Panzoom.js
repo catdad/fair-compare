@@ -20,12 +20,16 @@ module.exports = function Panzoom ({ children, view }) {
       return;
     }
 
+    const id = Math.random();
+
     const win = zoom.current.getBoundingClientRect();
     const box = view.getBoundingClientRect();
 
     const startScale = Math.min(win.width / box.width, win.height / box.height, 1) * 0.98;
     const startX = -((box.width / 2) - (win.width / 2));
     const startY = -((box.height / 2) - (win.height / 2));
+
+    const initOptions = { startX, startY, startScale };
 
     const instance = zoom.current[KEY] = panzoom(zoom.current, {
       maxScale,
@@ -35,29 +39,57 @@ module.exports = function Panzoom ({ children, view }) {
       ...cache.get(KEY, {})
     });
 
-    zoom.current.addEventListener('wheel', instance.zoomWithWheel);
-
     const onReset = () => {
       instance.pan(startX, startY);
       instance.zoom(startScale, { animate: true });
     };
-    const onFull = () => void instance.zoom(1, { animate: true });
+    const onFull = () => {
+      instance.zoom(1, { animate: true });
+    };
+
+    const onChange = ({ detail }) => {
+      events.emit('panzoom:change', { id, ...detail });
+    };
+
+    const onSync = detail => {
+      if (detail.id === id) {
+        return;
+      }
+
+      const { x, y } = instance.getPan();
+      const scale = instance.getScale();
+
+      if (detail.x !== x || detail.y !== y) {
+        instance.pan(detail.x, detail.y);
+      }
+
+      if (detail.scale !== scale) {
+        instance.zoom(detail.scale);
+      }
+    };
 
     events.on('panzoom:reset', onReset);
     events.on('panzoom:full', onFull);
+    events.on('panzoom:change', onSync);
+    zoom.current.addEventListener('wheel', instance.zoomWithWheel);
+    zoom.current.addEventListener('panzoomchange', onChange);
 
     return () => {
       const { x: startX, y: startY } = instance.getPan();
       const startScale = instance.getScale();
 
-      cache.set(KEY, { startX, startY, startScale });
+      const isInit = startX === initOptions.startX && startY === initOptions.startY && startScale === initOptions.startScale;
+
+      cache.set(KEY, isInit ? {} : { startX, startY, startScale });
 
       zoom.current.setAttribute('style', {});
       zoom.current.removeEventListener('wheel', instance.zoomWithWheel);
+      zoom.current.removeEventListener('panzoomchange', onChange);
       instance.destroy();
 
       events.off('panzoom:reset', onReset);
       events.off('panzoom:full', onFull);
+      events.off('panzoom:change', onSync);
     };
   }, [view, events]);
 
