@@ -1,6 +1,6 @@
 .side.double {
   position: relative;
-  max-width: 50%;
+  width: 50%;
 }
 
 .side.double:first-of-type::after {
