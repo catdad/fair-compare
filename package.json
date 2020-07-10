@@ -24,6 +24,7 @@
   "homepage": "https://github.com/catdad/fair-compare#readme",
   "devDependencies": {
     "@fiahfy/icns-convert": "0.0.8",
+    "cheerio": "^1.0.0-rc.3",
     "electron": "^9.0.5",
     "electron-background": "^1.0.0",
     "electronmon": "^1.1.1",
