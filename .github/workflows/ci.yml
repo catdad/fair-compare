@@ -18,6 +18,11 @@ jobs:
           node-version: 14.x
       - run: npm install
       - run: npm run package
+      - name: Upload Artifacts
+        uses: actions/upload-artifacts@v2
+        with:
+          name: windows-artifacts
+          path: dist/fair*.exe
   macos:
     runs-on: macos-latest
     steps:
@@ -27,6 +32,11 @@ jobs:
           node-version: 14.x
       - run: npm install
       - run: npm run package
+      - name: Upload Artifacts
+        uses: actions/upload-artifacts@v2
+        with:
+          name: macos-artifacts
+          path: dist/fair*.dmg
   linux:
     runs-on: ubuntu-latest
     steps:
@@ -36,3 +46,8 @@ jobs:
           node-version: 14.x
       - run: npm install
       - run: npm run package
+      - name: Upload Artifacts
+        uses: actions/upload-artifacts@v2
+        with:
+          name: macos-artifacts
+          path: dist/fair*.AppImage
