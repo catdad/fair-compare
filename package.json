@@ -10,7 +10,13 @@
     "dev": "electronmon .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prep": "npm run -s prep:icons",
-    "prep:icons": "node scripts/create-icons.js"
+    "prep:icons": "node scripts/create-icons.js",
+    "prepackage": "npm run -s prep",
+    "package": "run-script-os",
+    "package:win32": "electron-builder --publish never --win",
+    "package:darwin": "electron-builder --publish never --mac",
+    "package:linux": "electron-builder --publish never --linux",
+    "package:default": "echo \"Error: this OS is not supported\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -27,9 +33,11 @@
     "cheerio": "^1.0.0-rc.3",
     "electron": "^9.0.5",
     "electron-background": "^1.0.0",
+    "electron-builder": "^22.7.0",
     "electronmon": "^1.1.1",
     "eslint": "^5.16.0",
     "rootrequire": "^1.0.0",
+    "run-script-os": "^1.1.1",
     "svg-render": "^1.0.0",
     "to-ico": "^1.1.5"
   },
@@ -47,5 +55,41 @@
     "pixelmatch": "^5.2.0",
     "preact": "^10.4.4",
     "toastify-js": "^1.8.0"
+  },
+  "build": {
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "out/icon.icns",
+      "darkModeSupport": true
+    },
+    "dmg": {
+      "icon": "out/icon.icns",
+      "artifactName": "${name}-v${version}-setup.${ext}"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "out/icon.ico"
+    },
+    "nsis": {
+      "artifactName": "${name}-v${version}-setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "${name}-v${version}-portable.${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "executableName": "Fair Compare",
+      "category": "Graphics"
+    },
+    "appImage": {
+      "artifactName": "${name}-v${version}.${ext}"
+    }
   }
 }

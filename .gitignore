@@ -40,3 +40,4 @@ coverage/
 # App stuff
 .fair-compare-config.json
 out/
+dist/
