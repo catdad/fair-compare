@@ -29,9 +29,9 @@
     "electron-background": "^1.0.0",
     "electronmon": "^1.1.1",
     "eslint": "^5.16.0",
-    "png-to-ico": "^2.1.0",
     "rootrequire": "^1.0.0",
-    "svg-render": "^1.0.0"
+    "svg-render": "^1.0.0",
+    "to-ico": "^1.1.5"
   },
   "dependencies": {
     "@panzoom/panzoom": "^4.1.0",

@@ -2,9 +2,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const root = require('rootrequire');
 const renderSvg = require('svg-render');
-const pngToIco = require('png-to-ico');
+const toIco = require('to-ico');
 const { Icns, IcnsImage } = require('@fiahfy/icns');
-
 const cheerio = require('cheerio');
 
 const timing = require('../lib/timing.js')('prep:icons');
@@ -14,7 +13,15 @@ const write = fs.outputFile;
 const dist = file => path.resolve(root, 'out', file);
 
 const render = async (buffer, width = 512) => await renderSvg({ buffer, width });
-const createIco = async svg => await pngToIco(await render(svg, 256));
+const createIco = async svg => await toIco([
+  await render(svg, 16),
+  await render(svg, 24),
+  await render(svg, 32),
+  await render(svg, 48),
+  await render(svg, 64),
+  await render(svg, 128),
+  await render(svg, 256)
+]);
 const createIcns = async svg => {
   const icns = new Icns();
 
