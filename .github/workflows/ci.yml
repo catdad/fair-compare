@@ -49,5 +49,5 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: macos-artifacts
+          name: linux-artifacts
           path: dist/fair*.AppImage
