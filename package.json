@@ -57,6 +57,12 @@
     "toastify-js": "^1.8.0"
   },
   "build": {
+    "appId": "com.catdad.fair-compare",
+    "files": [
+      "!assets/*",
+      "!scripts/*",
+      "!.*"
+    ],
     "mac": {
       "target": [
         "dmg"
