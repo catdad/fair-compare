@@ -8,7 +8,9 @@
   "scripts": {
     "start": "electron-background .",
     "dev": "electronmon .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prep": "npm run -s prep:icons",
+    "prep:icons": "node scripts/create-icons.js"
   },
   "repository": {
     "type": "git",
@@ -21,10 +23,14 @@
   },
   "homepage": "https://github.com/catdad/fair-compare#readme",
   "devDependencies": {
+    "@fiahfy/icns-convert": "0.0.8",
     "electron": "^9.0.5",
     "electron-background": "^1.0.0",
     "electronmon": "^1.1.1",
-    "eslint": "^5.16.0"
+    "eslint": "^5.16.0",
+    "png-to-ico": "^2.1.0",
+    "rootrequire": "^1.0.0",
+    "svg-render": "^1.0.0"
   },
   "dependencies": {
     "@panzoom/panzoom": "^4.1.0",
