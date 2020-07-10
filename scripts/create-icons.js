@@ -3,7 +3,8 @@ const path = require('path');
 const root = require('rootrequire');
 const renderSvg = require('svg-render');
 const pngToIco = require('png-to-ico');
-const { convert: icnsConvert } = require('@fiahfy/icns-convert');
+const { Icns, IcnsImage } = require('@fiahfy/icns');
+
 const cheerio = require('cheerio');
 
 const timing = require('../lib/timing.js')('prep:icons');
@@ -14,16 +15,16 @@ const dist = file => path.resolve(root, 'out', file);
 
 const render = async (buffer, width = 512) => await renderSvg({ buffer, width });
 const createIco = async svg => await pngToIco(await render(svg, 256));
-const createIcns = async svg => await icnsConvert([
-  await render(svg, 16),
-  await render(svg, 32),
-  await render(svg, 48),
-  await render(svg, 64),
-  await render(svg, 128),
-  await render(svg, 256),
-  await render(svg, 512),
-  await render(svg, 1024)
-]);
+const createIcns = async svg => {
+  const icns = new Icns();
+
+  for (const { osType, size } of Icns.supportedIconTypes) {
+    const buffer = await render(svg, size);
+    icns.append(IcnsImage.fromPNG(buffer, osType));
+  }
+
+  return icns.data;
+};
 
 // this is a bad idea, but canvas can't render the use tags correctly
 const preprocess = svg => {
