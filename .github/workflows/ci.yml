@@ -59,4 +59,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           path: ./
-      - run: ls -lR
+      - run: |
+          echo "this is still only a test"
+          echo ref: ${{ github.ref }}
+          echo event_name: ${{ github.event_name }}
+          echo action: ${{ github.action }}
+          echo event: ${{ toJson(github.event) }}
+          echo job: ${{ toJson(job) }}
+          ls -lR
+
