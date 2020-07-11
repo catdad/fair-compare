@@ -56,13 +56,14 @@ jobs:
     needs: [ windows, macos, linux ]
     steps:
       - name: Download build artifacts
-        env:
-          GITHUB_EVENT_CONTEXT: ${{ toJSon(github.event) }}
-          JOB_CONTEXT: ${{ toJson(job) }}
         uses: actions/download-artifact@v2
         with:
           path: ./
-      - run: |
+      - name: Run some scripts I guess
+        env:
+          GITHUB_EVENT_CONTEXT: ${{ toJSon(github.event) }}
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: |
           echo "this is still only a test"
           echo ref: ${{ github.ref }}
           echo event_name: ${{ github.event_name }}
