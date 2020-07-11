@@ -56,6 +56,9 @@ jobs:
     needs: [ windows, macos, linux ]
     steps:
       - name: Download build artifacts
+        env:
+          GITHUB_EVENT_CONTEXT: ${{ toJSon(github.event) }}
+          JOB_CONTEXT: ${{ toJson(job) }}
         uses: actions/download-artifact@v2
         with:
           path: ./
@@ -64,7 +67,7 @@ jobs:
           echo ref: ${{ github.ref }}
           echo event_name: ${{ github.event_name }}
           echo action: ${{ github.action }}
-          echo event: ${{ toJson(github.event) }}
-          echo job: ${{ toJson(job) }}
+          echo event: "$GITHUB_EVENT_CONTEXT"
+          echo job: "$JOB_CONTEXT"
           ls -lR
 
