@@ -70,7 +70,7 @@ function createWindow () {
         nodeIntegrationInWorker: true,
         webviewTag: true,
       },
-      frame: process.platform === 'darwin' ? true : !config.getProp('experiments.framelessWindow')
+      frame: process.platform === 'win32' ? false : true
     };
 
     if (process.platform === 'darwin' && config.getProp('experiments.framelessWindow')) {
