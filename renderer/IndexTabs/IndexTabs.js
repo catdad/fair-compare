@@ -3,6 +3,8 @@ const viewBus = new (require('events'))();
 const { Config, withConfig } = require('../tools/config.js');
 const batchCompare = require('../workers/batch-compare.js');
 
+const Frame = require('./Frame.js');
+
 css('./IndexTabs.css');
 
 function Tabs({ list, onSelect, onClose }) {
@@ -145,9 +147,9 @@ function App() {
   }, [tabs, setTabs]);
 
   return html`
-    <div class="tab-bar">
+    <${Frame} class="tab-bar">
       <${Tabs} list=${tabs} onClose=${closeTab} onSelect=${selectTab} />
-    </div>
+    <//>
     <div ref=${view}></div>
   `;
 }
