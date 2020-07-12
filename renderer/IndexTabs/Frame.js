@@ -20,6 +20,10 @@ module.exports = ({ class: classList, children }) => {
     });
   };
 
+  const onMinimize = () => {
+    BrowserWindow.getFocusedWindow().minimize();
+  };
+
   const onClose = () => {
     BrowserWindow.getFocusedWindow().close();
   };
@@ -33,6 +37,7 @@ module.exports = ({ class: classList, children }) => {
       <span class=left><button onclick=${onMenu}>Menu</button></span>
       <span class=content>${children}</span>
       <span class=right>
+        <button onclick=${onMinimize}>Minimize</button>
         <button onclick=${onClose}>Close</button>
       </span>
     </div>
