@@ -1,6 +1,6 @@
 const { BrowserWindow } = require('electron').remote;
 
-const { html, css, useState } = require('../tools/ui.js');
+const { html, css } = require('../tools/ui.js');
 const menu = require('../../lib/menu.js');
 
 css('./Frame.css');
