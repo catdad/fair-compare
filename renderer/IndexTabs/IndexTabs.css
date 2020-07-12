@@ -1,9 +1,13 @@
 .tab-bar {
   background-color: var(--lvl4);
   height: var(--tab-height);
-  display: flex;
   align-items: center;
   border-bottom: 1px solid var(--color-border);
+}
+
+.tabs {
+  display: flex;
+  user-select: none;
 }
 
 .tab {

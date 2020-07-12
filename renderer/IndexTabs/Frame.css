@@ -1,0 +1,29 @@
+.frame .left,
+.frame .right,
+.frame .drag {
+  display: none;
+}
+
+.win32 .frame .left,
+.win32 .frame .right,
+.win32 .frame .drag {
+  display: inline-block;
+}
+
+.frame {
+  display: flex;
+}
+
+.frame .content {
+  padding-right: 100px;
+}
+
+.frame .content,
+.frame .content > *{
+  flex-grow: 1;
+  -webkit-app-region: drag
+}
+
+.frame .content > * * {
+  -webkit-app-region: no-drag;
+}

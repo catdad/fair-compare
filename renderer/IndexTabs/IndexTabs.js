@@ -148,7 +148,9 @@ function App() {
 
   return html`
     <${Frame} class="tab-bar">
-      <${Tabs} list=${tabs} onClose=${closeTab} onSelect=${selectTab} />
+      <span class=tabs>
+        <${Tabs} list=${tabs} onClose=${closeTab} onSelect=${selectTab} />
+      </span>
     <//>
     <div ref=${view}></div>
   `;
