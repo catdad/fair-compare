@@ -1,9 +1,14 @@
-const { BrowserWindow } = require('electron').remote;
+const { getCurrentWindow } = require('electron').remote;
 
 const { html, css } = require('../tools/ui.js');
 const menu = require('../../lib/menu.js');
 
 css('./Frame.css');
+
+const browser = getCurrentWindow();
+const onMinimize = () => void browser.minimize();
+const onMaximize = () => void (browser.isMaximized() ? browser.unmaximize() : browser.maximize());
+const onClose = () => void browser.close();
 
 module.exports = ({ class: classList, children }) => {
   const onMenu = (ev) => {
@@ -18,24 +23,6 @@ module.exports = ({ class: classList, children }) => {
     }).catch(err => {
       console.error('failed to interact with menu', err);
     });
-  };
-
-  const onMinimize = () => {
-    BrowserWindow.getFocusedWindow().minimize();
-  };
-
-  const onMaximize = () => {
-    const browser = BrowserWindow.getFocusedWindow();
-
-    if (browser.isMaximized()) {
-      browser.unmaximize();
-    } else {
-      browser.maximize();
-    }
-  };
-
-  const onClose = () => {
-    BrowserWindow.getFocusedWindow().close();
   };
 
   if (process.platform !== 'win32') {
