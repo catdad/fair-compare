@@ -59,16 +59,14 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           path: ./
-      - name: Run some scripts I guess
-        env:
-          GITHUB_EVENT_CONTEXT: ${{ toJSon(github.event) }}
-          JOB_CONTEXT: ${{ toJson(job) }}
+      - name: Flatten artifacts
         run: |
-          echo "this is still only a test"
-          echo ref: ${{ github.ref }}
-          echo event_name: ${{ github.event_name }}
-          echo action: ${{ github.action }}
-          echo event: "$GITHUB_EVENT_CONTEXT"
-          echo job: "$JOB_CONTEXT"
+          mv windows-artifacts/* .
+          mv macos-artifacts/* .
+          mv linux-artifacts/* .
+          rm -rf *artifacts
           ls -lR
-
+      - name: Create release
+        if: startsWith(github.ref, 'ref/tags/') && github.event_name != 'pull_request'
+        run: |
+          echo this runs only on tags now
