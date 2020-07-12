@@ -1,12 +1,11 @@
 .frame .left,
-.frame .right,
-.frame .drag {
+.frame .right {
+  user-select: none;
   display: none;
 }
 
 .win32 .frame .left,
-.win32 .frame .right,
-.win32 .frame .drag {
+.win32 .frame .right {
   display: inline-block;
 }
 
@@ -19,7 +18,7 @@
 }
 
 .frame .content,
-.frame .content > *{
+.frame .content > * {
   flex-grow: 1;
   -webkit-app-region: drag
 }
