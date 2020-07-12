@@ -24,6 +24,16 @@ module.exports = ({ class: classList, children }) => {
     BrowserWindow.getFocusedWindow().minimize();
   };
 
+  const onMaximize = () => {
+    const browser = BrowserWindow.getFocusedWindow();
+
+    if (browser.isMaximized()) {
+      browser.unmaximize();
+    } else {
+      browser.maximize();
+    }
+  };
+
   const onClose = () => {
     BrowserWindow.getFocusedWindow().close();
   };
@@ -38,6 +48,7 @@ module.exports = ({ class: classList, children }) => {
       <span class=content>${children}</span>
       <span class=right>
         <button onclick=${onMinimize}>Minimize</button>
+        <button onclick=${onMaximize}>Maximize</button>
         <button onclick=${onClose}>Close</button>
       </span>
     </div>
