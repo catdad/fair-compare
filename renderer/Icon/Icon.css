@@ -1,0 +1,8 @@
+.icon {
+  height: 100%;
+}
+
+.icon svg {
+  width: var(--size, 1rem);
+  height: var(--size, 1rem);
+}
