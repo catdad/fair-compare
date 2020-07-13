@@ -2,7 +2,6 @@
   background-color: var(--lvl4);
   height: var(--tab-height);
   align-items: center;
-  border-bottom: 1px solid var(--color-border);
 }
 
 .tabs {
