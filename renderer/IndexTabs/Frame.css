@@ -1,12 +1,17 @@
 .frame .left,
 .frame .right {
+  --display: flex;
+
   user-select: none;
   display: none;
+  height: 100%;
+  flex-direction: row;
+  align-items: center;
 }
 
 .win32 .frame .left,
 .win32 .frame .right {
-  display: inline-block;
+  display: var(--display);
 }
 
 .frame {
@@ -25,4 +30,21 @@
 
 .frame .content > * * {
   -webkit-app-region: no-drag;
+}
+
+.frame .butt {
+  height: 100%;
+  width: 2.2rem;
+  background: none;
+  border: none;
+}
+
+.frame .butt:active,
+.frame .butt:focus {
+  outline: none;
+  border: none;
+}
+
+.frame .butt:hover {
+  background: red;
 }
