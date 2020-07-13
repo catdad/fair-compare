@@ -44,7 +44,7 @@ module.exports = ({ class: classList, children }) => {
       <span class=content>${children}</span>
       <span class=right>
         <${Button} onclick=${onMinimize}>minimize<//>
-        <${Button} onclick=${onMaximize}>filter_none<//>
+        <${Button} onclick=${onMaximize} class="rotate-180">filter_none<//>
         <${Button} onclick=${onClose} class="frame-close">close<//>
       </span>
     </div>
