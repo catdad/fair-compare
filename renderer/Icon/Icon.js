@@ -17,7 +17,7 @@ const loadIcon = (name, varient) => {
 
   // TODO make this asynchronous so it doesn't block other stuff?
   cache[iconPath] = fs.readFileSync(iconPath, 'utf-8')
-    .replace(/width="\d+"/, '')
+    .replace(/width="\d+"/, 'class="icon"')
     .replace(/height="\d+"/, '');
 
   return cache[iconPath];
@@ -32,5 +32,5 @@ module.exports = ({ name, size = 16, varient = 'baseline' }) => {
     setVar(ref.current, 'size', dim);
   }, []);
 
-  return html`<span ref=${ref} class=icon>${html([svg])}</span>`;
+  return Object.assign(html([svg]), { ref });
 };
