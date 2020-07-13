@@ -14,7 +14,7 @@ const onClose = () => void browser.close();
 const Button = ({ onclick, children, class: classList }) => {
   const icon = Array.isArray(children) ? children[0] : children;
 
-  return html`<button class="butt ${classList}" onclick=${onclick}><${Icon} name=${icon} /></button>`;
+  return html`<button class="frame-button ${classList}" onclick=${onclick}><${Icon} name=${icon} /></button>`;
 };
 
 module.exports = ({ class: classList, children }) => {
@@ -45,7 +45,7 @@ module.exports = ({ class: classList, children }) => {
       <span class=right>
         <${Button} onclick=${onMinimize}>minimize<//>
         <${Button} onclick=${onMaximize}>filter_none<//>
-        <${Button} onclick=${onClose}>close<//>
+        <${Button} onclick=${onClose} class="frame-close">close<//>
       </span>
     </div>
   `;

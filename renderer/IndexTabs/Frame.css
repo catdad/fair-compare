@@ -32,19 +32,23 @@
   -webkit-app-region: no-drag;
 }
 
-.frame .butt {
+.frame .frame-button {
   height: 100%;
   width: 2.2rem;
   background: none;
   border: none;
 }
 
-.frame .butt:active,
-.frame .butt:focus {
+.frame .frame-button:active,
+.frame .frame-button:focus {
   outline: none;
   border: none;
 }
 
-.frame .butt:hover {
-  background: red;
+.frame .frame-button:hover {
+  background: var(--lvl3);
+}
+
+.frame .frame-close:hover {
+  background: var(--accent-red-bright);
 }
