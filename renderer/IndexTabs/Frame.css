@@ -1,3 +1,8 @@
+.win32 .frame {
+  --left-size: 2rem;
+  --right-size: calc(var(--left-size) * 3);
+}
+
 .frame .left,
 .frame .right {
   --display: flex;
@@ -16,15 +21,24 @@
 
 .frame {
   display: flex;
+  width: 100%;
+}
+
+.frame .left {
+  width: var(--left-size, 0px);
+}
+
+.frame .right {
+  width: var(--right-size, 0px);
 }
 
 .frame .content {
-  padding-right: 100px;
+  width: calc(100% - var(--left-size, 0px) - var(--right-size, 0px));
+  padding-right: 80px;
 }
 
 .frame .content,
 .frame .content > * {
-  flex-grow: 1;
   -webkit-app-region: drag
 }
 
