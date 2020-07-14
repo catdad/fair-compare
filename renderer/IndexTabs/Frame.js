@@ -1,6 +1,6 @@
 const { getCurrentWindow } = require('electron').remote;
 
-const { html, css } = require('../tools/ui.js');
+const { html, css, useState } = require('../tools/ui.js');
 const menu = require('../../lib/menu.js');
 const Icon = require('../Icon/Icon.js');
 
@@ -18,6 +18,13 @@ const Button = ({ onclick, children, class: classList }) => {
 };
 
 module.exports = ({ class: classList, children }) => {
+  const [maximized, setMaximized] = useState(browser.isMaximized());
+
+  const toggleMaximized = () => {
+    setMaximized(!maximized);
+    onMaximize();
+  };
+
   const onMenu = (ev) => {
     ev.preventDefault();
     ev.stopPropagation();
@@ -44,7 +51,7 @@ module.exports = ({ class: classList, children }) => {
       <span class=content>${children}</span>
       <span class=right>
         <${Button} onclick=${onMinimize}>minimize<//>
-        <${Button} onclick=${onMaximize} class="rotate-180">filter_none<//>
+        <${Button} onclick=${toggleMaximized} class="${maximized ? 'rotate-180' : ''}">${maximized ? 'filter_none' : 'crop_square'}<//>
         <${Button} onclick=${onClose} class="frame-close">close<//>
       </span>
     </div>
