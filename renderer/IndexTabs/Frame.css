@@ -4,6 +4,7 @@
 
   --left-size: calc(var(--button-size) + var(--button-pad) + var(--button-pad));
   --right-size: calc(var(--left-size) * 3);
+  --drag-pad: 60px;
 }
 
 .frame .left,
@@ -37,7 +38,7 @@
 
 .frame .content {
   width: calc(100% - var(--left-size, 0px) - var(--right-size, 0px));
-  padding-right: 80px;
+  padding-right: var(--drag-pad, 0px);
 }
 
 .frame .content,
