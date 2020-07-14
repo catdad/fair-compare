@@ -1,5 +1,8 @@
 .win32 .frame {
-  --left-size: 2rem;
+  --button-size: 2rem;
+  --button-pad: 0.5rem;
+
+  --left-size: calc(var(--button-size) + var(--button-pad) + var(--button-pad));
   --right-size: calc(var(--left-size) * 3);
 }
 
@@ -51,7 +54,10 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  width: 2.2rem;
+  width: var(--button-size);
+  padding-left: var(--button-pad);
+  padding-right: var(--button-pad);
+  box-sizing: content-box;
   background: none;
   border: none;
 }
