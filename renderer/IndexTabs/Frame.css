@@ -54,9 +54,9 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  width: var(--button-size);
-  padding-left: var(--button-pad);
-  padding-right: var(--button-pad);
+  width: var(--button-size, 0px);
+  padding-left: var(--button-pad, 0px);
+  padding-right: var(--button-pad, 0px);
   box-sizing: content-box;
   background: none;
   border: none;
