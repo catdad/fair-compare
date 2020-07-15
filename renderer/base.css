@@ -27,6 +27,16 @@
   --lvl6: var(--96dp);
   --lvl7: var(--256dp);
 
+  --accent-pink: #ff7598;
+  --accent-green: #75ff98;
+  --accent-blue: #7598ff;
+  --accent-purple: #dd75ff;
+  --accent-yellow: #ffdd75;
+
+  --accent-red-bright: #a01212;
+  --accent-yellow-bright: #f6c304;
+  --accent-purple-dark: #332940;
+
   --color-background: var(--lvl2);
   --color-border: var(--lvl5);
 

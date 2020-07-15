@@ -50,8 +50,8 @@ function App() {
   const setDir = (side) => async (dir) => {
     config.set(`directories.${side}`, dir);
 
-    const left = side === 'left' ? dir : treeData.left.base;
-    const right = side === 'right' ? dir : treeData.right.base;
+    const left = side === 'left' ? dir : treeData.left;
+    const right = side === 'right' ? dir : treeData.right;
 
     const newTreeData = await getDirectoryStructure({ left, right });
     setTreeData(newTreeData);

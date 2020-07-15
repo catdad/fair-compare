@@ -1,7 +1,9 @@
-const { html, css, useContext, useState, useEffect, useRef, useCallback } = require('../tools/ui.js');
+const { html, css, useContext, useState, useEffect, useRef, useCallback, setVar } = require('../tools/ui.js');
 const viewBus = new (require('events'))();
 const { Config, withConfig } = require('../tools/config.js');
 const batchCompare = require('../workers/batch-compare.js');
+
+const Frame = require('./Frame.js');
 
 css('./IndexTabs.css');
 
@@ -85,12 +87,21 @@ function App() {
   const view = useRef(null);
   const config = useContext(Config);
   const devTools = config.get('devToolsOpen', false);
+  const tabsRef = {};
+
+  const displayTabs = tabs => {
+    if (tabsRef.current) {
+      setVar(tabsRef.current, 'count', tabs.length);
+    }
+
+    setTabs(tabs);
+  };
 
   useEffect(() => {
     const tab = createTab({ title: 'Main', url: `${window.location.href}?route=directory`, view, devTools });
     batchCompare.register(tab.frame);
 
-    setTabs([tab]);
+    displayTabs([tab]);
   }, [/* execute once */]);
 
   useEffect(() => {
@@ -104,7 +115,7 @@ function App() {
         return t;
       })), tab];
 
-      setTabs(newTabs);
+      displayTabs(newTabs);
     };
 
     viewBus.on('new-tab', onNewTab);
@@ -119,7 +130,7 @@ function App() {
       tab.selected = tab === TAB;
     });
 
-    setTabs([].concat(tabs));
+    displayTabs([].concat(tabs));
   }, [tabs, setTabs]);
 
   const closeTab = useCallback(TAB => {
@@ -141,13 +152,15 @@ function App() {
       return tab !== TAB;
     });
 
-    setTabs(newTabs);
+    displayTabs(newTabs);
   }, [tabs, setTabs]);
 
   return html`
-    <div class="tab-bar">
-      <${Tabs} list=${tabs} onClose=${closeTab} onSelect=${selectTab} />
-    </div>
+    <${Frame} class="tab-bar">
+      <span class=tabs ref=${tabsRef}>
+        <${Tabs} list=${tabs} onClose=${closeTab} onSelect=${selectTab} />
+      </span>
+    <//>
     <div ref=${view}></div>
   `;
 }
