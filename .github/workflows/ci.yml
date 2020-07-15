@@ -90,7 +90,7 @@ jobs:
               
               await github.repos.uploadReleaseAsset({
                 owner, repo,
-                releaseId: release.data.id,
+                release_id: release.data.id,
                 name: file,
                 data: await fs.readFile(`./${file}`)
               });            
