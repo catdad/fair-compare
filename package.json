@@ -73,7 +73,7 @@
     },
     "dmg": {
       "icon": "out/icon.icns",
-      "artifactName": "${name}-v${version}-setup.${ext}"
+      "artifactName": "${name}-v${version}-macos-setup.${ext}"
     },
     "win": {
       "target": [
@@ -83,10 +83,10 @@
       "icon": "out/icon.ico"
     },
     "nsis": {
-      "artifactName": "${name}-v${version}-setup.${ext}"
+      "artifactName": "${name}-v${version}-windows-setup.${ext}"
     },
     "portable": {
-      "artifactName": "${name}-v${version}-portable.${ext}"
+      "artifactName": "${name}-v${version}-windows-portable.${ext}"
     },
     "linux": {
       "target": [
@@ -96,7 +96,7 @@
       "category": "Graphics"
     },
     "appImage": {
-      "artifactName": "${name}-v${version}.${ext}"
+      "artifactName": "${name}-v${version}-linux.${ext}"
     }
   }
 }
