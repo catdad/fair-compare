@@ -66,7 +66,25 @@ jobs:
           mv linux-artifacts/* .
           rm -rf *artifacts
           ls -lR
-      - name: Create release
-        if: startsWith(github.ref, 'ref/tags/') && github.event_name != 'pull_request'
-        run: |
-          echo this runs only on tags now
+      - name: Create Release
+        # if: startsWith(github.ref, 'ref/tags/') && github.event_name != 'pull_request'
+        uses: actions/github-script@v2
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            console.log(typeof process !== 'undefined' ? process.versions : 'no process object');
+            
+            const { owner, repo, sha } = context.repo;
+            const release = await github.repos.createRelease({
+              owner, repo,
+              tag_name: `release-${new Date().toISOString()}`,
+              draft: true,
+              target_commitish: sha
+            });
+            
+            console.log('created release', { release });
+            
+            const fs = require('fs').promises;
+            
+            console.log('files', await fs.readdir('.'));
+            
