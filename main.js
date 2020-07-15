@@ -3,12 +3,13 @@ const url = require('url');
 const EventEmitter = require('events');
 const events = new EventEmitter();
 
-const { app, BrowserWindow, ipcMain, systemPreferences } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, systemPreferences } = require('electron');
 
 require('./lib/app-id.js')(app);
 const log = require('./lib/log.js')('main');
 const config = require('./lib/config.js');
 const debounce = require('./lib/debounce.js');
+const menu = require('./lib/menu.js');
 require('./lib/progress.js');
 
 log.info(`electron node version: ${process.version}`);
@@ -57,6 +58,8 @@ function createWindow () {
   Promise.all([
     config.read()
   ]).then(() => {
+    Menu.setApplicationMenu(menu.create());
+
     const windowOptions = {
       width: config.getProp('window.width') || 1000,
       height: config.getProp('window.height') || 800,
@@ -67,7 +70,7 @@ function createWindow () {
         nodeIntegrationInWorker: true,
         webviewTag: true,
       },
-      frame: process.platform === 'darwin' ? true : !config.getProp('experiments.framelessWindow')
+      frame: process.platform === 'win32' ? false : true
     };
 
     if (process.platform === 'darwin' && config.getProp('experiments.framelessWindow')) {

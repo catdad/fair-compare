@@ -1,0 +1,83 @@
+.win32 .frame {
+  --button-size: 2rem;
+  --button-pad: 0.5rem;
+
+  --left-size: calc(var(--button-size) + var(--button-pad) + var(--button-pad));
+  --right-size: calc(var(--left-size) * 3);
+  --drag-pad: 60px;
+}
+
+.frame .left,
+.frame .right {
+  --display: flex;
+
+  user-select: none;
+  display: none;
+  height: 100%;
+  flex-direction: row;
+  align-items: center;
+}
+
+.win32 .frame .left,
+.win32 .frame .right {
+  display: var(--display);
+}
+
+.frame {
+  display: flex;
+  width: 100%;
+}
+
+.frame .left {
+  width: var(--left-size, 0px);
+}
+
+.frame .right {
+  width: var(--right-size, 0px);
+}
+
+.frame .content {
+  width: calc(100% - var(--left-size, 0px) - var(--right-size, 0px));
+  padding-right: var(--drag-pad, 0px);
+}
+
+.frame .content,
+.frame .content > * {
+  -webkit-app-region: drag
+}
+
+.frame .content > * * {
+  -webkit-app-region: no-drag;
+}
+
+.frame .frame-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: var(--button-size, 0px);
+  padding-left: var(--button-pad, 0px);
+  padding-right: var(--button-pad, 0px);
+  box-sizing: content-box;
+  background: none;
+  border: none;
+}
+
+.frame .frame-button:active,
+.frame .frame-button:focus {
+  outline: none;
+  border: none;
+}
+
+.frame .frame-button:hover {
+  background: var(--lvl3);
+}
+
+.frame .frame-close:hover {
+  background: var(--accent-red-bright);
+}
+
+.frame .frame-button.rotate-180 > * {
+  transform-origin: center;
+  transform: rotate(180deg) scale(0.8);
+}

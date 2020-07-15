@@ -1,0 +1,7 @@
+svg.icon {
+  fill: var(--color-text);
+  width: var(--size, 1rem);
+  height: var(--size, 1rem);
+  user-select: none;
+  pointer-events: none;
+}
