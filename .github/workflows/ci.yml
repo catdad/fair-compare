@@ -72,19 +72,26 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            console.log(typeof process !== 'undefined' ? process.versions : 'no process object');
+            const fs = require('fs').promises;
+            console.log('environment', process.versions);
             
             const { owner, repo, sha } = context.repo;
             const release = await github.repos.createRelease({
               owner, repo,
-              tag_name: `release-${new Date().toISOString()}`,
+              tag_name: `release-${new Date().toISOString().replace(/:/g, '-')}`,
               draft: true,
               target_commitish: sha
             });
             
             console.log('created release', { release });
-            
-            const fs = require('fs').promises;
-            
-            console.log('files', await fs.readdir('.'));
-            
+
+            for (let file of await fs.readdir('.')) {
+              console.log('uploading', file);
+              
+              await github.repos.uploadReleaseAsset({
+                owner, repo,,
+                releaseId: release.data.id,
+                name: file,
+                data: await fs.readFile(`./${file}`)
+              });            
+            }
