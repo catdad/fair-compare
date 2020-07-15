@@ -89,7 +89,7 @@ jobs:
               console.log('uploading', file);
               
               await github.repos.uploadReleaseAsset({
-                owner, repo,,
+                owner, repo,
                 releaseId: release.data.id,
                 name: file,
                 data: await fs.readFile(`./${file}`)
