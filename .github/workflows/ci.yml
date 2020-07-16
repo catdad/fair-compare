@@ -67,7 +67,7 @@ jobs:
           rm -rf *artifacts
           ls -lR
       - name: Create Release
-        # if: startsWith(github.ref, 'ref/tags/') && github.event_name != 'pull_request'
+        if: startsWith(github.ref, 'ref/tags/') && github.event_name != 'pull_request'
         uses: actions/github-script@v2
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -75,12 +75,14 @@ jobs:
             const fs = require('fs').promises;
             console.log('environment', process.versions);
             
-            const { repo: { owner, repo }, sha } = context;
-            console.log({ owner, repo, sha });
+            const { repo: { owner, repo }, sha, ref } = context;
+            console.log({ owner, repo, sha, ref });
+            
+            const name = ref.replace('refs/tags/', '');
 
             const release = await github.repos.createRelease({
-              owner, repo,
-              tag_name: `release-${new Date().toISOString().replace(/:/g, '-')}`,
+              owner, repo, name,
+              tag_name: name,
               draft: true,
               target_commitish: sha
             });
