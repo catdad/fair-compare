@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/catdad/fair-compare#readme",
   "devDependencies": {
+    "@catdad/to-ico": "^1.0.0",
     "@fiahfy/icns": "0.0.6",
     "cheerio": "^1.0.0-rc.3",
     "electron": "^9.0.5",
@@ -38,8 +39,7 @@
     "eslint": "^5.16.0",
     "rootrequire": "^1.0.0",
     "run-script-os": "^1.1.1",
-    "svg-render": "^1.0.0",
-    "to-ico": "^1.1.5"
+    "svg-render": "^1.0.0"
   },
   "dependencies": {
     "@material-icons/svg": "^1.0.2",
