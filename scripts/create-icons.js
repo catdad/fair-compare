@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const root = require('rootrequire');
 const renderSvg = require('svg-render');
-const toIco = require('to-ico');
+const toIco = require('@catdad/to-ico');
 const { Icns, IcnsImage } = require('@fiahfy/icns');
 const cheerio = require('cheerio');
 
