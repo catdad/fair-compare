@@ -2,7 +2,6 @@ const path = require('path');
 const url = require('url');
 const EventEmitter = require('events');
 const events = new EventEmitter();
-const get = require('lodash/get');
 
 const { app, BrowserWindow, ipcMain, Menu, systemPreferences } = require('electron');
 
@@ -12,7 +11,7 @@ const log = require('./lib/log.js')('main');
 const config = require('./lib/config.js');
 const debounce = require('./lib/debounce.js');
 const menu = require('./lib/menu.js');
-const pkg = require('./package.json');
+const icon = require('./lib/icon.js');
 
 log.info(`electron node version: ${process.version}`);
 
@@ -72,15 +71,12 @@ function createWindow () {
         nodeIntegrationInWorker: true,
         webviewTag: true,
       },
+      icon: icon(),
       frame: process.platform === 'win32' ? false : true
     };
 
     if (process.platform === 'darwin' && config.getProp('experiments.framelessWindow')) {
       windowOptions.titleBarStyle = 'hidden';
-    }
-
-    if (process.platform === 'linux' && get(pkg, 'build.linux.icon')) {
-      windowOptions.icon = path.resolve(__dirname, get(pkg, 'build.linux.icon'));
     }
 
     // Create the browser window.
