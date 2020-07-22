@@ -89,7 +89,7 @@
       "artifactName": "${name}-v${version}-windows-portable.${ext}"
     },
     "linux": {
-      "icon": "out/icon-32x32.png",
+      "icon": "out/icon-256x256.png",
       "target": [
         "AppImage"
       ],
