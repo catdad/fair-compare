@@ -34,6 +34,7 @@ timing({
 
     await write(dist('icon.svg'), svg);
     await write(dist('icon-512x512.png'), await render(svg, 512));
+    await write(dist('icon-32x32.png'), await render(svg, 32));
     await write(dist('icon.ico'), await createIco(svg));
     await write(dist('icon.icns'), await createIcns(svg));
   }
