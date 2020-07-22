@@ -2,7 +2,7 @@ const path = require('path');
 const url = require('url');
 const EventEmitter = require('events');
 const events = new EventEmitter();
-const get = require('lodsh/get');
+const get = require('lodash/get');
 
 const { app, BrowserWindow, ipcMain, Menu, systemPreferences } = require('electron');
 
