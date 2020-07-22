@@ -13,22 +13,15 @@ const dist = file => path.resolve(root, 'out', file);
 
 const render = async (buffer, width = 512) => await renderSvg({ buffer, width });
 
-const createIco = async svg => await toIco([
-  await render(svg, 16),
-  await render(svg, 24),
-  await render(svg, 32),
-  await render(svg, 48),
-  await render(svg, 64),
-  await render(svg, 128),
-  await render(svg, 256)
-]);
+const createIco = async svg => await toIco(
+  await Promise.all([16, 24, 32, 48, 64, 128, 256].map(size => render(svg, size)))
+);
 
 const createIcns = async svg => {
   const icns = new Icns();
 
   for (const { osType, size } of Icns.supportedIconTypes) {
-    const buffer = await render(svg, size);
-    icns.append(IcnsImage.fromPNG(buffer, osType));
+    icns.append(IcnsImage.fromPNG(await render(svg, size), osType));
   }
 
   return icns.data;
