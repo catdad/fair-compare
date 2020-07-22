@@ -94,7 +94,10 @@
         "AppImage"
       ],
       "executableName": "Fair Compare",
-      "category": "Graphics"
+      "category": "Graphics",
+      "asarUnpack": [
+        "out/*.png"
+      ]
     },
     "appImage": {
       "artifactName": "${name}-v${version}-linux.${ext}"
