@@ -6,11 +6,12 @@ const events = new EventEmitter();
 const { app, BrowserWindow, ipcMain, Menu, systemPreferences } = require('electron');
 
 require('./lib/app-id.js')(app);
+require('./lib/progress.js');
 const log = require('./lib/log.js')('main');
 const config = require('./lib/config.js');
 const debounce = require('./lib/debounce.js');
 const menu = require('./lib/menu.js');
-require('./lib/progress.js');
+const icon = require('./lib/icon.js');
 
 log.info(`electron node version: ${process.version}`);
 
@@ -70,15 +71,12 @@ function createWindow () {
         nodeIntegrationInWorker: true,
         webviewTag: true,
       },
+      icon: icon(),
       frame: process.platform === 'win32' ? false : true
     };
 
     if (process.platform === 'darwin' && config.getProp('experiments.framelessWindow')) {
       windowOptions.titleBarStyle = 'hidden';
-    }
-
-    if (process.platform === 'linux') {
-      windowOptions.icon = './third-party/icon.png';
     }
 
     // Create the browser window.

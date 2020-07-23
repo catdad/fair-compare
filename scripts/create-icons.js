@@ -33,9 +33,12 @@ timing({
     const svg = await read(path.resolve(root, 'assets/icon.svg'));
 
     await write(dist('icon.svg'), svg);
-    await write(dist('icon.png'), await render(svg, 512));
     await write(dist('icon.ico'), await createIco(svg));
     await write(dist('icon.icns'), await createIcns(svg));
+
+    for (let size of [32, 256, 512]) {
+      await write(dist(`${size}x${size}.png`), await render(svg, size));
+    }
   }
 }).catch(err => {
   // eslint-disable-next-line no-console
