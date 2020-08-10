@@ -62,7 +62,6 @@
     "appId": "com.catdad.fair-compare",
     "files": [
       "!assets/*",
-      "!scripts/*",
       "!.*"
     ],
     "mac": {
