@@ -11,7 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "npm run -s prep:icons",
     "prep": "npm run -s prep:icons",
-    "prep:icons": "node scripts/create-icons.js",
+    "prep:icons": "svg-app-icon --destination out < assets/icon.svg",
     "prepackage": "npm run -s prep",
     "package": "run-script-os",
     "package:win32": "electron-builder --publish never --win",
@@ -39,6 +39,7 @@
     "eslint": "^5.16.0",
     "rootrequire": "^1.0.0",
     "run-script-os": "^1.1.1",
+    "svg-app-icon": "^1.1.0",
     "svg-render": "^1.1.0"
   },
   "dependencies": {
@@ -61,7 +62,6 @@
     "appId": "com.catdad.fair-compare",
     "files": [
       "!assets/*",
-      "!scripts/*",
       "!.*"
     ],
     "mac": {
