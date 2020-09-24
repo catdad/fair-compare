@@ -11,12 +11,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "npm run -s prep:icons",
     "prep": "npm run -s prep:icons",
-    "prep:icons": "svg-app-icon --destination out < assets/icon.svg",
+    "prep:icons": "svg-app-icon --destination icons < assets/icon.svg",
     "prepackage": "npm run -s prep",
     "package": "run-script-os",
-    "package:win32": "electron-builder --publish never --win",
-    "package:darwin": "electron-builder --publish never --mac",
-    "package:linux": "electron-builder --publish never --linux",
+    "package:win32": "electron-builder --config .electron-builder.js --publish never --win",
+    "package:darwin": "electron-builder --config .electron-builder.js --publish never --mac",
+    "package:linux": "electron-builder --config .electron-builder.js --publish never --linux",
     "package:default": "echo \"Error: this OS is not supported\" && exit 1"
   },
   "repository": {
@@ -57,50 +57,5 @@
     "pixelmatch": "^5.2.0",
     "preact": "^10.4.4",
     "toastify-js": "^1.8.0"
-  },
-  "build": {
-    "appId": "com.catdad.fair-compare",
-    "files": [
-      "!assets/*",
-      "!.*"
-    ],
-    "mac": {
-      "target": [
-        "dmg"
-      ],
-      "icon": "out/icon.icns",
-      "darkModeSupport": true
-    },
-    "dmg": {
-      "icon": "out/icon.icns",
-      "artifactName": "${name}-v${version}-macos-setup.${ext}"
-    },
-    "win": {
-      "target": [
-        "nsis",
-        "portable"
-      ],
-      "icon": "out/icon.ico"
-    },
-    "nsis": {
-      "artifactName": "${name}-v${version}-windows-setup.${ext}"
-    },
-    "portable": {
-      "artifactName": "${name}-v${version}-windows-portable.${ext}"
-    },
-    "linux": {
-      "icon": "out/256x256.png",
-      "target": [
-        "AppImage"
-      ],
-      "executableName": "Fair Compare",
-      "category": "Graphics",
-      "asarUnpack": [
-        "out/*.png"
-      ]
-    },
-    "appImage": {
-      "artifactName": "${name}-v${version}-linux.${ext}"
-    }
   }
 }

@@ -41,3 +41,4 @@ coverage/
 .fair-compare-config.json
 out/
 dist/
+icons/
