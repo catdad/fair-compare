@@ -37,7 +37,7 @@ module.exports = {
   },
   portable: {
     artifactName: `${fileName}-v\${version}-Windows-portable.\${ext}`,
-    // splashImage: path.resolve(__dirname, 'image.bmp')
+    splashImage: path.resolve(__dirname, 'splash.bmp')
   },
   linux: {
     icon,

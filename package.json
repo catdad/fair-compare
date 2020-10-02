@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/catdad/fair-compare#readme",
   "devDependencies": {
-    "@catdad/to-bmp": "https://github.com/catdad-experiments/to-bmp/tarball/8e856f637532fdf138056ac1cceef5c643455561",
+    "@catdad/to-bmp": "https://github.com/catdad-experiments/to-bmp/tarball/2fb16a5f36af916bda51ba8b31bf13566b088934",
     "@catdad/to-ico": "^1.0.0",
     "@fiahfy/icns": "0.0.6",
     "electron": "^9.0.5",
