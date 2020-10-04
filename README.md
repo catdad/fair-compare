@@ -1,4 +1,4 @@
-# 🎡 fair compare
+[![fair compare](https://cdn.jsdelivr.net/gh/catdad-experiments/catdad-experiments-org@7cb300/fair-compare/logo.jpg)](https://github.com/catdad/fair-compare/)
 
 > You know... it's just okay
 
