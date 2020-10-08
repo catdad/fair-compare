@@ -34,7 +34,7 @@
     "@catdad/to-bmp": "^1.0.1",
     "@catdad/to-ico": "^1.0.0",
     "@fiahfy/icns": "0.0.6",
-    "electron": "^9.0.5",
+    "electron": "^9.3.1",
     "electron-background": "^1.0.0",
     "electron-builder": "^22.9.1",
     "electronmon": "^1.1.1",
