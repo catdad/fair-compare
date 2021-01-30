@@ -1,4 +1,4 @@
-[![fair compare logo](https://cdn.jsdelivr.net/gh/catdad-experiments/catdad-experiments-org@7cb300/fair-compare/logo.jpg)](https://github.com/catdad/fair-compare/)
+[![fair compare logo](https://cdn.jsdelivr.net/gh/catdad-experiments/catdad-experiments-org@7cb300/fair-compare/logo.jpg)](https://github.com/catdad/fair-compare/#readme)
 
 <p align="center"><b>You know... it's just okay</b></p>
 
