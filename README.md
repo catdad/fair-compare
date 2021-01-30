@@ -8,11 +8,11 @@
 
 Download and install the latest version for your operating system from the [latest release][release].
 
-[![Windows installer](https://img.shields.io/badge/Windows-installer-5dade2?style=for-the-badge&logo=windows)][release]
+[![Windows installer](https://img.shields.io/badge/Windows-installer-20b2dc?style=for-the-badge&logo=windows)][release]
 
-[![Windows portable](https://img.shields.io/badge/Windows-portable-58d68d?style=for-the-badge&logo=windows)][release]
+[![Windows portable](https://img.shields.io/badge/Windows-portable-238636?style=for-the-badge&logo=windows)][release]
 
-[![MacOS dmg](https://img.shields.io/badge/MacOS-dmg-a6acaf?style=for-the-badge&logo=apple)][release]
+[![MacOS dmg](https://img.shields.io/badge/MacOS-dmg-798083?style=for-the-badge&logo=apple)][release]
 
 [![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-dc7633?style=for-the-badge&logo=linux&logoColor=white)][release]
 
