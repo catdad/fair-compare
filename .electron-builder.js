@@ -23,7 +23,7 @@ module.exports = {
   },
   dmg: {
     icon,
-    artifactName: `${fileName}-v\${version}-MacOS-setup.\${ext}`
+    artifactName: `${fileName}-v\${version}-MacOS.\${ext}`
   },
   win: {
     icon,
