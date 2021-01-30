@@ -28,6 +28,10 @@ These executables are not signed, so in any prompts where Windows would generall
 
 The dmg package is not signed or notorized, so MacOS will warn you that this application is made by an untrusted developer. You will need to trust this application in order to run it. In most cases, you will just see a prompt telling you what to do when you try to run the application for the first time. However, if you do not, it would be best to search how to do this on your specific OS version since Apple keeps changing the process for doing this with every OS update for some reason. Becoming a trusted developer is quite expensive for an open-source application. If this is important to you, please consider sponsoring me and this project.
 
+### Issues
+
+If you experience an issue or have an idea for new improvements or features, please [create a bug](https://github.com/catdad/fair-compare/issues/new) or reach out to me on [twitter @kirilv](https://twitter.com/kirilv).
+
 ## Development
 
 This project requires a recent version of [node](https://nodejs.org/). In order to set it up:
