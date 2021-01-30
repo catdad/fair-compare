@@ -14,7 +14,7 @@ Download and install the latest version for your operating system from the [late
 
 [![MacOS dmg](https://img.shields.io/badge/MacOS-dmg-798083?style=for-the-badge&logo=apple)][release]
 
-[![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-dc7633?style=for-the-badge&logo=linux&logoColor=white)][release]
+[![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-de681b?style=for-the-badge&logo=linux&logoColor=white)][release]
 
 [release]: https://github.com/catdad/fair-compare/releases/latest
 
