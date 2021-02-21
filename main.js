@@ -3,7 +3,7 @@ const url = require('url');
 const EventEmitter = require('events');
 const events = new EventEmitter();
 
-const { app, BrowserWindow, ipcMain, Menu, systemPreferences } = require('electron');
+const { app, BrowserWindow, Menu, systemPreferences } = require('electron');
 
 require('./lib/app-id.js')(app);
 require('./lib/progress.js');
@@ -33,26 +33,6 @@ const setMacOSTheme = () => {
 if (systemPreferences.subscribeNotification) {
   systemPreferences.subscribeNotification('AppleInterfaceThemeChangedNotification', setMacOSTheme);
   setMacOSTheme();
-}
-
-function onIpc(ev, data) {
-  switch (true) {
-    case data.type === 'config-set':
-      config.setProp(data.key, data.value);
-      break;
-    case data.type === 'config-get':
-      mainWindow.webContents.send('message', {
-        type: 'config-read',
-        key: data.key,
-        value: config.getProp(data.key)
-      });
-      break;
-    case data.type === 'dragstart':
-      ev.sender.startDrag({
-        file: data.filepath,
-        icon: '' // icon is required :(
-      });
-  }
 }
 
 function createWindow () {
@@ -116,8 +96,6 @@ function createWindow () {
     mainWindow.on('unmaximize', () => {
       config.setProp('window.maximized', false);
     });
-
-    ipcMain.on('message', onIpc);
 
     mainWindow.webContents.on('devtools-opened', () => {
       config.setProp('devToolsOpen', true);
