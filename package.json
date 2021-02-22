@@ -8,7 +8,7 @@
   "scripts": {
     "start": "electron-background .",
     "dev": "electronmon .",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --timeout 30000 --slow 0 \"test/**/*.test.js\"",
     "postinstall": "npm run -s prep:icons",
     "prep": "npm run -s prep:icons && npm run -s prep:splash",
     "prep:icons": "svg-app-icon --destination icons < assets/icon.svg",
@@ -34,15 +34,21 @@
     "@catdad/to-bmp": "^1.0.1",
     "@catdad/to-ico": "^1.0.0",
     "@fiahfy/icns": "0.0.6",
+    "chai": "^4.3.0",
+    "chalk": "^4.1.0",
     "electron": "^9.4.0",
     "electron-background": "^1.0.0",
     "electron-builder": "^22.9.1",
     "electronmon": "^1.1.1",
     "eslint": "^5.16.0",
+    "mocha": "^8.3.0",
+    "puptron": "0.0.5",
     "rootrequire": "^1.0.0",
     "run-script-os": "^1.1.1",
     "svg-app-icon": "^1.1.0",
-    "svg-render": "^1.1.0"
+    "svg-render": "^1.1.0",
+    "tempy": "^1.0.0",
+    "wait-for-throwable": "^1.0.1"
   },
   "dependencies": {
     "@material-icons/svg": "^1.0.2",
