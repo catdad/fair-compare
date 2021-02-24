@@ -59,7 +59,6 @@ let _browser;
 module.exports = {
   environment,
   start: async (configPath = '') => {
-
     const launchOptions = {
       cwd: path.resolve(__dirname, '../..'),
       env: {
