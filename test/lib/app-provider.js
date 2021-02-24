@@ -77,7 +77,20 @@ module.exports = {
     return {
       page,
       browser: _browser,
-      utils: utils(page)
+      utils: utils(page),
+      pages: async () => _browser.pages(),
+      webviews: async () => {
+        const targets = await _browser.targets();
+        const webviews = targets.filter(t => t.type() === 'webview');
+
+        const result = [];
+
+        for (const webview of webviews) {
+          result.push(await webview.page());
+        }
+
+        return result;
+      }
     };
   },
   stop: async (printLogs) => {
