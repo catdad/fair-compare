@@ -26,7 +26,6 @@ switch (query.route) {
     break;
   }
   default: {
-    document.title += ' Main';
     const IndexTabs = require('./IndexTabs/IndexTabs.js');
     render(html`<${IndexTabs} events=${events} />`, document.querySelector('#app'));
     break;

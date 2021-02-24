@@ -1,6 +1,7 @@
 const { expect } = require('chai');
 const waitForThrowable = require('wait-for-throwable');
 
+const { productName } = require('../package.json');
 const { start, stop } = require('./lib/app-provider.js');
 const config = require('./lib/config-provider.js');
 
@@ -44,11 +45,11 @@ describe('fair-compare', () => {
 
       const pageTitle = await pages[0].title();
 
-      expect(pageTitle).to.equal('Fair Compare Main');
+      expect(pageTitle).to.equal(`${productName}`);
 
       const wvTitle = await webviews[0].title();
 
-      expect(wvTitle).to.equal('Fair Compare Directory');
+      expect(wvTitle).to.equal(`${productName} Directory`);
     });
   });
 });
