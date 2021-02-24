@@ -50,6 +50,6 @@ describe('fair-compare', () => {
       const wvTitle = await webviews[0].title();
 
       expect(wvTitle).to.equal(`${productName} Directory`);
-    });
+    }, { total: 4000 });
   });
 });
