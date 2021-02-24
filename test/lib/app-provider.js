@@ -78,7 +78,7 @@ module.exports = {
       page,
       browser: _browser,
       utils: utils(page),
-      pages: async () => _browser.pages(),
+      pages: async () => await _browser.pages(),
       webviews: async () => {
         const targets = await _browser.targets();
         const webviews = targets.filter(t => t.type() === 'webview');
