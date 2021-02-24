@@ -97,5 +97,6 @@ module.exports = {
     }
 
     await _browser.close();
+    _browser = null;
   }
 };
