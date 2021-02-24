@@ -40,8 +40,8 @@ describe('fair-compare', () => {
       const pages = await app.pages();
       const webviews = await app.webviews();
 
-      expect(pages).to.have.lengthOf(1);
-      expect(webviews).to.have.lengthOf(1);
+      expect(pages).to.have.lengthOf(1, 'An unexpected number of pages were found');
+      expect(webviews).to.have.lengthOf(1, 'An unexpected number of webviews were found');
 
       const pageTitle = await pages[0].title();
 
