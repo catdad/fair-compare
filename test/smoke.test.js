@@ -29,7 +29,7 @@ describe('fair-compare', () => {
   beforeEach(cleanup);
   afterEach(cleanup);
 
-  it('launches', async () => {
+  it('launches with a main view and a directory webview', async () => {
     const configPath = await config.create({});
     const app = await start(configPath);
 
