@@ -5,6 +5,9 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  FORCE_COLOR: 1
+
 jobs:
   windows:
     runs-on: windows-latest
@@ -14,6 +17,7 @@ jobs:
         with:
           node-version: 14.x
       - run: npm install
+      - run: npm test
       - run: npm run package
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
@@ -28,6 +32,7 @@ jobs:
         with:
           node-version: 14.x
       - run: npm install
+      - run: npm test
       - run: npm run package
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
@@ -41,7 +46,9 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14.x
+      - run: sudo apt-get install xvfb
       - run: npm install
+      - run: xvfb-run --auto-servernum npm test
       - run: npm run package
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
