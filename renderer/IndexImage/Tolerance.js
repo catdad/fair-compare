@@ -91,12 +91,6 @@ function Tolerance({ left, right, buttons }) {
       config.set(THRESHOLD, value);
     };
 
-    const data = cache.get(KEY);
-
-    if (data && data.leftData && data.rightData) {
-      return set(value);
-    }
-
     if (renderPromise.current) {
       const setter = '__threshold_setter';
       const final = '__theshold_final';
