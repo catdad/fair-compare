@@ -86,23 +86,29 @@ function Tolerance({ left, right, buttons }) {
   }, [left, right, threshold, background]);
 
   const applyThreshold = ({ target: { value } }) => {
-    const setter = '__threshold_setter';
-    const final = '__theshold_final';
+    const set = value => {
+      setThreshold(value);
+      config.set(THRESHOLD, value);
+    };
 
     if (renderPromise.current) {
+      const setter = '__threshold_setter';
+      const final = '__theshold_final';
+
       renderPromise.current[final] = Number(value);
-    }
 
-    if (renderPromise.current && renderPromise.current[setter] === undefined) {
-      renderPromise.current[setter] = () => {
-        const finalValue = renderPromise.current[final];
-        renderPromise.current = null;
+      if (renderPromise.current[setter] === undefined) {
+        renderPromise.current[setter] = () => {
+          const finalValue = renderPromise.current[final];
+          renderPromise.current = null;
 
-        setThreshold(finalValue);
-        config.set(THRESHOLD, finalValue);
-      };
+          set(finalValue);
+        };
 
-      renderPromise.current.then(() => renderPromise.current[setter]());
+        renderPromise.current.then(() => renderPromise.current[setter]());
+      }
+    } else {
+      set(value);
     }
   };
 
