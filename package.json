@@ -2,7 +2,7 @@
   "name": "fair-compare",
   "productName": "Fair Compare",
   "appId": "com.catdad.fair-compare",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -67,6 +67,8 @@
     "toastify-js": "^1.8.0"
   },
   "electronmon": {
-    "patterns": ["!test/**"]
+    "patterns": [
+      "!test/**"
+    ]
   }
 }
