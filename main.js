@@ -3,7 +3,7 @@ const url = require('url');
 const EventEmitter = require('events');
 const events = new EventEmitter();
 
-const { app, BrowserWindow, Menu, systemPreferences } = require('electron');
+const { app, BrowserWindow, Menu, screen, systemPreferences } = require('electron');
 
 require('./lib/app-id.js')(app);
 require('./lib/progress.js');
@@ -35,6 +35,24 @@ if (systemPreferences.subscribeNotification) {
   setMacOSTheme();
 }
 
+function getLocationOnExistingScreen() {
+  const x = config.getProp('window.x');
+  const y = config.getProp('window.y');
+  const width = config.getProp('window.width') || 1000;
+  const height = config.getProp('window.height') || 800;
+
+  for (const { bounds } of screen.getAllDisplays()) {
+    const xInBounds = x >= bounds.x && x <= bounds.x + bounds.width;
+    const yInBounds = y >= bounds.y && y <= bounds.y + bounds.height;
+
+    if (xInBounds && yInBounds) {
+      return { x, y, width, height };
+    }
+  }
+
+  return { width, height };
+}
+
 function createWindow () {
   Promise.all([
     config.read()
@@ -42,8 +60,7 @@ function createWindow () {
     Menu.setApplicationMenu(menu.create());
 
     const windowOptions = {
-      width: config.getProp('window.width') || 1000,
-      height: config.getProp('window.height') || 800,
+      ...getLocationOnExistingScreen(),
       backgroundColor: '#121212',
       darkTheme: true,
       webPreferences: {
@@ -78,16 +95,21 @@ function createWindow () {
       mainWindow = null;
     });
 
-    mainWindow.on('resize', debounce(() => {
+    const onBoundsChange = debounce(() => {
       if (mainWindow.isMaximized() || mainWindow.isMinimized()) {
         return;
       }
 
-      const size = mainWindow.getSize();
+      const bounds = mainWindow.getBounds();
 
-      config.setProp('window.width', size[0]);
-      config.setProp('window.height', size[1]);
-    }, 500));
+      config.setProp('window.x', bounds.x);
+      config.setProp('window.y', bounds.y);
+      config.setProp('window.width', bounds.width);
+      config.setProp('window.height', bounds.height);
+    }, 500);
+
+    mainWindow.on('resize', onBoundsChange);
+    mainWindow.on('move', onBoundsChange);
 
     mainWindow.on('maximize', () => {
       config.setProp('window.maximized', true);
