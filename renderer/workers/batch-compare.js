@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
 
 const os = require('os');
-const get = require('lodash/get');
 const is = require('../../lib/is.js');
+const query = require('../tools/query.js');
 
-const global = () => typeof window === 'undefined' ? {} : window;
-const isParent = get(global(), 'process.argv', []).includes('--node-integration-in-worker');
+const isParent = !query.route;
 const isWorker = is.worker;
 const count = Math.max(Math.floor(os.cpus().length * 0.75), 1);
 
@@ -44,20 +43,14 @@ if (isWorker) {
         'unknown';
   };
 
-  module.exports = () => {
-    comlink.expose({ compare });
-  };
+  comlink.expose({ compare });
 } else if (isParent) {
   // this is the primary renderer thread, it will create and communicate with the worker
   // and accept actions from the webview threads
   const comlink = require('comlink');
   const promises = new Map();
 
-  const workers = new Array(count).fill(true).map(() => {
-    return new Worker(URL.createObjectURL(
-      new Blob(['require("../renderer/workers/batch-compare.js")();'])
-    ));
-  });
+  const workers = new Array(count).fill(true).map(() => new Worker(__filename));
   const apis = workers.map(worker => comlink.wrap(worker));
 
   const compare = async (...args) => {
