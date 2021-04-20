@@ -49,8 +49,7 @@ function createTab({ title, url, view, devTools = false, selected = true }) {
       frame = document.createElement('webview');
       frame.classList.add('view');
       frame.setAttribute('src', url);
-      frame.setAttribute('nodeintegration', true);
-      frame.setAttribute('nodeintegrationinworker', true);
+      frame.setAttribute('webpreferences', 'contextIsolation=false,nodeIntegration=true,nodeIntegrationInWorker=true');
 
       view.current.appendChild(frame);
 
