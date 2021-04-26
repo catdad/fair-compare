@@ -7,6 +7,7 @@ const { app, BrowserWindow, Menu, screen, systemPreferences } = require('electro
 
 require('./lib/app-id.js')(app);
 require('./lib/progress.js');
+require('./lib/tabs.js');
 const log = require('./lib/log.js')('main');
 const config = require('./lib/config.js');
 const debounce = require('./lib/debounce.js');
