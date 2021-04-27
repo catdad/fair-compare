@@ -1,4 +1,4 @@
-const { html, css, useState, useEffect, useRef, useCallback, setVar } = require('../tools/ui.js');
+const { html, css, useState, useEffect, useRef, useCallback } = require('../tools/ui.js');
 
 const TABS = require('../../lib/tabs.js');
 
@@ -31,20 +31,11 @@ function Tabs({ list, onSelect, onClose }) {
 function App() {
   const [tabs, setTabs] = useState([]);
   const view = useRef(null);
-  const tabsRef = {};
-
-  const displayTabs = tabs => {
-    if (tabsRef.current) {
-      setVar(tabsRef.current, 'count', tabs.length);
-    }
-
-    setTabs(tabs);
-  };
 
   useEffect(() => {
     const onUpdate = data => {
       console.log('update tabs', data);
-      displayTabs(data);
+      setTabs(data);
     };
 
     TABS.events.on('update', onUpdate);
@@ -77,7 +68,7 @@ function App() {
 
   return html`
     <${Frame} class="tab-bar">
-      <span class=tabs ref=${tabsRef}>
+      <span class=tabs style="--count:${tabs.length}">
         <${Tabs} list=${tabs} onClose=${closeTab} onSelect=${selectTab} />
       </span>
     <//>
