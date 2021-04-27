@@ -124,6 +124,7 @@ function createWindow () {
 
     mainWindow.webContents.on('devtools-opened', () => {
       config.setProp('devToolsOpen', true);
+      mainWindow.webContents.openDevTools({ mode: 'detach' });
     });
 
     mainWindow.webContents.on('devtools-closed', () => {
@@ -131,7 +132,7 @@ function createWindow () {
     });
 
     if (config.getProp('devToolsOpen')) {
-      mainWindow.webContents.openDevTools();
+      mainWindow.webContents.openDevTools({ mode: 'detach' });
     }
 
     events.on('reload', () => {
