@@ -3,6 +3,8 @@ const viewBus = new (require('events'))();
 const { Config, withConfig } = require('../tools/config.js');
 const batchCompare = require('../workers/batch-compare.js');
 
+const TABS = require('../../lib/tabs.js');
+
 const Frame = require('./Frame.js');
 
 css('./IndexTabs.css');
@@ -22,63 +24,10 @@ function Tabs({ list, onSelect, onClose }) {
   };
 
   return list.map(tab => {
-    return html`<span key=${tab.key} class="tab ${tab.selected ? 'selected' : ''}" onclick=${() => onSelect(tab)} onauxclick=${onAuxClick(tab)}>
+    return html`<span key=${tab.id} class="tab ${tab.selected ? 'selected' : ''}" onclick=${() => onSelect(tab)} onauxclick=${onAuxClick(tab)}>
       <span title=${tab.title}>${tab.title}</span>
       <button onclick=${onCloseClick(tab)}>🞩</button>
     </span>`;
-  });
-}
-
-function createTab({ title, url, view, devTools = false, selected = true }) {
-  let frame;
-
-  const onMessage = ({ channel, args }) => {
-    viewBus.emit(channel, ...args);
-  };
-
-  const onLoadFinish = () => {
-    if (devTools && frame) {
-      frame.openDevTools();
-    }
-  };
-
-  return Object.defineProperties({
-    key: Math.random(),
-    title,
-    frame: (() => {
-      frame = document.createElement('webview');
-      frame.classList.add('view');
-      frame.setAttribute('src', url);
-      frame.setAttribute('nodeintegration', true);
-      frame.setAttribute('nodeintegrationinworker', true);
-
-      view.current.appendChild(frame);
-
-      frame.addEventListener('ipc-message', onMessage);
-
-      frame.addEventListener('did-finish-load', onLoadFinish);
-
-      return frame;
-    })(),
-    close: () => {
-      frame.removeEventListener('new-tab', onMessage);
-      frame.removeEventListener('did-finish-load', onLoadFinish);
-      frame.remove();
-    },
-    selected
-  }, {
-    selected: {
-      get: () => selected,
-      set: val => {
-        selected = !!val;
-
-        if (selected) {
-          frame.style.top = '';
-        } else {
-          frame.style.top = '200vh';
-        }
-      }
-    }
   });
 }
 
@@ -98,32 +47,26 @@ function App() {
   };
 
   useEffect(() => {
-    const tab = createTab({ title: 'Main', url: `${window.location.href}?route=directory`, view, devTools });
-    batchCompare.register(tab.frame);
-
-    displayTabs([tab]);
-  }, [/* execute once */]);
-
-  useEffect(() => {
-    const onNewTab = ({ title, ...data }) => {
-      const query = Object.keys(data).map(key => `${key}=${data[key]}`).join('&');
-      const url = `${window.location.href}?${query}`;
-
-      const tab = createTab({ title, url, view, devTools });
-      const newTabs = [...(tabs.map(t => {
-        t.selected = false;
-        return t;
-      })), tab];
-
-      displayTabs(newTabs);
+    const onUpdate = data => {
+      console.log('update tabs', data);
+      setTabs(data);
     };
 
-    viewBus.on('new-tab', onNewTab);
+    TABS.events.on('update', onUpdate);
 
     return () => {
-      viewBus.off('new-tab', onNewTab);
+      TABS.events.off('update', onUpdate);
     };
-  }, [tabs]);
+  }, [/* execute once */]);
+
+  useEffect(async () => {
+    try {
+      const url = `${window.location.href}?route=directory`;
+      await TABS.open({ url, title: 'Main', selected: true });
+    } catch (e) {
+      console.error('error creating main tab', e);
+    }
+  }, [/* execute once */]);
 
   const selectTab = useCallback(TAB => {
     tabs.forEach(tab => {
@@ -138,21 +81,7 @@ function App() {
       return;
     }
 
-    const newTabs = tabs.filter((tab, idx) => {
-      if (tabs[idx + 1] === TAB) {
-        tab.selected = true;
-      } else {
-        tab.selected = false;
-      }
-
-      if (tab === TAB) {
-        tab.close();
-      }
-
-      return tab !== TAB;
-    });
-
-    displayTabs(newTabs);
+    TABS.close(TAB.id);
   }, [tabs, setTabs]);
 
   return html`
