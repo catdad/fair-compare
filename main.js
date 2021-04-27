@@ -69,8 +69,7 @@ function createWindow () {
         enableRemoteModule: true,
         nodeIntegration: true,
         nodeIntegrationInWorker: true,
-        nodeIntegrationInSubFrames: true,
-        webviewTag: true
+        nodeIntegrationInSubFrames: true
       },
       icon: icon(),
       frame: process.platform === 'win32' ? false : true
