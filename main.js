@@ -65,9 +65,12 @@ function createWindow () {
       backgroundColor: '#121212',
       darkTheme: true,
       webPreferences: {
+        contextIsolation: false,
+        enableRemoteModule: true,
         nodeIntegration: true,
         nodeIntegrationInWorker: true,
-        webviewTag: true,
+        nodeIntegrationInSubFrames: true,
+        webviewTag: true
       },
       icon: icon(),
       frame: process.platform === 'win32' ? false : true
