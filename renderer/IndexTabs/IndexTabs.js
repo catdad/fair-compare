@@ -1,7 +1,4 @@
-const { html, css, useContext, useState, useEffect, useRef, useCallback, setVar } = require('../tools/ui.js');
-const viewBus = new (require('events'))();
-const { Config, withConfig } = require('../tools/config.js');
-const batchCompare = require('../workers/batch-compare.js');
+const { html, css, useState, useEffect, useRef, useCallback, setVar } = require('../tools/ui.js');
 
 const TABS = require('../../lib/tabs.js');
 
@@ -34,8 +31,6 @@ function Tabs({ list, onSelect, onClose }) {
 function App() {
   const [tabs, setTabs] = useState([]);
   const view = useRef(null);
-  const config = useContext(Config);
-  const devTools = config.get('devToolsOpen', false);
   const tabsRef = {};
 
   const displayTabs = tabs => {
@@ -49,7 +44,7 @@ function App() {
   useEffect(() => {
     const onUpdate = data => {
       console.log('update tabs', data);
-      setTabs(data);
+      displayTabs(data);
     };
 
     TABS.events.on('update', onUpdate);
@@ -69,11 +64,7 @@ function App() {
   }, [/* execute once */]);
 
   const selectTab = useCallback(TAB => {
-    tabs.forEach(tab => {
-      tab.selected = tab === TAB;
-    });
-
-    displayTabs([].concat(tabs));
+    TABS.focus(TAB.id);
   }, [tabs, setTabs]);
 
   const closeTab = useCallback(TAB => {
@@ -94,4 +85,4 @@ function App() {
   `;
 }
 
-module.exports = withConfig(App);
+module.exports = App;

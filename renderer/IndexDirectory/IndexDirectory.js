@@ -8,7 +8,6 @@ const toast = require('../tools/toast.js');
 const { compare } = require('../tools/batch-compare.js');
 const dialog = require('./batch-dialog.js');
 
-const { ipcRenderer } = require('electron');
 const { List, Tree } = require('../Directory/Directory.js');
 const { Toolbar, ToolbarSeparator } = require('../Toolbar/Toolbar.js');
 
