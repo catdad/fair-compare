@@ -12,6 +12,8 @@ const { ipcRenderer } = require('electron');
 const { List, Tree } = require('../Directory/Directory.js');
 const { Toolbar, ToolbarSeparator } = require('../Toolbar/Toolbar.js');
 
+const tabs = require('../../lib/tabs.js');
+
 css('./IndexDirectory.css');
 
 const VIEW = 'directory-view';
@@ -88,7 +90,14 @@ function App() {
       data.right = right;
     }
 
-    ipcRenderer.sendToHost('new-tab', data);
+    const query = Object.keys(data).map(key => `${key}=${data[key]}`).join('&');
+    const url = `${window.location.href}?${query}`;
+
+    await tabs.open({
+      title: path.basename(file.path),
+      url: url,
+      selected: true
+    });
   };
 
   const onSelect = file => {
