@@ -2,9 +2,7 @@
 
 const os = require('os');
 const is = require('../../lib/is.js');
-const query = require('../tools/query.js');
 
-const isParent = !query.route;
 const isWorker = is.worker;
 const count = Math.max(Math.floor(os.cpus().length * 0.75), 1);
 
@@ -44,7 +42,7 @@ if (isWorker) {
   };
 
   comlink.expose({ compare });
-} else if (isParent) {
+} else {
   // this is the primary renderer thread, it will create and communicate with the worker
   // and accept actions from the webview threads
   const comlink = require('comlink');
@@ -70,53 +68,6 @@ if (isWorker) {
       promises.delete(api);
       apis.push(api);
     }
-  };
-
-  const implementation = { compare };
-
-  const register = frame => {
-    frame._onMessage = ({ channel, args }) => {
-      if (!implementation[channel]) {
-        console.warn('unknown message:', channel, args);
-        return;
-      }
-
-      const [id, ARGS] = args;
-
-      implementation[channel](...ARGS).then(data => {
-        frame.send(id, { ok: true, data });
-      }).catch(err => {
-        frame.send(id, { ok: false, err: {
-          message: err.message,
-          stack: err.stack
-        } });
-      });
-    };
-
-    frame.addEventListener('ipc-message', frame._onMessage);
-  };
-
-  module.exports = { ...implementation, register, count };
-} else {
-  // this is a webview, it will forward all work to the primary thread
-  const { ipcRenderer } = require('electron');
-  const gid = () => Math.random().toString(36).substr(2);
-  const CB_CHANNEL = 'THREADLINK-batch-compare-channel';
-
-  const compare = (...args) => {
-    const id = `${CB_CHANNEL}-${gid()}`;
-
-    return new Promise((resolve, reject) => {
-      ipcRenderer.on(id, (info, { err, data }) => {
-        if (err) {
-          return reject(err);
-        }
-
-        resolve(data);
-      });
-
-      ipcRenderer.sendToHost('compare', id, args);
-    });
   };
 
   module.exports = { compare, count };
