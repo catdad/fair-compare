@@ -1,5 +1,5 @@
 const pixelmatch = require('pixelmatch');
-const fs = require('fs-extra');
+const fs = require('fs/promises');
 const timing = require('../../lib/timing.js')('image-diff');
 
 const pixelsAreEqual = (leftData, rightData) => {

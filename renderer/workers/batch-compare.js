@@ -10,7 +10,7 @@ if (isWorker) {
   // this is a worker, it will take actions from the primary renderer thread and complete them
   const comlink = require('comlink');
 
-  const fs = require('fs-extra');
+  const fs = require('fs/promises');
   const FileType = require('file-type');
 
   const imageDiff = require('../tools/image-diff.js');
