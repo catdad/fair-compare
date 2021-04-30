@@ -2,6 +2,8 @@ const pixelmatch = require('pixelmatch');
 const fs = require('fs/promises');
 const timing = require('../../lib/timing.js')('image-diff');
 
+const Jimp = require('jimp');
+
 const pixelsAreEqual = (leftData, rightData) => {
   return Buffer.from(leftData.buffer).equals(Buffer.from(rightData.buffer));
 };
@@ -16,23 +18,18 @@ const getCanvas = (width, height) => {
 };
 
 const loadImage = async (filepath) => {
-  return await timing({
-    label: `create-image "${filepath}"`,
-    func: async () => {
-      const buffer = await fs.readFile(filepath);
-      const blob = new Blob([buffer.buffer]);
-      const img = await timing({
-        label: `create-bitmap "${filepath}"`,
-        func: async () => await createImageBitmap(blob)
-      });
+  const buffer = await fs.readFile(filepath);
+  const blob = new Blob([buffer.buffer]);
+  const img = await createImageBitmap(blob);
 
-      return img;
-    }
-  });
+  return img;
 };
 
 const readImageData = async (filepath, FORCE_WIDTH, FORCE_HEIGHT) => {
-  const img = await loadImage(filepath);
+  const img = await timing({
+    label: `read-image "${filepath}"`,
+    func: async () => await loadImage(filepath)
+  });
 
   const { ctx } = await timing({
     label: `ctx-draw "${filepath}"`,
@@ -73,23 +70,53 @@ const computeTolerance = async ({ leftData, rightData, threshold, outputImage = 
         })
       });
 
-      return { leftData, rightData, pixels, output, width, height };
+      if (outputImage) {
+        return { leftData, rightData, pixels, output, width, height };
+      }
+
+      return { pixels, width, height };
     }
   });
 };
 
-const tolerance = async ({ left, right, threshold = 0.05, outputImage = true }) => {
+const readImagesCanvas = async ({ left, right }) => {
+  const leftData = await readImageData(left);
+  const rightData = await readImageData(right, leftData.width, leftData.height);
+
+  return { leftData, rightData };
+};
+
+const readImagesJimp = async ({ left, right }) => {
+  const leftImg = await Jimp.read(left);
+  const rightImg = await Jimp.read(right);
+
+  if (leftImg.bitmap.width !== rightImg.bitmap.width || leftImg.bitmap.height !== rightImg.bitmap.height) {
+    const width = Math.min(leftImg.bitmap.width, rightImg.bitmap.width);
+    const height = Math.min(leftImg.bitmap.height, rightImg.bitmap.height);
+
+    leftImg.crop(0, 0, width, height);
+    rightImg.crop(0, 0, width, height);
+  }
+
+  return {
+    leftData: leftImg.bitmap,
+    rightData: rightImg.bitmap
+  };
+
+  // TODO we actually can return proper ImageData, but it is slower
+  //return {
+  //  leftData: new ImageData(Uint8ClampedArray.from(leftImg.bitmap.data), leftImg.bitmap.width, leftImg.bitmap.height),
+  //  rightData: new ImageData(Uint8ClampedArray.from(rightImg.bitmap.data), rightImg.bitmap.width, rightImg.bitmap.height)
+  //};
+};
+
+const tolerance = async ({ left, right, threshold = 0.05, outputImage = true, canvas = true }) => {
   return await timing({
     label: `tolerance "${left}"`,
     func : async () => {
-      const [leftData, rightData] = await timing({
+      const { leftData, rightData } = await timing({
         label: `read-total "${left}"`,
-        func: async () => {
-          const leftData = await readImageData(left);
-          const rightData = await readImageData(right, leftData.width, leftData.height);
-
-          return [leftData, rightData];
-        }
+        func: async () => canvas ? await readImagesCanvas({ left, right }) : await readImagesJimp({ left, right })
       });
 
       return await computeTolerance({ leftData, rightData, threshold, outputImage, left });
