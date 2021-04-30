@@ -3,6 +3,13 @@ const fs = require('fs/promises');
 const timing = require('../../lib/timing.js')('image-diff');
 
 const Jimp = require('jimp');
+const sharp = (() => {
+  try {
+    return require('sharp');
+  } catch (e) {
+    return null;
+  }
+})();
 
 const pixelsAreEqual = (leftData, rightData) => {
   return Buffer.from(leftData.buffer).equals(Buffer.from(rightData.buffer));
@@ -110,13 +117,41 @@ const readImagesJimp = async ({ left, right }) => {
   //};
 };
 
+const readImagesSharp = async ({ left, right }) => {
+  const leftImg = await sharp(left);
+  const rightImg = await sharp(right);
+
+  const { width: lw, height: lh } = await leftImg.metadata();
+  const { width: rw, height: rh } = await rightImg.metadata();
+
+  if (lw !== rw || lh !== rh) {
+    const width = Math.min(lw, rw);
+    const height = Math.min(lh, rh);
+
+    leftImg.extract({ left: 0, top: 0, width, height });
+    rightImg.extract({ left: 0, top: 0, width, height });
+  }
+
+  const leftData = await leftImg.raw().toBuffer({ resolveWithObject: true });
+  const rightData = await rightImg.raw().toBuffer({ resolveWithObject: true });
+
+  return {
+    leftData: { data: leftData.data, width: leftData.info.width, height: leftData.info.height },
+    rightData: { data: rightData.data, width: rightData.info.width, height: rightData.info.height }
+  };
+};
+
+const readImagesModule = async (...args) => sharp ?
+  await readImagesSharp(...args) :
+  await readImagesJimp(...args);
+
 const tolerance = async ({ left, right, threshold = 0.05, outputImage = true, canvas = true }) => {
   return await timing({
     label: `tolerance "${left}"`,
     func : async () => {
       const { leftData, rightData } = await timing({
         label: `read-total "${left}"`,
-        func: async () => canvas ? await readImagesCanvas({ left, right }) : await readImagesJimp({ left, right })
+        func: async () => canvas ? await readImagesCanvas({ left, right }) : await readImagesModule({ left, right })
       });
 
       return await computeTolerance({ leftData, rightData, threshold, outputImage, left });
