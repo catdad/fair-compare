@@ -117,12 +117,22 @@ const readImagesJimp = async ({ left, right }) => {
   //};
 };
 
-const readImagesSharp = async ({ left, right }) => {
-  const leftImg = await sharp(left);
-  const rightImg = await sharp(right);
+const readSharp = async file => {
+  try {
+    const img = sharp(file);
+    const { width, height } = await img.metadata();
+    return { img, width, height };
+  } catch (e) {
+    // on Windows, it seems sharp can't read files with long paths
+    const img = sharp(await fs.readFile(file));
+    const { width, height } = await img.metadata();
+    return { img, width, height };
+  }
+};
 
-  const { width: lw, height: lh } = await leftImg.metadata();
-  const { width: rw, height: rh } = await rightImg.metadata();
+const readImagesSharp = async ({ left, right }) => {
+  const { img: leftImg, width: lw, height: lh } = await readSharp(left);
+  const { img: rightImg, width: rw, height: rh } = await readSharp(right);
 
   if (lw !== rw || lh !== rh) {
     const width = Math.min(lw, rw);
