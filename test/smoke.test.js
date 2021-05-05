@@ -38,18 +38,10 @@ describe('fair-compare', () => {
 
     await waitForThrowable(async () => {
       const pages = await app.pages();
-      const webviews = await app.webviews();
 
-      expect(pages).to.have.lengthOf(1, 'An unexpected number of pages were found');
-      expect(webviews).to.have.lengthOf(1, 'An unexpected number of webviews were found');
-
-      const pageTitle = await pages[0].title();
-
-      expect(pageTitle).to.equal(`${productName}`);
-
-      const wvTitle = await webviews[0].title();
-
-      expect(wvTitle).to.equal(`${productName} Directory`);
+      expect(pages).to.have.lengthOf(2, 'An unexpected number of pages were found');
+      expect(await pages[0].title()).to.equal(`${productName}`);
+      expect(await pages[1].title()).to.equal(`${productName} Directory`);
     }, { total: 6000 });
   });
 });

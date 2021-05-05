@@ -7,6 +7,7 @@ const { app, BrowserWindow, Menu, screen, systemPreferences } = require('electro
 
 require('./lib/app-id.js')(app);
 require('./lib/progress.js');
+require('./lib/tabs.js');
 const log = require('./lib/log.js')('main');
 const config = require('./lib/config.js');
 const debounce = require('./lib/debounce.js');
@@ -64,9 +65,10 @@ function createWindow () {
       backgroundColor: '#121212',
       darkTheme: true,
       webPreferences: {
+        contextIsolation: false,
+        enableRemoteModule: true,
         nodeIntegration: true,
-        nodeIntegrationInWorker: true,
-        webviewTag: true,
+        nodeIntegrationInWorker: true
       },
       icon: icon(),
       frame: process.platform === 'win32' ? false : true
@@ -121,6 +123,7 @@ function createWindow () {
 
     mainWindow.webContents.on('devtools-opened', () => {
       config.setProp('devToolsOpen', true);
+      mainWindow.webContents.openDevTools({ mode: 'detach' });
     });
 
     mainWindow.webContents.on('devtools-closed', () => {
@@ -128,7 +131,7 @@ function createWindow () {
     });
 
     if (config.getProp('devToolsOpen')) {
-      mainWindow.webContents.openDevTools();
+      mainWindow.webContents.openDevTools({ mode: 'detach' });
     }
 
     events.on('reload', () => {

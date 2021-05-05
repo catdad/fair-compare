@@ -1,5 +1,5 @@
 const { html, css, useContext, useEffect, useState } = require('../tools/ui.js');
-const fs = require('fs-extra');
+const fs = require('fs/promises');
 const { diffLines } = require('diff');
 
 const { Config, withConfig } = require('../tools/config.js');

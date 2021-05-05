@@ -1,4 +1,4 @@
-const fs = require('fs-extra');
+const fs = require('fs/promises');
 const fg = require('fast-glob');
 
 const sort = files => [...files].sort((a, b) => a.localeCompare(b));
