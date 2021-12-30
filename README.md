@@ -4,7 +4,9 @@
 
 > Simple and easy comparison of images and text across whole directories, with no confusing frills
 
-## Download
+## Download [![github-downloads.svg]][release]
+
+[github-downloads.svg]: https://img.shields.io/github/downloads/catdad/fair-compare/total.svg
 
 Download and install the latest version for your operating system from the [latest release][release].
 
@@ -32,7 +34,7 @@ The dmg package is not signed or notorized, so MacOS will warn you that this app
 
 If you experience an issue or have an idea for new improvements or features, please [create a bug](https://github.com/catdad/fair-compare/issues/new) or reach out to me on [twitter @kirilv](https://twitter.com/kirilv).
 
-## Development
+## Development 👩‍💻
 
 This project requires a recent version of [node](https://nodejs.org/). In order to set it up:
 
